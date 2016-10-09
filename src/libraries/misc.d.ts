@@ -5,13 +5,13 @@ interface Window {
     webkitAudioContext?: any;
 }
 
-interface HTMLElement{
+interface HTMLElement {
     getContext?: any;
     width?: any;
 }
 
-interface DOMException{
-    err?: any
+interface DOMException {
+    err?: any;
 }
 
 interface DecodeErrorCallback {

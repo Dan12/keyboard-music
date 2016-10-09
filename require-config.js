@@ -4,7 +4,8 @@ requirejs.config({
     // library paths
     paths:{
         "jquery":'libraries/jquery.min',
-        "howler":'libraries/howler.min'
+        "howler":'libraries/howler.min',
+        "zip":'libraries/zip'
     }
 });
 

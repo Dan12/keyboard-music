@@ -1,5 +1,5 @@
-/out
-/lib
+/out/*
+/lib/*
 !/lib/libraries/*
 .DS_Store
 /.sass-cache

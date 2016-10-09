@@ -9,5 +9,6 @@ export class File {
   constructor(name: string, sound: Howl) {
     this.name = name;
     this.sound = sound;
+    console.log(this.name);
   }
 }
