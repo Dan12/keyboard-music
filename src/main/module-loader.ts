@@ -1,4 +1,5 @@
 import { Keyboard } from './modules/keyboard';
+import { MousePayload } from './modules/mouse-payload';
 
 /**
  * Loads certain modules onto the main element
@@ -13,4 +14,6 @@ export function ModuleLoader(main_element: JQuery) {
   console.log('loading keyboard');
 
   main_element.append(keyboard.asElement());
+
+  MousePayload.initialize(main_element);
 };

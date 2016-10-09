@@ -11,7 +11,7 @@ export class KeyboardKey extends Element {
 
   private sound: SoundContainer;
 
-  constructor() {
-    super($('<div class="keyboard_key primary_color"></div>'));
+  constructor(symbol: string) {
+    super($(`<div class="keyboard_key primary_color"><div class="key_text">${symbol}</div></div>`));
   }
 }
