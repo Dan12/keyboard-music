@@ -9,6 +9,6 @@
     "removeComments": false,
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
-    "outDir":"./lib/main"
+    "outFile":"./lib/main.js"
   }
 }

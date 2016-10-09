@@ -1,0 +1,24 @@
+#keyboard{
+  display: inline-block;
+  width: 960px;
+  text-align: center;
+  padding: 0;
+}
+
+.row{
+  padding: 0;
+  margin: 0;
+}
+
+.keyboard_key{
+  display: inline-block;
+  padding: 10px 2px;
+  margin: 4px;
+  width:56px;
+  height:40px;
+  font-size:35px;
+  text-align:center;
+  border: solid 1px black;
+  border-radius: 6px;
+  transition: background-color 75ms ease-out;
+}
