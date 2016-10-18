@@ -10,5 +10,6 @@
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
     "outFile":"./lib/main.js"
-  }
+  },
+  "files": ["src/main/main.ts"]
 }

@@ -1,3 +1,3 @@
-export class Song {
+class Song {
   // TODO
 }

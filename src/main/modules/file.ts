@@ -1,7 +1,7 @@
 /**
  * An object representing a sound file with a howl object and name
  */
-export class File {
+class SoundFile {
 
   private sound: Howl;
   private name: string;
@@ -9,6 +9,5 @@ export class File {
   constructor(name: string, sound: Howl) {
     this.name = name;
     this.sound = sound;
-    console.log(this.name);
   }
 }

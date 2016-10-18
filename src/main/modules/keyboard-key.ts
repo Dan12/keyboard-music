@@ -1,5 +1,5 @@
-import { SoundContainer } from './sound-container';
-import { Element } from '../interfaces/element';
+/// <reference path="../interfaces/element.ts"/>
+/// <reference path="./sound-container.ts"/>
 
 /**
  * A single key on a keyboard.
@@ -7,7 +7,7 @@ import { Element } from '../interfaces/element';
  * @class KeyboardKey
  * @constructor
  */
-export class KeyboardKey extends Element {
+class KeyboardKey extends JQElement {
 
   private sound: SoundContainer;
 

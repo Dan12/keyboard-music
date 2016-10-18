@@ -3,7 +3,7 @@
  *
  * @static
  */
-export class MousePayload {
+class MousePayload {
 
   private static listen_element: JQuery;
 

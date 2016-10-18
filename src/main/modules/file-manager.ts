@@ -1,12 +1,11 @@
-import { File } from './file';
-import { Howl } from 'howler';
+/// <reference path="./file.ts"/>
 
 /**
  * A file manager for managing all of the sounds
  */
-export class FileManager {
+class FileManager {
 
-  private files: File[];
+  private files: SoundFile[];
 
   constructor() {
     this.files = [];
@@ -15,7 +14,7 @@ export class FileManager {
   public addFile(name: string, data: string) {
     let newHowl =
     this.files.push(
-      new File(
+      new SoundFile(
         name,
         new Howl({
           urls: [data],

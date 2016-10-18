@@ -1,8 +1,8 @@
-import { Song } from './song';
+/// <reference path="./song.ts"/>
 
 /**
  * Load the
  */
-export function loadSong(url: string, destination: Song) {
+function loadSong(url: string, destination: Song) {
   // TODO
 }

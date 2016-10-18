@@ -7,7 +7,7 @@
  * @param elelemt {JQuery} the jQuery element representing this object
  */
 
-export abstract class Element {
+abstract class JQElement {
   protected element: JQuery;
 
   constructor(element: JQuery) {

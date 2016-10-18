@@ -1,18 +1,15 @@
-import { FileManager } from './file-manager';
-import * as NotZip from 'zip';
-// import { zip } from 'zip';
+/// <reference path="./file-manager.ts"/>
 
-export class ZipHandler {
+class ZipHandler {
 
   private static destination: FileManager;
   private static initializedScripts = false;
+  private static zipBase = 'zip_files';
 
   public static initialize(destination: FileManager) {
-    // hacky way to bring zip.js in scope, ignore this
-    NotZip == null;
-
     if (!ZipHandler.initializedScripts) {
       zip.workerScripts = {
+        // TODO add as base64, don't load
         inflater: ['zip_files/z-worker.js', 'zip_files/inflate.js']
       };
       ZipHandler.initializedScripts = true;
@@ -47,13 +44,13 @@ export class ZipHandler {
   public static loadZip(name: string, callback: () => void) {
     // get request for zip file
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', `zip_files/${name}.zip`);
+    xhr.open('GET', `${ZipHandler.zipBase}/${name}.zip`);
     xhr.responseType = 'blob';
     xhr.onload = function(){
         // console.log(xhr.response)
         // create the zip reader for the zip file blob
         zip.createReader(new zip.BlobReader(xhr.response), function(reader: zip.ZipReader) {
-          console.log('Extracting Sounds...');
+          console.log('Extracting sounds from the file...');
           // get all entries from the zip
           reader.getEntries(function(entries: zip.Entry[]) {
             ZipHandler.interateEntries(entries, 0, reader, callback);
@@ -64,6 +61,6 @@ export class ZipHandler {
         });
     };
     xhr.send();
-    console.log('Loading main sound file...');
+    console.log(`Fetching sound file \"${name}\" from the server...`);
   }
 }

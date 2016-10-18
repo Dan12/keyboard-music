@@ -1,7 +1,7 @@
-import { Keyboard } from './modules/keyboard';
-import { MousePayload } from './modules/mouse-payload';
-import { FileManager } from './modules/file-manager';
-import { loadSounds } from './modules/sound-loader';
+/// <reference path="./modules/mouse-payload.ts"/>
+/// <reference path="./modules/keyboard.ts"/>
+/// <reference path="./modules/file-manager.ts"/>
+/// <reference path="./modules/sound-loader.ts"/>
 
 /**
  * Loads certain modules onto the main element
@@ -10,7 +10,7 @@ import { loadSounds } from './modules/sound-loader';
  * @for Main
  * @param main_element {JQuery} the jQuery element to load the modules onto
  */
-export function ModuleLoader(main_element: JQuery) {
+function ModuleLoader(main_element: JQuery) {
   let keyboard = new Keyboard();
 
   console.log('loading keyboard');

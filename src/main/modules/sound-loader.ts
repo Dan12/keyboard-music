@@ -1,10 +1,10 @@
-import { FileManager } from './file-manager';
-import { ZipHandler } from './zip_handler';
+/// <reference path="./file-manager.ts"/>
+/// <reference path="./zip_handler.ts"/>
 
 let i: number;
 let zipUrls: string[];
 
-export function loadSounds(urls: string[], destination: FileManager) {
+function loadSounds(urls: string[], destination: FileManager) {
     ZipHandler.initialize(destination);
     i = -1;
     zipUrls = urls;
@@ -14,6 +14,7 @@ export function loadSounds(urls: string[], destination: FileManager) {
 function getNextUrl() {
   i++;
   if (i >= zipUrls.length) {
+    console.log('Finished loading sounds');
     return;
   }
   ZipHandler.loadZip(zipUrls[i], getNextUrl);

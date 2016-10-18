@@ -1,5 +1,5 @@
-import { Element } from '../interfaces/element';
-import { KeyboardKey } from './keyboard-key';
+/// <reference path="../interfaces/element.ts"/>
+/// <reference path="./keyboard-key.ts"/>
 
 /**
  * The keyboard module to represent an html keyboard.
@@ -7,7 +7,7 @@ import { KeyboardKey } from './keyboard-key';
  * @class Keyboard
  * @constructor
  */
-export class Keyboard extends Element {
+class Keyboard extends JQElement {
 
   private rows: KeyboardKey[][];
   private numRows = 4;

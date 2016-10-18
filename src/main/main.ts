@@ -3,10 +3,12 @@
  * @class Main
  */
 
-// full jquery import here (not needed elsewhere)
-import * as $ from 'jquery';
+// library imports
+/// <reference path="../libraries/howler.d.ts"/>
+/// <reference path="../libraries/jquery.d.ts"/>
+/// <reference path="../libraries/zip.d.ts"/>
 
-import { ModuleLoader } from './module-loader';
+/// <reference path="./module-loader.ts"/>
 
 $(document).ready(function(){
     console.log('Starting Application');
