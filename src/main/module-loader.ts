@@ -2,6 +2,7 @@
 /// <reference path="./modules/keyboard.ts"/>
 /// <reference path="./modules/file-manager.ts"/>
 /// <reference path="./modules/sound-loader.ts"/>
+/// <reference path="./modules/input-propegator.ts"/>
 
 /**
  * Loads certain modules onto the main element
@@ -22,4 +23,6 @@ function ModuleLoader(main_element: JQuery) {
   let fileManager = new FileManager();
 
   loadSounds(['eq'], fileManager);
+
+  let propegator = new InputEventPropegator(keyboard);
 };

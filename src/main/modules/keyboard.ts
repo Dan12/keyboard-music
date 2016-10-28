@@ -1,5 +1,6 @@
 /// <reference path="../interfaces/element.ts"/>
 /// <reference path="./keyboard-key.ts"/>
+/// <reference path="../interfaces/input-reciever.ts"/>
 
 /**
  * The keyboard module to represent an html keyboard.
@@ -7,7 +8,7 @@
  * @class Keyboard
  * @constructor
  */
-class Keyboard extends JQElement {
+class Keyboard extends JQElement implements InputReciever {
 
   private rows: KeyboardKey[][];
   private numRows = 4;
@@ -20,9 +21,28 @@ class Keyboard extends JQElement {
     ['Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', '\\s',  'NA'],
   ];
 
+  // ascii key mappings to array index
+  private keyPairs = [
+    [49, 50, 51, 52, 53, 54, 55, 56,  57,  48,  189, 187],
+    [81, 87, 69, 82, 84, 89, 85, 73,  79,  80,  219, 221],
+    [65, 83, 68, 70, 71, 72, 74, 75,  76,  186, 222, 13],
+    [90, 88, 67, 86, 66, 78, 77, 188, 190, 191, 16,  -1]
+  ];
+
+  // alternate keys for firefox
+  private backupPairs = [
+    [49, 50, 51, 52, 53, 54, 55, 56,  57,  48,  173, 61],
+    [81, 87, 69, 82, 84, 89, 85, 73,  79,  80,  219, 221],
+    [65, 83, 68, 70, 71, 72, 74, 75,  76,  59,  222, 13],
+    [90, 88, 67, 86, 66, 78, 77, 188, 190, 191, 16,  -1]
+  ];
+
+  private keyMap = {};
+
   constructor() {
     super($('<div id="keyboard"></div>'));
     this.rows = [];
+    // push row elements and new keyboard key elements to each row
     for (let r = 0; r < this.numRows; r++) {
       this.rows.push([]);
       let nextRow = $(`<div class="row" id="row_${r}"></div>`);
@@ -33,5 +53,21 @@ class Keyboard extends JQElement {
         nextRow.append(this.rows[r][c].asElement());
       }
     }
+
+    // setup the key map
+    for (let i = 0; i < this.numRows; i++) {
+      for (let j = 0; j < this.numCols; j++) {
+        this.keyMap[this.keyPairs[i][j]] = [i, j];
+        this.keyMap[this.backupPairs[i][j]] = [i, j];
+      }
+    }
+  }
+
+  public keyDown(key: number) {
+    console.log(this.keyMap[key]);
+  }
+
+  public keyUp(key: number) {
+    console.log(this.keyMap[key]);
   }
 }
