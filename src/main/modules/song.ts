@@ -1,3 +1,4 @@
 class Song {
-  // TODO
+  private name: string;
+  private bpms: number[];
 }

@@ -1,5 +1,5 @@
 /**
- * a selective key event propegator
+ * a selective key and mouse event propegator
  */
 class InputEventPropegator {
   private mode: Mode;
@@ -14,6 +14,10 @@ class InputEventPropegator {
     this.initMouseMaps();
   }
 
+  /**
+   * initialize the key event listeners and mode callback events
+   * @method initKeyMaps
+   */
   private initKeyMaps() {
     $('body').keydown((event: JQueryKeyEventObject) => {
       switch (this.mode) {
@@ -32,6 +36,10 @@ class InputEventPropegator {
     });
   }
 
+  /**
+   * initialize the key event listeners and mode callback events
+   * @method initKeyMaps
+   */
   private initMouseMaps() {
     $('body').mousedown((event: JQueryMouseEventObject) => {
       console.log(event);
@@ -39,6 +47,11 @@ class InputEventPropegator {
   }
 }
 
+/**
+ * an enum for the modes of the application. TODO: switch to other file
+ * @class Mode
+ * @static
+ */
 const enum Mode {
   KEYBOARD,
   EDITOR
