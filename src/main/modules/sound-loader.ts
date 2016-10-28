@@ -1,5 +1,5 @@
 /// <reference path="./file-manager.ts"/>
-/// <reference path="./zip_handler.ts"/>
+/// <reference path="./zip-handler.ts"/>
 
 let i: number;
 let zipUrls: string[];

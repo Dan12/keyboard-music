@@ -12,6 +12,6 @@ class KeyboardKey extends JQElement {
   private sound: SoundContainer;
 
   constructor(symbol: string) {
-    super($(`<div class="keyboard_key primary_color"><div class="key_text">${symbol}</div></div>`));
+    super($(`<div class="keyboard_key primary_color">${symbol}</div>`));
   }
 }
