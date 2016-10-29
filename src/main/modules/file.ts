@@ -3,8 +3,8 @@
  */
 class SoundFile {
 
-  private sound: Howl;
-  private name: string;
+  public sound: Howl;
+  public name: string;
 
   constructor(name: string, sound: Howl) {
     this.name = name;

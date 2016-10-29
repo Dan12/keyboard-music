@@ -3,7 +3,7 @@
 /// <reference path="./modules/file-manager.ts"/>
 /// <reference path="./modules/sound-loader.ts"/>
 /// <reference path="./modules/input-propegator.ts"/>
-/// <reference path="./modules/song-loader.ts"/>
+/// <reference path="./modules/song.ts"/>
 
 /**
  * Loads certain modules onto the main element
@@ -25,7 +25,5 @@ function ModuleLoader(main_element: JQuery) {
 
   let fileManager = new FileManager();
 
-  let eqSong = new Song();
-
-  loadSong('songs/equinox.json', eqSong, fileManager);
+  let song = new Song('songs/equinox.json', fileManager);
 };

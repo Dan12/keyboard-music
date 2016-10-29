@@ -17,8 +17,11 @@ class SoundPack {
     }
   }
 
-  public addContainer(container: SoundContainer, row: number, col: number) {
-    if (row < 0 || row >= this. || col < 0 || col >= this.sounds[0].length) {
+  public addContainer(container: SoundContainer, loc: number) {
+    let location = this.linearToGrid(loc);
+    let row = location[0];
+    let col = location[1];
+    if (row < 0 || row >= this.rows || col < 0 || col >= this.cols) {
       console.log(`Invalid soundpack index at ${row},${col}`);
       return;
     }
@@ -26,6 +29,6 @@ class SoundPack {
   }
 
   private linearToGrid(i: number): number[] {
-    return [i / this.cols, ];
+    return [Math.floor(i / this.cols), i % this.cols];
   }
 }

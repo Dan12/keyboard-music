@@ -19,23 +19,22 @@ class ZipHandler {
     ZipHandler.destination = destination;
   }
 
+  // trim the initial directory off of the filename
+  private static trimFileLocation(name: string): string {
+    return name.substring(name.indexOf('/') + 1, name.length);
+  }
+
   // recursively iterate over the entries
   private static interateEntries(entries: zip.Entry[], i: number, reader: zip.ZipReader, callback: () => void) {
     if (i < entries.length) {
       // skip this entry if it is a directory
       if (entries[i].directory) {
-        if (entries[i].filename.startsWith('sounds/')) {
-          let dirName = entries[i].filename.substring(7);
-          if (dirName !== '') {
-            ZipHandler.destination.addDirectory(dirName.substring(0, dirName.length - 1));
-          }
-        }
         ZipHandler.interateEntries(entries, i + 1, reader, callback);
       }
       // only accept a file with the extension .mp3
       else if (entries[i].filename.endsWith('.mp3')) {
         entries[i].getData(new zip.Data64URIWriter('audio/mp3'), function(data: string) {
-          ZipHandler.destination.addFile(entries[i].filename, data);
+          ZipHandler.destination.addFile(ZipHandler.trimFileLocation(entries[i].filename), data);
           ZipHandler.interateEntries(entries, i + 1, reader, callback);
         });
       // skip

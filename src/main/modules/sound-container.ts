@@ -8,13 +8,17 @@
 class SoundContainer {
   private pitches: Sound[];
   private looped: boolean;
-  private quaternized: boolean;
+  private quaternized: number;
   private holdToPlay: boolean;
 
-  constructor(pitches: Sound[], hold_to_play: boolean, looped: boolean, quaternized: boolean) {
-    this.pitches = pitches;
+  constructor(hold_to_play: boolean, quaternized: number, looped: boolean) {
+    this.pitches = [];
     this.looped = looped === undefined ? false : looped;
-    this.quaternized = quaternized === undefined ? false : quaternized;
+    this.quaternized = quaternized === undefined ? 0 : quaternized;
     this.holdToPlay = hold_to_play === undefined ? false : hold_to_play;
+  }
+
+  public addPitches(sound: SoundFile, start_time: number, end_time: number) {
+    this.pitches.push(new Sound(sound.name, sound.sound, this.looped, start_time, end_time));
   }
 }

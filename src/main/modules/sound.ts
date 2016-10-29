@@ -10,18 +10,26 @@
 class Sound {
 
   /**
-   * THe howler js object which this class exposes a simple api for
+   * The howler js object which this class exposes a simple api for
    * @property howl_object
    * @type Howl
    * @default undefined
    */
-  private howl_object: Howl = undefined;
+  private howl_object: Howl;
 
-  public constructor(filename: string, looped: boolean, start_time?: number, end_time?: number) {
-    this.howl_object = new Howl({
-      urls: [filename],
-      loop: looped
-    });
+  private name: string;
+
+  private asSprite: boolean;
+
+  public constructor(name: string, howlObj: Howl, looped: boolean, start_time: number, end_time: number) {
+    this.name = name;
+    this.howl_object = howlObj;
+
+    this.asSprite = false;
+
+    if (start_time !== undefined && end_time !== undefined) {
+      this.howl_object.sprite({sprite: [start_time, end_time - start_time]});
+    }
   }
 
   /**
@@ -29,7 +37,11 @@ class Sound {
    * @method play
    */
   public play(): void {
-    this.howl_object.play();
+    if (this.asSprite) {
+      this.howl_object.play('sprite');
+    } else {
+      this.howl_object.play();
+    }
   }
 
   /**

@@ -1,7 +1,6 @@
 /// <reference path="../interfaces/element.ts"/>
 /// <reference path="./keyboard-key.ts"/>
 /// <reference path="../interfaces/input-reciever.ts"/>
-/// <reference path="./keyboard-type.ts"/>
 
 /**
  * The keyboard module to represent an html keyboard.
@@ -92,7 +91,7 @@ class Keyboard extends JQElement implements InputReciever {
       case KeyBoardType.DOUBLE:
         return {rows: 8, cols: 11};
       default: // standard
-        return {rows: 4, cols: 11};
+        return {rows: 4, cols: 12};
     }
   }
 }
