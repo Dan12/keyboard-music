@@ -1,6 +1,7 @@
 /// <reference path="../interfaces/element.ts"/>
 /// <reference path="./keyboard-key.ts"/>
 /// <reference path="../interfaces/input-reciever.ts"/>
+/// <reference path="./keyboard-type.ts"/>
 
 /**
  * The keyboard module to represent an html keyboard.
@@ -40,6 +41,8 @@ class Keyboard extends JQElement implements InputReciever {
   private keyMap = {};
 
   constructor() {
+    // TODO: show keys
+
     super($('<div id="keyboard"></div>'));
     this.rows = [];
     // push row elements and new keyboard key elements to each row
@@ -70,4 +73,37 @@ class Keyboard extends JQElement implements InputReciever {
   public keyUp(key: number) {
     console.log(this.keyMap[key]);
   }
+
+  public static getKeyboardSizeString(type: String): KeyBoardSize {
+    switch (type) {
+      case 'SQUARE':
+        return Keyboard.getKeyboardSize(KeyBoardType.SQUARE);
+      case 'DOUBLE':
+        return Keyboard.getKeyboardSize(KeyBoardType.DOUBLE);
+      default:
+        return Keyboard.getKeyboardSize(KeyBoardType.STANDARD);
+    }
+  }
+
+  public static getKeyboardSize(type: KeyBoardType): KeyBoardSize {
+    switch (type) {
+      case KeyBoardType.SQUARE:
+        return {rows: 8, cols: 8};
+      case KeyBoardType.DOUBLE:
+        return {rows: 8, cols: 11};
+      default: // standard
+        return {rows: 4, cols: 11};
+    }
+  }
+}
+
+interface KeyBoardSize {
+  rows: number;
+  cols: number;
+}
+
+enum KeyBoardType {
+  STANDARD, // original 4*12 grid
+  SQUARE, // 8*8 grid like actual pad, modifier to access lower grid
+  DOUBLE, // 8*11 grid, modifier to access lower grid, option to hide lower half
 }

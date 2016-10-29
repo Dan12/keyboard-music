@@ -1,21 +1,19 @@
 /// <reference path="./file-manager.ts"/>
 /// <reference path="./zip-handler.ts"/>
 
-let i: number;
-let zipUrls: string[];
-
-function loadSounds(urls: string[], destination: FileManager) {
+function loadSounds(urls: string[], destination: FileManager, callback: () => void) {
     ZipHandler.initialize(destination);
-    i = -1;
-    zipUrls = urls;
-    getNextUrl();
-}
+    let i = 0;
 
-function getNextUrl() {
-  i++;
-  if (i >= zipUrls.length) {
-    console.log('Finished loading sounds');
-    return;
-  }
-  ZipHandler.loadZip(zipUrls[i], getNextUrl);
+    let nextUrl = () => {
+      i++;
+      if (i >= urls.length) {
+        console.log('Finished loading sounds');
+        callback();
+        return;
+      }
+      ZipHandler.loadZip(urls[i], nextUrl);
+    };
+
+    ZipHandler.loadZip(urls[i], nextUrl);
 }

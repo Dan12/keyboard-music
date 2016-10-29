@@ -4,7 +4,8 @@ class ZipHandler {
 
   private static destination: FileManager;
   private static initializedScripts = false;
-  private static zipBase = 'zip_files';
+  private static zipBase = 'songs';
+  private static lock = false;
 
   public static initialize(destination: FileManager) {
     if (!ZipHandler.initializedScripts) {
@@ -22,8 +23,15 @@ class ZipHandler {
   private static interateEntries(entries: zip.Entry[], i: number, reader: zip.ZipReader, callback: () => void) {
     if (i < entries.length) {
       // skip this entry if it is a directory
-      if (entries[i].directory)
+      if (entries[i].directory) {
+        if (entries[i].filename.startsWith('sounds/')) {
+          let dirName = entries[i].filename.substring(7);
+          if (dirName !== '') {
+            ZipHandler.destination.addDirectory(dirName.substring(0, dirName.length - 1));
+          }
+        }
         ZipHandler.interateEntries(entries, i + 1, reader, callback);
+      }
       // only accept a file with the extension .mp3
       else if (entries[i].filename.endsWith('.mp3')) {
         entries[i].getData(new zip.Data64URIWriter('audio/mp3'), function(data: string) {
@@ -36,15 +44,25 @@ class ZipHandler {
       }
     } else {  // at the end, so close reader
       reader.close(function() {
+        ZipHandler.lock = false;
         callback();
       });
     }
   }
 
   public static loadZip(name: string, callback: () => void) {
+    if (ZipHandler.lock) {
+      console.log('The zip handler is currently locked. Returning');
+      callback();
+      return;
+    }
+
+    // lock the ZipHandler to allow only one instance to be running
+    ZipHandler.lock = true;
+
     // get request for zip file
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', `${ZipHandler.zipBase}/${name}.zip`);
+    xhr.open('GET', `${ZipHandler.zipBase}/${name}`);
     xhr.responseType = 'blob';
     xhr.onload = function(){
         // console.log(xhr.response)

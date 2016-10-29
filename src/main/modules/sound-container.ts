@@ -11,5 +11,10 @@ class SoundContainer {
   private quaternized: boolean;
   private holdToPlay: boolean;
 
-  constructor() {}
+  constructor(pitches: Sound[], hold_to_play: boolean, looped: boolean, quaternized: boolean) {
+    this.pitches = pitches;
+    this.looped = looped === undefined ? false : looped;
+    this.quaternized = quaternized === undefined ? false : quaternized;
+    this.holdToPlay = hold_to_play === undefined ? false : hold_to_play;
+  }
 }
