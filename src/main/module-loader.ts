@@ -4,6 +4,8 @@
 /// <reference path="./modules/sound-loader.ts"/>
 /// <reference path="./modules/input-propegator.ts"/>
 /// <reference path="./modules/song.ts"/>
+/// <reference path="./modules/mode-handler.ts"/>
+/// <reference path="./modules/creator.ts"/>
 
 /**
  * Loads certain modules onto the main element
@@ -21,9 +23,11 @@ function ModuleLoader(main_element: JQuery) {
 
   MousePayload.initialize(main_element);
 
-  let propegator = new InputEventPropegator(keyboard);
+  InputEventPropegator.init();
 
   let fileManager = new FileManager();
 
-  let song = new Song('songs/equinox.json', fileManager);
+  let song = new Song('songs/equinox.json', fileManager, () => {
+    console.log(song);
+  });
 };

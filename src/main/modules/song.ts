@@ -4,17 +4,14 @@ class Song {
   private name: string;
   private bpms: number[];
   private soundPacks: SoundPack[];
-  private ready: boolean;
 
-  constructor(location: string, fileManager: FileManager) {
+  constructor(location: string, fileManager: FileManager, callback: () => void) {
     this.soundPacks = [];
-    this.ready = false;
 
     $.getJSON(location, (data) => {
       loadSounds(data.files, fileManager, () => {
-        console.log(fileManager);
-        console.log(data);
         this.loadPacks(data, fileManager);
+        callback();
       });
     });
   }

@@ -2,35 +2,29 @@
  * a selective key and mouse event propegator
  */
 class InputEventPropegator {
-  private mode: Mode;
-  private keyboard: Keyboard;
+  public static init() {
+    InputEventPropegator.initKeyMaps();
 
-  constructor(keyboard: Keyboard) {
-    this.mode = Mode.KEYBOARD;
-    this.keyboard = keyboard;
-
-    this.initKeyMaps();
-
-    this.initMouseMaps();
+    InputEventPropegator.initMouseMaps();
   }
 
   /**
    * initialize the key event listeners and mode callback events
    * @method initKeyMaps
    */
-  private initKeyMaps() {
+  private static initKeyMaps() {
     $('body').keydown((event: JQueryKeyEventObject) => {
-      switch (this.mode) {
+      switch (ModeHandler.getMode()) {
         case Mode.KEYBOARD:
-          this.keyboard.keyDown(event.keyCode);
+          ModeHandler.getKeyboard().keyDown(event.keyCode);
           break;
       }
     });
 
     $('body').keydown((event: JQueryKeyEventObject) => {
-      switch (this.mode) {
+      switch (ModeHandler.getMode()) {
         case Mode.KEYBOARD:
-          this.keyboard.keyUp(event.keyCode);
+          ModeHandler.getKeyboard().keyUp(event.keyCode);
           break;
       }
     });
@@ -40,19 +34,9 @@ class InputEventPropegator {
    * initialize the key event listeners and mode callback events
    * @method initKeyMaps
    */
-  private initMouseMaps() {
+  private static initMouseMaps() {
     $('body').mousedown((event: JQueryMouseEventObject) => {
       console.log(event);
     });
   }
-}
-
-/**
- * an enum for the modes of the application. TODO: switch to other file
- * @class Mode
- * @static
- */
-const enum Mode {
-  KEYBOARD,
-  EDITOR
 }
