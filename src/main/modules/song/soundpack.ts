@@ -1,3 +1,5 @@
+/// <reference path="./sound-container.ts"/>
+
 class SoundPack {
   private sounds: SoundContainer[][];
   private rows: number;

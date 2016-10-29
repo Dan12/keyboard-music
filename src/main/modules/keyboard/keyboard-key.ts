@@ -1,5 +1,5 @@
-/// <reference path="../interfaces/element.ts"/>
-/// <reference path="./sound-container.ts"/>
+/// <reference path="../../interfaces/element.ts"/>
+/// <reference path="../song/sound-container.ts"/>
 
 /**
  * A single key on a keyboard.

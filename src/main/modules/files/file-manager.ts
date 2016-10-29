@@ -1,13 +1,23 @@
 /// <reference path="./file.ts"/>
 
 /**
- * A file manager for managing all of the sounds
+ * A file manager for managing all of the sounds. uses singleton pattern
  */
 class FileManager {
 
   private files: Directory;
 
-  constructor() {
+  private static instance: FileManager;
+
+  public static getManager() {
+    if (FileManager.instance === undefined) {
+      FileManager.instance = new FileManager();
+    }
+
+    return FileManager.instance;
+  }
+
+  private constructor() {
     this.files = new Directory();
   }
 
@@ -17,6 +27,10 @@ class FileManager {
 
   public getSound(location: string): SoundFile {
     return this.files.getFile(location);
+  }
+
+  public clearFiles() {
+    this.files = new Directory();
   }
 }
 

@@ -1,6 +1,6 @@
-/// <reference path="../interfaces/element.ts"/>
+/// <reference path="../../interfaces/element.ts"/>
 /// <reference path="./keyboard-key.ts"/>
-/// <reference path="../interfaces/input-reciever.ts"/>
+/// <reference path="../../interfaces/input-reciever.ts"/>
 
 /**
  * The keyboard module to represent an html keyboard.

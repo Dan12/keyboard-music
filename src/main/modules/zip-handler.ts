@@ -1,13 +1,11 @@
-/// <reference path="./file-manager.ts"/>
+/// <reference path="./files/file-manager.ts"/>
 
 class ZipHandler {
-
-  private static destination: FileManager;
   private static initializedScripts = false;
   private static zipBase = 'songs';
   private static lock = false;
 
-  public static initialize(destination: FileManager) {
+  public static initialize() {
     if (!ZipHandler.initializedScripts) {
       zip.workerScripts = {
         // TODO add as base64, don't load
@@ -15,8 +13,6 @@ class ZipHandler {
       };
       ZipHandler.initializedScripts = true;
     }
-
-    ZipHandler.destination = destination;
   }
 
   // trim the initial directory off of the filename
@@ -34,7 +30,7 @@ class ZipHandler {
       // only accept a file with the extension .mp3
       else if (entries[i].filename.endsWith('.mp3')) {
         entries[i].getData(new zip.Data64URIWriter('audio/mp3'), function(data: string) {
-          ZipHandler.destination.addFile(ZipHandler.trimFileLocation(entries[i].filename), data);
+          FileManager.getManager().addFile(ZipHandler.trimFileLocation(entries[i].filename), data);
           ZipHandler.interateEntries(entries, i + 1, reader, callback);
         });
       // skip
