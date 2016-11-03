@@ -6,6 +6,8 @@
 /// <reference path="./modules/mode-handler.ts"/>
 /// <reference path="./modules/creator/creator.ts"/>
 
+/// <reference path="./modules/newZip.ts"/>
+
 /**
  * Loads certain modules onto the main element
  *
@@ -20,6 +22,12 @@ function ModuleLoader(main_element: JQuery) {
 
   main_element.append(keyboard.asElement());
 
+  let creator = new Creator();
+
+  main_element.append(creator.asElement());
+
+  ModeHandler.init(keyboard, creator);
+
   MousePayload.initialize(main_element);
 
   InputEventPropegator.init();
@@ -27,4 +35,8 @@ function ModuleLoader(main_element: JQuery) {
   let song = new Song('songs/equinox.json', () => {
     console.log(song);
   });
+
+  ModeHandler.setMode(Mode.CREATOR);
+
+  NewZip.loadZip('eq.zip');
 };

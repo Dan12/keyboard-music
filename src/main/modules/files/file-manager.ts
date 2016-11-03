@@ -51,13 +51,22 @@ class Directory {
       }
       this.subdirectories[dir].addFile(name.substring(name.indexOf('/') + 1, name.length), data);
     } else {
-      this.files[name] = new SoundFile(
-        name,
-        new Howl({
-          urls: [data],
-        })
-      );
+      // only add the file to the file manager when it has been loaded
+      let _this = this;
+      // create a new howl object and pass it the load file constructor
+      new Howl({
+        urls: [data],
+
+        onload: function() {
+          // this refers to the howl object
+          _this.loadedFile(name, this);
+        }
+      });
     }
+  }
+
+  private loadedFile(name: string, sound: Howl) {
+    this.files[name] = new SoundFile(name, sound);
   }
 
   public getFile(location: string): SoundFile {
