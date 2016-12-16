@@ -1,28 +1,32 @@
 /// <reference path="./file.ts"/>
 
 /**
- * A file manager for managing all of the sounds. uses singleton pattern
+ * A file manager for managing all of the sounds.
  */
 class FileManager {
 
-  private files: Directory;
+  public files: Directory;
 
-  private static instance: FileManager;
+  private baseSongDir = "sounds";
 
-  public static getManager() {
-    if (FileManager.instance === undefined) {
-      FileManager.instance = new FileManager();
-    }
-
-    return FileManager.instance;
-  }
-
-  private constructor() {
+  public constructor() {
     this.files = new Directory();
   }
 
   public addFile(name: string, data: string) {
-    this.files.addFile(name, data);
+    if(this.validFile(name)){
+      this.files.addFile(this.  trimName(name), data);
+    } else {
+      console.log("invalid file");
+    }
+  }
+
+  private validFile(name: string): boolean {
+    return name.startsWith(this.baseSongDir);
+  }
+
+  private trimName(name: string):string {
+    return name.substring(this.baseSongDir.length, name.length);
   }
 
   public getSound(location: string): SoundFile {
@@ -35,8 +39,8 @@ class FileManager {
 }
 
 class Directory {
-  private files: {[name: string]: SoundFile};
-  private subdirectories: {[name: string]: Directory};
+  public files: {[name: string]: SoundFile};
+  public subdirectories: {[name: string]: Directory};
 
   constructor() {
     this.files = {};

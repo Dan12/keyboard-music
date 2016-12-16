@@ -1,8 +1,9 @@
 /// <reference path="./modules/mouse-payload.ts"/>
 /// <reference path="./modules/keyboard/keyboard.ts"/>
 /// <reference path="./modules/files/file-manager.ts"/>
+/// <reference path="./modules/files/file-gui.ts"/>
 /// <reference path="./modules/input-propegator.ts"/>
-/// <reference path="./modules/song/song.ts"/>
+// /// <reference path="./modules/song/song.ts"/>
 /// <reference path="./modules/mode-handler.ts"/>
 /// <reference path="./modules/creator/creator.ts"/>
 
@@ -26,17 +27,27 @@ function ModuleLoader(main_element: JQuery) {
 
   main_element.append(creator.asElement());
 
+  let files = new FileGUI();
+
+  main_element.append(files.asElement());
+
+  console.log("added file gui");
+
   ModeHandler.init(keyboard, creator);
 
   MousePayload.initialize(main_element);
 
   InputEventPropegator.init();
 
-  let song = new Song('songs/equinox.json', () => {
-    console.log(song);
+  // let song = new Song('songs/equinox.json', () => {
+  //   console.log(song);
+  // });
+
+  // ModeHandler.setMode(Mode.CREATOR);
+
+  FileManager manager = new FileManager();
+
+  NewZip.loadZip('eq.zip', manager, () => {
+    files.updateGUI(manager);
   });
-
-  ModeHandler.setMode(Mode.CREATOR);
-
-  NewZip.loadZip('eq.zip');
 };

@@ -1,7 +1,10 @@
 class NewZip {
   private static zipBase = 'songs';
 
-  public static loadZip(name: string, callback?: () => void) {
+  private static found = 0;
+  private static loaded = 0;
+
+  public static loadZip(name: string, destination: FileManager, callback?: () => void) {
 
     let zip = new JSZip();
 
@@ -17,12 +20,16 @@ class NewZip {
             if (zipEntry.name.endsWith('.mp3')) {
                 let soundName = zipEntry.name;
                 zipEntry.async('base64').then(function(data) {
-                  let sound = new Howl({
-                    urls: [data],
-                    onload: function() {
-                      this.play();
-                    }
-                  });
+                  // let sound = new Howl({
+                  //   urls: [data],
+                  //   onload: function() {
+                  //     this.play();
+                  //   }
+                  // });
+
+                  console.log(zipEntry.name);
+
+                  destination.addFile(zipEntry.name, data);
                 });
             }
           });
