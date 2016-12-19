@@ -2,12 +2,14 @@
 /// <reference path="./modules/keyboard/keyboard.ts"/>
 /// <reference path="./modules/files/file-manager.ts"/>
 /// <reference path="./modules/files/file-gui.ts"/>
+/// <reference path="./modules/files/file-inspector.ts"/>
 /// <reference path="./modules/input-propegator.ts"/>
 // /// <reference path="./modules/song/song.ts"/>
 /// <reference path="./modules/mode-handler.ts"/>
 /// <reference path="./modules/creator/creator.ts"/>
 
 /// <reference path="./modules/newZip.ts"/>
+/// <reference path="./modules/zip-handler.ts"/>
 
 /**
  * Loads certain modules onto the main element
@@ -27,11 +29,13 @@ function ModuleLoader(main_element: JQuery) {
 
   main_element.append(creator.asElement());
 
-  let files = new FileGUI();
+  let files = FileGUI.getInstance();
 
   main_element.append(files.asElement());
 
-  console.log("added file gui");
+  let inspector = FileInspector.getInstance();
+
+  main_element.append(inspector.asElement());
 
   ModeHandler.init(keyboard, creator);
 
@@ -45,9 +49,12 @@ function ModuleLoader(main_element: JQuery) {
 
   // ModeHandler.setMode(Mode.CREATOR);
 
-  FileManager manager = new FileManager();
+  let manager = FileManager.getInstance();
 
-  NewZip.loadZip('eq.zip', manager, () => {
-    files.updateGUI(manager);
-  });
+  NewZip.loadZip('eq.zip');
+
+  // ZipHandler.initialize();
+  // ZipHandler.loadZip('eq.zip', function() {
+  //   console.log('loaded');
+  // });
 };

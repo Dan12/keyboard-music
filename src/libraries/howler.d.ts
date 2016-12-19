@@ -64,6 +64,9 @@ interface Howl {
     on(event: string, listener?: Function): Howl;
     off(event: string, listener?: Function): Howl;
     unload(): void;
+
+    // technically a private var
+    _src: string;
 }
 
 interface HowlStatic {

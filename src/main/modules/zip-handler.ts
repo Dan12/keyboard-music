@@ -30,7 +30,8 @@ class ZipHandler {
       // only accept a file with the extension .mp3
       else if (entries[i].filename.endsWith('.mp3')) {
         entries[i].getData(new zip.Data64URIWriter('audio/mp3'), function(data: string) {
-          FileManager.getManager().addFile(ZipHandler.trimFileLocation(entries[i].filename), data);
+          // FileManager.getInstance().addFile(ZipHandler.trimFileLocation(entries[i].filename), data);
+          FileManager.getInstance().addFile(entries[i].filename, data);
           ZipHandler.interateEntries(entries, i + 1, reader, callback);
         });
       // skip

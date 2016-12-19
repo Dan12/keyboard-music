@@ -7,17 +7,28 @@ class FileManager {
 
   public files: Directory;
 
-  private baseSongDir = "sounds";
+  private baseSongDir = 'sounds';
 
-  public constructor() {
+  private static instance: FileManager;
+
+  public static getInstance(): FileManager {
+    if(FileManager.instance === undefined) {
+      FileManager.instance = new FileManager();
+    }
+
+    return FileManager.instance;
+  }
+
+  private constructor() {
     this.files = new Directory();
   }
 
   public addFile(name: string, data: string) {
-    if(this.validFile(name)){
-      this.files.addFile(this.  trimName(name), data);
+    if (this.validFile(name)) {
+      let fileName = this.trimName(name);
+      this.files.addFile(fileName, data, fileName);
     } else {
-      console.log("invalid file");
+      console.log('invalid file');
     }
   }
 
@@ -25,7 +36,7 @@ class FileManager {
     return name.startsWith(this.baseSongDir);
   }
 
-  private trimName(name: string):string {
+  private trimName(name: string): string {
     return name.substring(this.baseSongDir.length, name.length);
   }
 
@@ -35,6 +46,8 @@ class FileManager {
 
   public clearFiles() {
     this.files = new Directory();
+
+    FileGUI.getInstance().notifyClear();
   }
 }
 
@@ -47,13 +60,13 @@ class Directory {
     this.subdirectories = {};
   }
 
-  public addFile(name: string, data: string) {
+  public addFile(name: string, data: string, fullname: string) {
     if (name.indexOf('/') !== -1) {
       let dir = name.substring(0, name.indexOf('/'));
       if (this.subdirectories[dir] === undefined) {
         this.subdirectories[dir] = new Directory();
       }
-      this.subdirectories[dir].addFile(name.substring(name.indexOf('/') + 1, name.length), data);
+      this.subdirectories[dir].addFile(name.substring(name.indexOf('/') + 1, name.length), data, fullname);
     } else {
       // only add the file to the file manager when it has been loaded
       let _this = this;
@@ -63,14 +76,19 @@ class Directory {
 
         onload: function() {
           // this refers to the howl object
-          _this.loadedFile(name, this);
+          _this.loadedFile(name, this, fullname);
+        },
+        onloaderror: function() {
+          console.log('error loading file');
         }
       });
     }
   }
 
-  private loadedFile(name: string, sound: Howl) {
+  private loadedFile(name: string, sound: Howl, fullname: string) {
     this.files[name] = new SoundFile(name, sound);
+
+    FileGUI.getInstance().notifyAdd(fullname);
   }
 
   public getFile(location: string): SoundFile {
