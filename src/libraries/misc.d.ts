@@ -8,6 +8,7 @@ interface Window {
 interface HTMLElement {
     getContext?: any;
     width?: any;
+    height?: any;
 }
 
 interface DOMException {

@@ -19,9 +19,15 @@ class InputEventPropegator {
           ModeHandler.getKeyboard().keyDown(event.keyCode);
           break;
       }
+
+      // TODO check mode
+      if (event.keyCode === 32) {
+        FileInspector.getInstance().pressSpace();
+        return false;
+      }
     });
 
-    $('body').keydown((event: JQueryKeyEventObject) => {
+    $('body').keyup((event: JQueryKeyEventObject) => {
       switch (ModeHandler.getMode()) {
         case Mode.KEYBOARD:
           ModeHandler.getKeyboard().keyUp(event.keyCode);
