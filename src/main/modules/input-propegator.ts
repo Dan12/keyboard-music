@@ -16,7 +16,7 @@ class InputEventPropegator {
     $('body').keydown((event: JQueryKeyEventObject) => {
       switch (ModeHandler.getMode()) {
         case Mode.KEYBOARD:
-          ModeHandler.getKeyboard().keyDown(event.keyCode);
+          Keyboard.getInstance().keyDown(event.keyCode);
           break;
       }
 
@@ -30,7 +30,7 @@ class InputEventPropegator {
     $('body').keyup((event: JQueryKeyEventObject) => {
       switch (ModeHandler.getMode()) {
         case Mode.KEYBOARD:
-          ModeHandler.getKeyboard().keyUp(event.keyCode);
+          Keyboard.getInstance().keyUp(event.keyCode);
           break;
       }
     });
@@ -38,6 +38,7 @@ class InputEventPropegator {
 
   /**
    * initialize the key event listeners and mode callback events
+   * TODO consider removing
    * @method initKeyMaps
    */
   private static initMouseMaps() {

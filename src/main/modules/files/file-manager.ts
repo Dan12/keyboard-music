@@ -12,7 +12,7 @@ class FileManager {
   private static instance: FileManager;
 
   public static getInstance(): FileManager {
-    if(FileManager.instance === undefined) {
+    if (FileManager.instance === undefined) {
       FileManager.instance = new FileManager();
     }
 

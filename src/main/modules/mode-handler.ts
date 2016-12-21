@@ -3,25 +3,16 @@
  * @static
  */
 class ModeHandler {
-  private static keyboard: Keyboard;
-  private static creator: Creator;
   private static mode: Mode;
 
-  static init(keyboard: Keyboard, creator: Creator) {
-    ModeHandler.keyboard = keyboard;
-    ModeHandler.creator = creator;
+  static init(defaultMode?: Mode) {
+    if (defaultMode) {
+      ModeHandler.mode = defaultMode;
+    } else {
+      ModeHandler.mode = Mode.KEYBOARD;
+    }
 
-    ModeHandler.mode = Mode.KEYBOARD;
-
-    ModeHandler.creator.asElement().hide();
-  }
-
-  public static getKeyboard(): Keyboard {
-    return ModeHandler.keyboard;
-  }
-
-  public static getCreator(): Creator {
-    return ModeHandler.creator;
+    Creator.getInstance().asElement().hide();
   }
 
   public static getMode(): Mode {
@@ -32,19 +23,19 @@ class ModeHandler {
     if (mode !== ModeHandler.mode) {
       switch (ModeHandler.mode) {
         case Mode.KEYBOARD:
-          ModeHandler.keyboard.asElement().hide(1000);
+          Keyboard.getInstance().asElement().hide(1000);
           break;
         case Mode.CREATOR:
-          ModeHandler.creator.asElement().hide(1000);
+          Creator.getInstance().asElement().hide(1000);
           break;
       }
 
       switch (mode) {
         case Mode.KEYBOARD:
-          ModeHandler.keyboard.asElement().show(1000);
+          Keyboard.getInstance().asElement().show(1000);
           break;
         case Mode.CREATOR:
-          ModeHandler.creator.asElement().show(1000);
+          Creator.getInstance().asElement().show(1000);
           break;
       }
 

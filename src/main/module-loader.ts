@@ -19,38 +19,36 @@
  * @param main_element {JQuery} the jQuery element to load the modules onto
  */
 function ModuleLoader(main_element: JQuery) {
-  let keyboard = new Keyboard();
+  // add the keyboard
+  main_element.append(Keyboard.getInstance().asElement());
 
-  console.log('loading keyboard');
+  // add the creator
+  main_element.append(Creator.getInstance().asElement());
 
-  main_element.append(keyboard.asElement());
+  // add the file gui
+  main_element.append(FileGUI.getInstance().asElement());
 
-  let creator = new Creator();
+  // add the sound inspector
+  main_element.append(FileInspector.getInstance().asElement());
 
-  main_element.append(creator.asElement());
+  // initialize the mode handler
+  ModeHandler.init();
+  // ModeHandler.setMode(Mode.CREATOR);
 
-  let files = FileGUI.getInstance();
-
-  main_element.append(files.asElement());
-
-  let inspector = FileInspector.getInstance();
-
-  main_element.append(inspector.asElement());
-
-  ModeHandler.init(keyboard, creator);
-
+  // initialize the mouse payload listener on the main element
   MousePayload.initialize(main_element);
 
+  // initilize the event propegator
   InputEventPropegator.init();
 
   // let song = new Song('songs/equinox.json', () => {
   //   console.log(song);
   // });
 
-  // ModeHandler.setMode(Mode.CREATOR);
-
+  // intialize the file manager data object
   let manager = FileManager.getInstance();
 
+  // load eq.zip into the file manager
   NewZip.loadZip('eq.zip');
 
   // ZipHandler.initialize();

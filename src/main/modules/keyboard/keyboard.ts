@@ -6,7 +6,7 @@
  * The keyboard module to represent an html keyboard.
  *
  * @class Keyboard
- * @constructor
+ * @static
  */
 class Keyboard extends JQElement implements InputReciever {
 
@@ -37,9 +37,20 @@ class Keyboard extends JQElement implements InputReciever {
     [90, 88, 67, 86, 66, 78, 77, 188, 190, 191, 16,  -1]
   ];
 
+  // a mapping from a keycode to keyboard row and column
   private keyMap = {};
 
-  constructor() {
+  private static instance: Keyboard;
+
+  public static getInstance(): Keyboard {
+    if (Keyboard.instance === undefined) {
+      Keyboard.instance = new Keyboard();
+    }
+
+    return Keyboard.instance;
+  }
+
+  private constructor() {
     // TODO: show keys
 
     super($('<div id="keyboard"></div>'));
@@ -60,7 +71,9 @@ class Keyboard extends JQElement implements InputReciever {
     for (let i = 0; i < this.numRows; i++) {
       for (let j = 0; j < this.numCols; j++) {
         this.keyMap[this.keyPairs[i][j]] = [i, j];
-        this.keyMap[this.backupPairs[i][j]] = [i, j];
+        if (this.backupPairs[i][j] !== this.keyPairs[i][j]) {
+          this.keyMap[this.backupPairs[i][j]] = [i, j];
+        }
       }
     }
   }
