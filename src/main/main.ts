@@ -20,5 +20,6 @@ $(document).ready(function(){
 
     $('body').append(main_element);
 
+    // call the module loader
     ModuleLoader(main_element);
 });

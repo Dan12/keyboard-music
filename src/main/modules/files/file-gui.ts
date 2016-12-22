@@ -1,12 +1,18 @@
 /**
  * a class to display the data from the file mananger
- * @class
+ * @class FileGUI
  * @static
  */
 class FileGUI extends JQElement {
 
   private static instance: FileGUI;
 
+  /**
+   * return the singleton instance of this class
+   * @method getInstance
+   * @static
+   * @return {FileGUI} the instance
+   */
   public static getInstance(): FileGUI {
     if (FileGUI.instance === undefined) {
       FileGUI.instance = new FileGUI();
@@ -22,7 +28,10 @@ class FileGUI extends JQElement {
     this.asElement().append($('<div id="main-directory"></div>'));
   }
 
-  // called by file manager when a data item is added
+  /**
+   * called by file manager when a data item is added
+   * @method notifyAdd
+   */
   public notifyAdd(location: string) {
     let dirArr = location.split('/');
 
@@ -33,17 +42,22 @@ class FileGUI extends JQElement {
       i = 1;
 
     for (; i < dirArr.length; i++) {
-      // if directory location
+      // if this is a directory, append it to the correct parent directory
       if (i < dirArr.length - 1) {
-
+        // check if this subdirectory exists
         let dirDiv = $('#file-manager #' + dirID + '-' + dirArr[i]);
-        // add the subdirectory to the correct div
+
+        // add the subdirectory if it does not exist
         if (dirDiv.length === 0) {
+          // add the subdirectory name
           let dirElement = $('<div subdir="' + dirID + '-' + dirArr[i] + '" class="subdirectory-name">' + dirArr[i] + '</div>');
+          // append the subdirectory to the parent
           $('#file-manager #' + dirID).append(dirElement);
+          // add a listener to the name to expand the subdirectory when clicked
           dirElement.click(function() {
             $('#file-manager #' + dirElement.attr('subdir')).toggle(100);
           });
+          // add the subdirectory
           $('#file-manager #' + dirID).append('<div id="' + dirID + '-' + dirArr[i] + '" class="subdirectory"></div>');
         }
       } else {
@@ -55,12 +69,15 @@ class FileGUI extends JQElement {
           FileInspector.getInstance().inspect(fileElement.attr('path'), FileManager.getInstance().getSound(fileElement.attr('path')));
         });
       }
-
+      // create the next subdir id
       dirID = dirID + '-' + dirArr[i];
     }
   }
 
-  // called when the clear method is called on the
+  /**
+   * called when the clear method is called on the
+   * @method notifyClear
+   */
   public notifyClear() {
     this.asElement().remove();
   }

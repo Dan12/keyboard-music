@@ -1,5 +1,9 @@
 /**
  * An object representing a sound file with a howl object and name
+ * @class SoundFile
+ * @constructor
+ * @param {Howl} sound the howl sound object
+ * @param {String} name the file name
  */
 class SoundFile {
 

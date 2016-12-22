@@ -9,7 +9,9 @@
 /// <reference path="./modules/creator/creator.ts"/>
 
 /// <reference path="./modules/newZip.ts"/>
-/// <reference path="./modules/zip-handler.ts"/>
+// /// <reference path="./modules/zip-handler.ts"/>
+
+/// <reference path="./modules/error-collector.ts"/>
 
 /**
  * Loads certain modules onto the main element

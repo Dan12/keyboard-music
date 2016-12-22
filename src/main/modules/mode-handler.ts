@@ -1,5 +1,6 @@
 /**
  * a class to handle the different modes of the editor
+ * @class ModeHandler
  * @static
  */
 class ModeHandler {

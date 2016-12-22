@@ -1,7 +1,13 @@
 /**
  * a selective key and mouse event propegator
+ * @class InputEventPropegator
+ * @static
  */
 class InputEventPropegator {
+  /**
+   * initialize the propegtor
+   * @method init
+   */
   public static init() {
     InputEventPropegator.initKeyMaps();
 
