@@ -6,6 +6,12 @@
 class ModeHandler {
   private static mode: Mode;
 
+  /**
+   * Initialize the mode handler
+   * @method init
+   * @param {Mode} [defaultMode] the initial mode
+   * @static
+   */
   static init(defaultMode?: Mode) {
     if (defaultMode) {
       ModeHandler.mode = defaultMode;
@@ -16,10 +22,20 @@ class ModeHandler {
     Creator.getInstance().asElement().hide();
   }
 
+ /**
+  * @method getMode
+  * @static
+  * @return {Mode} the current mode
+  */
   public static getMode(): Mode {
     return ModeHandler.mode;
   }
 
+  /**
+   * set the mode and display the correct modules
+   * @method setMode
+   * @param {Mode} mode the mode to set the app to
+   */
   public static setMode(mode: Mode) {
     if (mode !== ModeHandler.mode) {
       switch (ModeHandler.mode) {
@@ -46,6 +62,7 @@ class ModeHandler {
 }
 
 /**
+ * An enum to represent the current application mode
  * @class Mode
  * @static
  */

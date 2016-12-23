@@ -42,6 +42,12 @@ class Keyboard extends JQElement implements InputReciever {
 
   private static instance: Keyboard;
 
+  /**
+   * return the singleton instance of this class
+   * @method getInstance
+   * @static
+   * @return {Keyboard} the instance
+   */
   public static getInstance(): Keyboard {
     if (Keyboard.instance === undefined) {
       Keyboard.instance = new Keyboard();
@@ -51,9 +57,8 @@ class Keyboard extends JQElement implements InputReciever {
   }
 
   private constructor() {
-    // TODO: show keys
-
     super($('<div id="keyboard"></div>'));
+
     this.rows = [];
     // push row elements and new keyboard key elements to each row
     for (let r = 0; r < this.numRows; r++) {
@@ -78,10 +83,20 @@ class Keyboard extends JQElement implements InputReciever {
     }
   }
 
+  /**
+   * called when the key with the given keycode is pressed down
+   * @method keyDown
+   * @param {number} key the keycode
+   */
   public keyDown(key: number) {
     console.log(this.keyMap[key]);
   }
 
+  /**
+   * called when the key with the given keycode is released
+   * @method keyUp
+   * @param {number} key the keycode
+   */
   public keyUp(key: number) {
     console.log(this.keyMap[key]);
   }
