@@ -22,7 +22,7 @@ class InputEventPropegator {
     $('body').keydown((event: JQueryKeyEventObject) => {
       switch (ModeHandler.getMode()) {
         case Mode.KEYBOARD:
-          Keyboard.getInstance().keyDown(event.keyCode);
+          KeyboardLayout.getInstance().getKeyboard().keyDown(event.keyCode);
           break;
       }
 
@@ -36,7 +36,7 @@ class InputEventPropegator {
     $('body').keyup((event: JQueryKeyEventObject) => {
       switch (ModeHandler.getMode()) {
         case Mode.KEYBOARD:
-          Keyboard.getInstance().keyUp(event.keyCode);
+          KeyboardLayout.getInstance().getKeyboard().keyUp(event.keyCode);
           break;
       }
     });

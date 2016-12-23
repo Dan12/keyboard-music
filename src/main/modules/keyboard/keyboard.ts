@@ -6,13 +6,17 @@
  * The keyboard module to represent an html keyboard.
  *
  * @class Keyboard
- * @static
  */
 class Keyboard extends JQElement implements InputReciever {
 
   private rows: KeyboardKey[][];
   private numRows = 4;
   private numCols = 12;
+
+  // return key activates other layers
+  private modifierKeyCode = 13;
+  private modifierActive: boolean = undefined;
+  private modifierHold = true;
 
   private keyboardSymbols = [
     ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-',  '='],
@@ -40,24 +44,16 @@ class Keyboard extends JQElement implements InputReciever {
   // a mapping from a keycode to keyboard row and column
   private keyMap = {};
 
-  private static instance: Keyboard;
+  public constructor(type: KeyBoardType) {
+    super($('<div class="keyboard"></div>'));
 
-  /**
-   * return the singleton instance of this class
-   * @method getInstance
-   * @static
-   * @return {Keyboard} the instance
-   */
-  public static getInstance(): Keyboard {
-    if (Keyboard.instance === undefined) {
-      Keyboard.instance = new Keyboard();
+    let size = Keyboard.getKeyboardSize(type);
+    this.numRows = size.rows;
+    this.numCols = size.cols;
+
+    if (type !== KeyBoardType.STANDARD) {
+      this.modifierActive = false;
     }
-
-    return Keyboard.instance;
-  }
-
-  private constructor() {
-    super($('<div id="keyboard"></div>'));
 
     this.rows = [];
     // push row elements and new keyboard key elements to each row
@@ -66,21 +62,32 @@ class Keyboard extends JQElement implements InputReciever {
       let nextRow = $(`<div class="row" id="row_${r}"></div>`);
       this.asElement().append(nextRow);
       for (let c = 0; c < this.numCols; c++) {
-        let nextCell = new KeyboardKey(this.keyboardSymbols[r][c]);
+        let nextCell = new KeyboardKey(this.keyboardSymbols[r % 4][c]);
         this.rows[r].push(nextCell);
         nextRow.append(this.rows[r][c].asElement());
+
+        if (r < 4) {
+          nextCell.asElement().addClass('bolder');
+        }
       }
     }
 
+    let maxRows = Math.min(4, this.numRows);
+
     // setup the key map
-    for (let i = 0; i < this.numRows; i++) {
+    for (let i = 0; i < maxRows; i++) {
       for (let j = 0; j < this.numCols; j++) {
         this.keyMap[this.keyPairs[i][j]] = [i, j];
+        // add the backup pairs
         if (this.backupPairs[i][j] !== this.keyPairs[i][j]) {
           this.keyMap[this.backupPairs[i][j]] = [i, j];
         }
       }
     }
+  }
+
+  public resize(scale: number) {
+    // TODO
   }
 
   /**
@@ -89,7 +96,20 @@ class Keyboard extends JQElement implements InputReciever {
    * @param {number} key the keycode
    */
   public keyDown(key: number) {
-    console.log(this.keyMap[key]);
+    if (this.modifierActive !== undefined && key === this.modifierKeyCode) {
+      // if user has to hold, modifier is down
+      if (this.modifierHold)
+        this.modifierActive = true;
+      // if user can press and release, modifier is toggled on key down
+      else
+        this.modifierActive = !this.modifierActive;
+
+      this.changeModiferKeys();
+    }
+
+    let keyIdx = this.keyMap[key];
+    if (keyIdx)
+      this.rows[keyIdx[0] + 4 * (this.modifierActive ? 1 : 0)][keyIdx[1]].setColor(255, 160, 0);
   }
 
   /**
@@ -98,7 +118,36 @@ class Keyboard extends JQElement implements InputReciever {
    * @param {number} key the keycode
    */
   public keyUp(key: number) {
-    console.log(this.keyMap[key]);
+    // only set to false if the modifier key is down and we have to hold to trigger
+    if (this.modifierActive !== undefined && key === this.modifierKeyCode && this.modifierHold) {
+      this.modifierActive = false;
+
+      this.changeModiferKeys();
+    }
+
+    let keyIdx = this.keyMap[key];
+    if (keyIdx)
+      this.rows[keyIdx[0] + 4 * (this.modifierActive ? 1 : 0)][keyIdx[1]].resetColor();
+  }
+
+  private changeModiferKeys() {
+    for (let r = 0; r < this.numRows; r++) {
+      for (let c = 0; c < this.numCols; c++) {
+        if (r < 4) {
+          if (this.modifierActive) {
+            this.rows[r][c].asElement().removeClass('bolder');
+          } else {
+            this.rows[r][c].asElement().addClass('bolder');
+          }
+        } else {
+          if (this.modifierActive) {
+            this.rows[r][c].asElement().addClass('bolder');
+          } else {
+            this.rows[r][c].asElement().removeClass('bolder');
+          }
+        }
+      }
+    }
   }
 
   public static getKeyboardSizeString(type: String): KeyBoardSize {

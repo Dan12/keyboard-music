@@ -40,7 +40,7 @@ class ModeHandler {
     if (mode !== ModeHandler.mode) {
       switch (ModeHandler.mode) {
         case Mode.KEYBOARD:
-          Keyboard.getInstance().asElement().hide(1000);
+          KeyboardLayout.getInstance().asElement().hide(1000);
           break;
         case Mode.CREATOR:
           Creator.getInstance().asElement().hide(1000);
@@ -49,7 +49,7 @@ class ModeHandler {
 
       switch (mode) {
         case Mode.KEYBOARD:
-          Keyboard.getInstance().asElement().show(1000);
+          KeyboardLayout.getInstance().asElement().show(1000);
           break;
         case Mode.CREATOR:
           Creator.getInstance().asElement().show(1000);

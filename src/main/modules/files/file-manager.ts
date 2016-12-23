@@ -34,12 +34,13 @@ class FileManager {
   /**
    * add the given file with the data to the file manager
    * @method addFile
+   * @param {String} baseLocation the base file location
    * @param {String} name the file name
    * @param {String} data the file data
    */
-  public addFile(name: string, data: string) {
+  public addFile(baseLocation: string, name: string, data: string) {
     if (this.validFile(name)) {
-      let fileName = this.trimName(name);
+      let fileName = '/' + baseLocation + this.trimName(name);
       this.files.addFile(fileName, data, fileName);
     } else {
       collectErrorMessage('Add file error, invalid name', name);

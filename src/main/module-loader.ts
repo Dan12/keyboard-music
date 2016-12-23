@@ -1,5 +1,5 @@
 /// <reference path="./modules/mouse-payload.ts"/>
-/// <reference path="./modules/keyboard/keyboard.ts"/>
+/// <reference path="./modules/keyboard/keyboard-layout.ts"/>
 /// <reference path="./modules/files/file-manager.ts"/>
 /// <reference path="./modules/files/file-gui.ts"/>
 /// <reference path="./modules/files/file-inspector.ts"/>
@@ -22,7 +22,7 @@
  */
 function ModuleLoader(main_element: JQuery) {
   // add the keyboard
-  main_element.append(Keyboard.getInstance().asElement());
+  main_element.append(KeyboardLayout.getInstance().asElement());
 
   // add the creator
   main_element.append(Creator.getInstance().asElement());

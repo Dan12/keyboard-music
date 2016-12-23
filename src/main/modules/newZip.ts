@@ -20,6 +20,8 @@ class NewZip {
 
     let zip = new JSZip();
 
+    let baseName = name.substring(name.indexOf('/') + 1, name.indexOf('.'));
+
     // get request for zip file
     let xhr = new XMLHttpRequest();
     xhr.open('GET', `${NewZip.zipBase}/${name}`);
@@ -36,7 +38,7 @@ class NewZip {
             zipEntry.async('base64').then(function(data) {
               data = 'data:audio/mp3;base64,' + data;
 
-              FileManager.getInstance().addFile(zipEntry.name, data);
+              FileManager.getInstance().addFile(baseName, zipEntry.name, data);
 
               NewZip.checkCallback(callback);
             });
