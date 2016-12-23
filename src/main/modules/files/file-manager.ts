@@ -42,7 +42,7 @@ class FileManager {
       let fileName = this.trimName(name);
       this.files.addFile(fileName, data, fileName);
     } else {
-      console.log('invalid file');
+      collectErrorMessage('Add file error, invalid name', name);
     }
   }
 
@@ -115,7 +115,7 @@ class Directory {
           _this.loadedFile(name, this, fullname);
         },
         onloaderror: function() {
-          console.log('error loading file');
+          collectErrorMessage('Error loading file', {name: fullname, d: data});
         }
       });
     }
@@ -137,14 +137,14 @@ class Directory {
     if (location.indexOf('/') !== -1) {
       let dir = location.substring(0, location.indexOf('/'));
       if (this.subdirectories[dir] === undefined) {
-        console.log(`The directory ${dir} does not exist`);
+        collectErrorMessage(`The directory ${dir} does not exist`);
         return undefined;
       }
       return this.subdirectories[dir].getFile(location.substring(location.indexOf('/') + 1, location.length));
     } else {
       let file = this.files[location];
       if (file === undefined) {
-        console.log(`The file ${location} does not exist`);
+        collectErrorMessage(`The file ${location} does not exist`);
       }
       return file;
     }
