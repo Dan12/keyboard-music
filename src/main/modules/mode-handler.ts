@@ -20,6 +20,7 @@ class ModeHandler {
     }
 
     Creator.getInstance().asElement().hide();
+    KeyboardLayout.getInstance().asElement().hide();
   }
 
  /**

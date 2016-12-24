@@ -1,6 +1,7 @@
 /// <reference path="../../interfaces/element.ts"/>
 /// <reference path="./keyboard-key.ts"/>
 /// <reference path="../../interfaces/input-reciever.ts"/>
+/// <reference path="./color-manager.ts"/>
 
 /**
  * The keyboard module to represent an html keyboard.
@@ -17,6 +18,11 @@ class Keyboard extends JQElement implements InputReciever {
   private modifierKeyCode = 13;
   private modifierActive: boolean = undefined;
   private modifierHold = true;
+
+  // option to show keys
+  private showKeys = true;
+
+  private colorManager: ColorManager;
 
   private keyboardSymbols = [
     ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-',  '='],
@@ -84,11 +90,39 @@ class Keyboard extends JQElement implements InputReciever {
         }
       }
     }
+
+    this.resize(1);
+
+    this.setVisible();
+
+    // default. TODO add ability to change
+    this.colorManager = new ColorManager(this.rows);
   }
 
-  public resize(scale: number) {
-    // TODO
+  private setVisible() {
+    let cssObj = {'color': this.showKeys ? '' : 'rgba(0,0,0,0)'};
+    for (let r = 0; r < this.numRows; r++) {
+      for (let c = 0; c < this.numCols; c++) {
+        this.rows[r][c].setCSS(cssObj);
+      }
+    }
   }
+
+  public resize(scale = 1) {
+    let css = KeyboardKey.getScaleCSS(scale);
+
+    for (let r = 0; r < this.numRows; r++) {
+      for (let c = 0; c < this.numCols; c++) {
+        this.rows[r][c].setCSS(css);
+      }
+    }
+  }
+
+  public centerVertical() {
+    this.asElement().addClass('vertical-align');
+  }
+
+  // TODO release all keys when modifierActive if toggled
 
   /**
    * called when the key with the given keycode is pressed down
@@ -109,7 +143,7 @@ class Keyboard extends JQElement implements InputReciever {
 
     let keyIdx = this.keyMap[key];
     if (keyIdx)
-      this.rows[keyIdx[0] + 4 * (this.modifierActive ? 1 : 0)][keyIdx[1]].setColor(255, 160, 0);
+      this.colorManager.pressedKey(keyIdx[0] + 4 * (this.modifierActive ? 1 : 0), keyIdx[1]);
   }
 
   /**
@@ -127,7 +161,7 @@ class Keyboard extends JQElement implements InputReciever {
 
     let keyIdx = this.keyMap[key];
     if (keyIdx)
-      this.rows[keyIdx[0] + 4 * (this.modifierActive ? 1 : 0)][keyIdx[1]].resetColor();
+      this.colorManager.releasedKey(keyIdx[0] + 4 * (this.modifierActive ? 1 : 0), keyIdx[1]);
   }
 
   private changeModiferKeys() {

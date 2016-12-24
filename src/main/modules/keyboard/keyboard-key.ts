@@ -14,11 +14,31 @@ class KeyboardKey extends JQElement {
   }
 
   /**
-   * remove all stylizing
+   * get a css object that scales the key
+   * @method getScaleCSS
+   * @return {JSON} a json object
+   */
+  public static getScaleCSS(scale = 1): {} {
+    // 60 x 60 px key
+    let ret = {};
+    ret['font-size'] = `${35 * scale}px`;
+    ret['padding'] = `${9 * scale}px ${2 * scale}px`;
+    ret['width'] = `${54 * scale}px`;
+    ret['height'] = `${40 * scale}px`;
+    ret['border-radius'] = `${6 * scale}px`;
+    return ret;
+  }
+
+  /**
+   * remove coloring css
    * @method resetColor
    */
   public resetColor() {
-    this.asElement().removeAttr('style');
+    this.asElement().css('background-color', '');
+  }
+
+  public setCSS(css: {}) {
+    this.asElement().css(css);
   }
 
   /**
@@ -27,9 +47,8 @@ class KeyboardKey extends JQElement {
    * @param {number} r the red value from 0-255
    * @param {number} g the greed value from 0-255
    * @param {number} b the blue value from 0-255
-   * @param {number} [a] the optional alpha value from 0-255
    */
-  public setColor(r: number, g: number, b: number, a?: number) {
+  public setColor(r: number, g: number, b: number) {
     this.asElement().css('background-color', `rgb(${r}, ${g}, ${b})`);
   }
 

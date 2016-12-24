@@ -1,4 +1,4 @@
-/// <reference path="./modules/mouse-payload.ts"/>
+/// <reference path="./modules/payload/mouse-payload.ts"/>
 /// <reference path="./modules/keyboard/keyboard-layout.ts"/>
 /// <reference path="./modules/files/file-manager.ts"/>
 /// <reference path="./modules/files/file-gui.ts"/>
@@ -35,7 +35,7 @@ function ModuleLoader(main_element: JQuery) {
 
   // initialize the mode handler
   ModeHandler.init();
-  // ModeHandler.setMode(Mode.CREATOR);
+  ModeHandler.setMode(Mode.CREATOR);
 
   // initialize the mouse payload listener on the main element
   MousePayload.initialize(main_element);
