@@ -35,7 +35,7 @@ function ModuleLoader(main_element: JQuery) {
 
   // initialize the mode handler
   ModeHandler.init();
-  ModeHandler.setMode(Mode.CREATOR);
+  ModeHandler.setMode(Mode.KEYBOARD);
 
   // initialize the mouse payload listener on the main element
   MousePayload.initialize(main_element);

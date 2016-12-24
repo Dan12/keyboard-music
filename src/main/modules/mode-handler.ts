@@ -13,11 +13,7 @@ class ModeHandler {
    * @static
    */
   static init(defaultMode?: Mode) {
-    if (defaultMode) {
-      ModeHandler.mode = defaultMode;
-    } else {
-      ModeHandler.mode = Mode.KEYBOARD;
-    }
+    ModeHandler.mode = defaultMode;
 
     Creator.getInstance().asElement().hide();
     KeyboardLayout.getInstance().asElement().hide();
@@ -39,13 +35,15 @@ class ModeHandler {
    */
   public static setMode(mode: Mode) {
     if (mode !== ModeHandler.mode) {
-      switch (ModeHandler.mode) {
-        case Mode.KEYBOARD:
-          KeyboardLayout.getInstance().asElement().hide(1000);
-          break;
-        case Mode.CREATOR:
-          Creator.getInstance().asElement().hide(1000);
-          break;
+      if (ModeHandler.mode !== undefined) {
+        switch (ModeHandler.mode) {
+          case Mode.KEYBOARD:
+            KeyboardLayout.getInstance().asElement().hide(1000);
+            break;
+          case Mode.CREATOR:
+            Creator.getInstance().asElement().hide(1000);
+            break;
+        }
       }
 
       switch (mode) {

@@ -24,6 +24,8 @@ class Keyboard extends JQElement implements InputReciever {
 
   private colorManager: ColorManager;
 
+  private pressed: {};
+
   private keyboardSymbols = [
     ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-',  '='],
     ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[',  ']'],
@@ -91,6 +93,8 @@ class Keyboard extends JQElement implements InputReciever {
       }
     }
 
+    this.pressed = {};
+
     this.resize(1);
 
     this.setVisible();
@@ -122,28 +126,31 @@ class Keyboard extends JQElement implements InputReciever {
     this.asElement().addClass('vertical-align');
   }
 
-  // TODO release all keys when modifierActive if toggled
-
   /**
    * called when the key with the given keycode is pressed down
    * @method keyDown
    * @param {number} key the keycode
    */
   public keyDown(key: number) {
-    if (this.modifierActive !== undefined && key === this.modifierKeyCode) {
-      // if user has to hold, modifier is down
-      if (this.modifierHold)
-        this.modifierActive = true;
-      // if user can press and release, modifier is toggled on key down
-      else
-        this.modifierActive = !this.modifierActive;
+    if (!this.pressed[key]) {
+      if (this.modifierActive !== undefined && key === this.modifierKeyCode) {
+        // if user has to hold, modifier is down
+        if (this.modifierHold)
+          this.modifierActive = true;
+        // if user can press and release, modifier is toggled on key down
+        else
+          this.modifierActive = !this.modifierActive;
 
-      this.changeModiferKeys();
+        this.changeModiferKeys();
+      }
+
+      let keyIdx = this.keyMap[key];
+      if (keyIdx) {
+        this.pressedKey(keyIdx[0] + 4 * (this.modifierActive ? 1 : 0), keyIdx[1]);
+      }
+
+      this.pressed[key] = true;
     }
-
-    let keyIdx = this.keyMap[key];
-    if (keyIdx)
-      this.colorManager.pressedKey(keyIdx[0] + 4 * (this.modifierActive ? 1 : 0), keyIdx[1]);
   }
 
   /**
@@ -152,16 +159,29 @@ class Keyboard extends JQElement implements InputReciever {
    * @param {number} key the keycode
    */
   public keyUp(key: number) {
-    // only set to false if the modifier key is down and we have to hold to trigger
-    if (this.modifierActive !== undefined && key === this.modifierKeyCode && this.modifierHold) {
-      this.modifierActive = false;
+    if (this.pressed[key]) {
+      // only set to false if the modifier key is down and we have to hold to trigger
+      if (this.modifierActive !== undefined && key === this.modifierKeyCode && this.modifierHold) {
+        this.modifierActive = false;
 
-      this.changeModiferKeys();
+        this.changeModiferKeys();
+      }
+
+      let keyIdx = this.keyMap[key];
+      if (keyIdx) {
+        this.releasedKey(keyIdx[0] + 4 * (this.modifierActive ? 1 : 0), keyIdx[1]);
+      }
+
+      delete this.pressed[key];
     }
+  }
 
-    let keyIdx = this.keyMap[key];
-    if (keyIdx)
-      this.colorManager.releasedKey(keyIdx[0] + 4 * (this.modifierActive ? 1 : 0), keyIdx[1]);
+  private pressedKey(r: number, c: number) {
+    this.colorManager.pressedKey(r, c);
+  }
+
+  private releasedKey(r: number, c: number) {
+    this.colorManager.releasedKey(r, c);
   }
 
   private changeModiferKeys() {
@@ -169,6 +189,8 @@ class Keyboard extends JQElement implements InputReciever {
       for (let c = 0; c < this.numCols; c++) {
         if (r < 4) {
           if (this.modifierActive) {
+            // release all keys in lower half
+            this.releasedKey(r, c);
             this.rows[r][c].asElement().removeClass('bolder');
           } else {
             this.rows[r][c].asElement().addClass('bolder');
@@ -177,6 +199,8 @@ class Keyboard extends JQElement implements InputReciever {
           if (this.modifierActive) {
             this.rows[r][c].asElement().addClass('bolder');
           } else {
+            // release all keys in upper half
+            this.releasedKey(r, c);
             this.rows[r][c].asElement().removeClass('bolder');
           }
         }

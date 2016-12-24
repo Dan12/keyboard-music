@@ -17,7 +17,7 @@ class KeyboardLayout extends JQElement {
   constructor() {
     super($('<div id="keyboard"></div>'));
 
-    this.keyboard = new Keyboard(KeyBoardType.STANDARD);
+    this.keyboard = new Keyboard(KeyBoardType.SQUARE);
     this.keyboard.centerVertical();
 
     this.asElement().append(this.keyboard.asElement());
