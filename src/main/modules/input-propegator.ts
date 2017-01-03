@@ -24,12 +24,14 @@ class InputEventPropegator {
         case Mode.KEYBOARD:
           KeyboardLayout.getInstance().getKeyboard().keyDown(event.keyCode);
           break;
-      }
+        case Mode.CREATOR:
+          Creator.getInstance().keyDown(event.keyCode);
 
-      // TODO check mode
-      if (event.keyCode === 32) {
-        FileInspector.getInstance().pressSpace();
-        return false;
+          if (event.keyCode === 32) {
+            FileInspector.getInstance().pressSpace();
+            return false;
+          }
+          break;
       }
     });
 
@@ -37,6 +39,9 @@ class InputEventPropegator {
       switch (ModeHandler.getMode()) {
         case Mode.KEYBOARD:
           KeyboardLayout.getInstance().getKeyboard().keyUp(event.keyCode);
+          break;
+        case Mode.CREATOR:
+          Creator.getInstance().keyUp(event.keyCode);
           break;
       }
     });

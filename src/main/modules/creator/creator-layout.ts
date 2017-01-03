@@ -3,7 +3,7 @@
  * @class Creator
  * @static
  */
-class Creator extends JQElement {
+class Creator extends JQElement implements InputReciever {
 
   private static instance: Creator;
 
@@ -12,6 +12,9 @@ class Creator extends JQElement {
   private fileWidth = 160;
   private inspectorHeight = 120;
   private padding = 6;
+
+  private square: Keyboard;
+  private mapTo: Keyboard;
 
   /**
    * return the singleton instance of this class
@@ -32,15 +35,15 @@ class Creator extends JQElement {
 
     // initialize the keyboards
 
-    let square = new Keyboard(KeyBoardType.SQUARE);
-    square.resize(0.6);
-    square.centerVertical();
+    this.square = new Keyboard(KeyBoardType.SQUARE);
+    this.square.resize(0.6);
+    this.square.centerVertical();
     // add some spacing to the square
-    square.asElement().css({'margin-right': '30px'});
+    this.square.asElement().css({'margin-right': '30px'});
 
-    let mapTo = new Keyboard(KeyBoardType.STANDARD);
-    mapTo.resize(0.6);
-    mapTo.centerVertical();
+    this.mapTo = new Keyboard(KeyBoardType.STANDARD);
+    this.mapTo.resize(0.6);
+    this.mapTo.centerVertical();
 
     // add the file gui
     this.asElement().append(FileGUI.getInstance().asElement());
@@ -52,7 +55,7 @@ class Creator extends JQElement {
     this.main_content = $('<div style="position: absolute; display: inline-block; overflow: hidden;"></div>');
     this.asElement().append(this.main_content);
 
-    this.main_content.append(square.asElement());
+    this.main_content.append(this.square.asElement());
 
     let h1 = $('<div class="horizontal-column"></div>');
     this.main_content.append(h1);
@@ -60,8 +63,8 @@ class Creator extends JQElement {
     this.main_content.append(h2);
 
     // add the keyboards to the columns
-    h1.append(square.asElement());
-    h2.append(mapTo.asElement());
+    h1.append(this.square.asElement());
+    h2.append(this.mapTo.asElement());
 
     // layout the elements
     this.layoutElements();
@@ -76,5 +79,13 @@ class Creator extends JQElement {
     this.main_content.css(
       {'left': (this.fileWidth + this.padding) + 'px', 'top': '0', 'right': '0', 'bottom': (this.inspectorHeight + this.padding) + 'px'}
     );
+  }
+
+  public keyDown(key: number) {
+    this.mapTo.keyDown(key);
+  }
+
+  public keyUp(key: number) {
+    this.mapTo.keyUp(key);
   }
 }

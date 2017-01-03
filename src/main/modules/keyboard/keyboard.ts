@@ -64,6 +64,11 @@ class Keyboard extends PayloadReceiver implements InputReciever {
       this.modifierActive = false;
     }
 
+    let keyHook = (payload: Payload, r: number, c: number) => {
+      // TODO
+      console.log('received ' + r + ',' + c + ' in keyboard');
+    };
+
     this.rows = [];
     // push row elements and new keyboard key elements to each row
     for (let r = 0; r < this.numRows; r++) {
@@ -71,7 +76,7 @@ class Keyboard extends PayloadReceiver implements InputReciever {
       let nextRow = $(`<div class="row" id="row_${r}"></div>`);
       this.asElement().append(nextRow);
       for (let c = 0; c < this.numCols; c++) {
-        let nextCell = new KeyboardKey(this.keyboardSymbols[r % 4][c]);
+        let nextCell = new KeyboardKey(this.keyboardSymbols[r % 4][c], r, c, keyHook);
         this.rows[r].push(nextCell);
         nextRow.append(this.rows[r][c].asElement());
 
