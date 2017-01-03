@@ -3,12 +3,17 @@
 
 class Song {
   private name: string;
-  private bpms: number[];
+  // array of time stamps and the corresponding bpm.
+  // Invariant: must be at least of length 1 and the first cell must have timestamp 0
+  private bpms: number[][];
   private soundPacks: SoundPack[];
 
-  constructor(location: string, callback: () => void) {
+  constructor() {
     this.soundPacks = [];
+    this.bpms = [[]];
+  }
 
+  public loadFromSource(location: string, callback: () => void) {
     $.getJSON(location, (data) => {
       loadSounds(data.files, () => {
         this.loadPacks(data);

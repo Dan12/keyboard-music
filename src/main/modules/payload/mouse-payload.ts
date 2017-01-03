@@ -12,6 +12,10 @@ class MousePayload {
 
   private static payload: Payload;
 
+  private static payloadElement: JQuery;
+  private static xOffset: number;
+  private static yOffset: number;
+
   /**
    * initialize the mouse payload object
    * @method initialize
@@ -22,11 +26,32 @@ class MousePayload {
 
     MousePayload.listen_element.mousemove((e: JQueryMouseEventObject) => {
       let target = e.target;
+      // console.log(target);
+      if (MousePayload.payload !== undefined) {
+        if (MousePayload.payloadElement === undefined) {
+          MousePayload.payloadElement = MousePayload.payload.asElement().clone();
+          MousePayload.listen_element.append(MousePayload.payloadElement);
+          MousePayload.payloadElement.css({'position': 'absolute', 'pointer-events': 'none'});
+        }
+        MousePayload.payloadElement.css(
+          {'left': (e.pageX + MousePayload.xOffset) + 'px', 'top': (e.pageY + MousePayload.yOffset) + 'px'}
+        );
+      }
+
+      e.preventDefault();
+      return false;
+    });
+
+    MousePayload.listen_element.mouseup((e: JQueryMouseEventObject) => {
+      MousePayload.popPayload();
     });
   }
 
-  public static setPayload(payload: Payload) {
+  public static setPayload(payload: Payload, e: JQueryMouseEventObject) {
     MousePayload.payload = payload;
+    let offset = MousePayload.payload.asElement().offset();
+    MousePayload.xOffset = offset.left - e.pageX;
+    MousePayload.yOffset = offset.top - e.pageY;
   }
 
   public static peekPayload(): Payload {
@@ -35,7 +60,16 @@ class MousePayload {
 
   public static popPayload(): Payload {
     let ret = MousePayload.payload;
+
+    // clear the payload
     MousePayload.payload = undefined;
+    if (MousePayload.payloadElement !== undefined) {
+      MousePayload.payloadElement.remove();
+    }
+    MousePayload.payloadElement = undefined;
+    MousePayload.xOffset = undefined;
+    MousePayload.yOffset = undefined;
+
     return ret;
   }
 

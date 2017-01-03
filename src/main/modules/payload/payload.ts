@@ -9,7 +9,7 @@ abstract class Payload extends JQElement {
     super(element);
 
     this.asElement().mousedown((e: JQueryMouseEventObject) => {
-      MousePayload.setPayload(this);
+      MousePayload.setPayload(this, e);
     });
   }
 }

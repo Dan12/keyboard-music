@@ -1,4 +1,5 @@
 /// <reference path="./file.ts"/>
+/// <reference path="./directory.ts"/>
 
 /**
  * A file manager for managing all of the sounds.
@@ -7,9 +8,10 @@
  */
 class FileManager {
 
-  private files: Directory;
+  // define several file directories with a base location pointing to a directory
+  private files: {[name: string]: Directory};
 
-  private baseSongDir = 'sounds';
+  private baseSongDir = 'sounds/';
 
   private static instance: FileManager;
 
@@ -28,7 +30,8 @@ class FileManager {
   }
 
   private constructor() {
-    this.files = new Directory();
+    // create the root file directory and append the element
+    this.files = {};
   }
 
   /**
@@ -40,8 +43,13 @@ class FileManager {
    */
   public addFile(baseLocation: string, name: string, data: string) {
     if (this.validFile(name)) {
-      let fileName = '/' + baseLocation + this.trimName(name);
-      this.files.addFile(fileName, data, fileName);
+      let fileName = this.trimName(name);
+      // if the base directory doesn't exists yet, create it
+      if (this.files[baseLocation] === undefined) {
+        this.files[baseLocation] = new Directory(baseLocation, FileGUI.getInstance().asElement());
+      }
+      // add the file to the base directory
+      this.files[baseLocation].addFile(fileName, data, fileName);
     } else {
       collectErrorMessage('Add file error, invalid name', name);
     }
@@ -61,8 +69,8 @@ class FileManager {
    * @method getSound
    * @return {SoundFile} the file
    */
-  public getSound(location: string): SoundFile {
-    return this.files.getFile(location);
+  public getSound(basedir: string, location: string): SoundFile {
+    return this.files[basedir].getFile(location);
   }
 
   /**
@@ -70,84 +78,8 @@ class FileManager {
    * @method clearFiles
    */
   public clearFiles() {
-    this.files = new Directory();
+    this.files = {};
 
     FileGUI.getInstance().notifyClear();
-  }
-}
-
-/**
- * A directory class with files and recursive subdirectories
- * @class Directory
- */
-class Directory {
-  private files: {[name: string]: SoundFile};
-  private subdirectories: {[name: string]: Directory};
-
-  constructor() {
-    this.files = {};
-    this.subdirectories = {};
-  }
-
-  /**
-   * recursively add the file to this directory.
-   * Create new subdirectories if needed.
-   * @method addFile
-   * @param {string} name the file name relative to this directory
-   * @param {String} data the file data
-   * @param {String} fullname the absolute file path
-   */
-  public addFile(name: string, data: string, fullname: string) {
-    if (name.indexOf('/') !== -1) {
-      let dir = name.substring(0, name.indexOf('/'));
-      if (this.subdirectories[dir] === undefined) {
-        this.subdirectories[dir] = new Directory();
-      }
-      this.subdirectories[dir].addFile(name.substring(name.indexOf('/') + 1, name.length), data, fullname);
-    } else {
-      // only add the file to the file manager when it has been loaded
-      let _this = this;
-      // create a new howl object and pass it the load file constructor
-      new Howl({
-        urls: [data],
-
-        onload: function() {
-          // this refers to the howl object
-          _this.loadedFile(name, this, fullname);
-        },
-        onloaderror: function() {
-          collectErrorMessage('Error loading file', {name: fullname, d: data});
-        }
-      });
-    }
-  }
-
-  // called when a file is loaded to add it to the file data structure and gui
-  private loadedFile(name: string, sound: Howl, fullname: string) {
-    this.files[name] = new SoundFile(name, sound);
-
-    FileGUI.getInstance().notifyAdd(fullname);
-  }
-
-  /**
-   * recursively get the given file
-   * @method getFile
-   * @param {String} location the relative file path to this directory
-   */
-  public getFile(location: string): SoundFile {
-    if (location.indexOf('/') !== -1) {
-      let dir = location.substring(0, location.indexOf('/'));
-      if (this.subdirectories[dir] === undefined) {
-        collectErrorMessage(`The directory ${dir} does not exist`);
-        return undefined;
-      }
-      return this.subdirectories[dir].getFile(location.substring(location.indexOf('/') + 1, location.length));
-    } else {
-      let file = this.files[location];
-      if (file === undefined) {
-        collectErrorMessage(`The file ${location} does not exist`);
-      }
-      return file;
-    }
   }
 }

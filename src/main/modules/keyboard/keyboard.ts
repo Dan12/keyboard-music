@@ -8,7 +8,7 @@
  *
  * @class Keyboard
  */
-class Keyboard extends JQElement implements InputReciever {
+class Keyboard extends PayloadReceiver implements InputReciever {
 
   private rows: KeyboardKey[][];
   private numRows = 4;
@@ -174,6 +174,15 @@ class Keyboard extends JQElement implements InputReciever {
 
       delete this.pressed[key];
     }
+  }
+
+  public canReceive(payload: Payload): boolean {
+    return payload instanceof Directory;
+  }
+
+  public receivePayload(payload: Payload) {
+    console.log('keyboard recieved:');
+    console.log(payload);
   }
 
   private pressedKey(r: number, c: number) {

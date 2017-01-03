@@ -7,16 +7,23 @@ abstract class PayloadReceiver extends JQElement {
     super(element);
 
     this.asElement().mouseup((e: JQueryMouseEventObject) => {
-      let payload = MousePayload.popPayload();
-      if (payload !== undefined && this.canReceive(payload))
-        this.receivePayload(payload);
+      let payload = MousePayload.peekPayload();
+      // only consume the payload if you can recieve it
+      if (payload !== undefined && this.canReceive(payload)) {
+        this.receivePayload(MousePayload.popPayload());
+        this.asElement().css('color', '');
+      }
     });
 
     // highlight on mouseover
-    this.asElement().mouseover((e: JQueryMouseEventObject) => {
+    this.asElement().mouseenter((e: JQueryMouseEventObject) => {
       let payload = MousePayload.peekPayload();
       if (payload !== undefined && this.canReceive(payload))
-        this.asElement().css('background-color', 'rgba(0,200,200, 0.3)');
+        this.asElement().css('color', 'rgba(0,200,200, 0.3)');
+    });
+
+    this.asElement().mouseleave(() => {
+      this.asElement().css('color', '');
     });
   }
 

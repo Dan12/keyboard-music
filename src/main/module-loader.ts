@@ -4,9 +4,9 @@
 /// <reference path="./modules/files/file-gui.ts"/>
 /// <reference path="./modules/files/file-inspector.ts"/>
 /// <reference path="./modules/input-propegator.ts"/>
-// /// <reference path="./modules/song/song.ts"/>
+/// <reference path="./modules/song/song.ts"/>
 /// <reference path="./modules/mode-handler.ts"/>
-/// <reference path="./modules/creator/creator.ts"/>
+/// <reference path="./modules/creator/creator-layout.ts"/>
 
 /// <reference path="./modules/newZip.ts"/>
 // /// <reference path="./modules/zip-handler.ts"/>
@@ -27,15 +27,9 @@ function ModuleLoader(main_element: JQuery) {
   // add the creator
   main_element.append(Creator.getInstance().asElement());
 
-  // add the file gui
-  main_element.append(FileGUI.getInstance().asElement());
-
-  // add the sound inspector
-  main_element.append(FileInspector.getInstance().asElement());
-
   // initialize the mode handler
   ModeHandler.init();
-  ModeHandler.setMode(Mode.KEYBOARD);
+  ModeHandler.setMode(Mode.CREATOR);
 
   // initialize the mouse payload listener on the main element
   MousePayload.initialize(main_element);

@@ -49,7 +49,7 @@ class InputEventPropegator {
    */
   private static initMouseMaps() {
     $('body').mousedown((event: JQueryMouseEventObject) => {
-      console.log(event);
+      // console.log(event);
     });
   }
 }
