@@ -30,7 +30,8 @@ abstract class PayloadReceiver extends JQElement {
   abstract canReceive(payload: Payload): boolean;
 
   /**
-   * handle the payload that was received
+   * handle the payload that was received.
+   * It will be a payload that can be received as defined by canReceive.
    * @method receivePayload
    * @param {Payload} payload
    */

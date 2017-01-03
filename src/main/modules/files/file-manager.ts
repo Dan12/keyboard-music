@@ -49,7 +49,7 @@ class FileManager {
         this.files[baseLocation] = new Directory(baseLocation, FileGUI.getInstance().asElement());
       }
       // add the file to the base directory
-      this.files[baseLocation].addFile(fileName, data, fileName);
+      this.files[baseLocation].addFile(fileName, data, baseLocation + '/' + fileName);
     } else {
       collectErrorMessage('Add file error, invalid name', name);
     }

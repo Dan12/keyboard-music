@@ -10,7 +10,11 @@ class Song {
 
   constructor() {
     this.soundPacks = [];
-    this.bpms = [[]];
+
+    // default bpm
+    this.bpms = [[0, 140]];
+
+    this.name = 'Untitled';
   }
 
   public loadFromSource(location: string, callback: () => void) {
@@ -37,7 +41,10 @@ class Song {
 
         let pitches = data[1];
         for (let i = 0; i < pitches.length; i++) {
-          container.addPitches(FileManager.getManager().getSound(pitches[i][0]), pitches[i][1], pitches[i][2]);
+          // TODO verify correctness
+          let baseDir = pitches[i][0].substring(0, pitches[i][0].indexOf('/'));
+          let location = pitches[i][0].substring(pitches[i][0].indexOf('/') + 1, pitches[i][0].length);
+          container.addPitches(FileManager.getInstance().getSound(baseDir, pitches[i][0]), pitches[i][1], pitches[i][2]);
         }
         this.soundPacks[i].addContainer(container, data[0]);
       }

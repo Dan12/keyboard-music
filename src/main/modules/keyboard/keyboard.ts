@@ -7,6 +7,7 @@
  * The keyboard module to represent an html keyboard.
  *
  * @class Keyboard
+ * @extends PayloadReceiver
  */
 class Keyboard extends PayloadReceiver implements InputReciever {
 
@@ -99,8 +100,14 @@ class Keyboard extends PayloadReceiver implements InputReciever {
 
     this.setVisible();
 
-    // default. TODO add ability to change
     this.colorManager = new ColorManager(this.rows);
+  }
+
+  /**
+   * @method getColorManager
+   */
+  public getColorManager(): ColorManager {
+    return this.colorManager;
   }
 
   private setVisible() {
@@ -112,6 +119,9 @@ class Keyboard extends PayloadReceiver implements InputReciever {
     }
   }
 
+  /**
+   * @method resize
+   */
   public resize(scale = 1) {
     let css = KeyboardKey.getScaleCSS(scale);
 
@@ -122,6 +132,9 @@ class Keyboard extends PayloadReceiver implements InputReciever {
     }
   }
 
+  /**
+   * @method centerVertical
+   */
   public centerVertical() {
     this.asElement().addClass('vertical-align');
   }
@@ -185,10 +198,12 @@ class Keyboard extends PayloadReceiver implements InputReciever {
     console.log(payload);
   }
 
+  // where a key officially gets pressed
   private pressedKey(r: number, c: number) {
     this.colorManager.pressedKey(r, c);
   }
 
+  // where a key officially gets released
   private releasedKey(r: number, c: number) {
     this.colorManager.releasedKey(r, c);
   }

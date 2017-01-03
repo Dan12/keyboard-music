@@ -9,8 +9,12 @@
  */
 class KeyboardKey extends PayloadReceiver {
 
-  constructor(symbol: string) {
+  private payloadHook: (payload: Payload) => void;
+
+  constructor(symbol: string, hook: (payload: Payload) => void) {
     super($(`<div class="keyboard_key primary_color">${symbol}</div>`));
+
+    this.payloadHook = hook;
   }
 
   /**

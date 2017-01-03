@@ -30,7 +30,12 @@ class SoundPack {
     this.sounds[row][col] = container;
   }
 
+  // returns in [row, col] order
   private linearToGrid(i: number): number[] {
     return [Math.floor(i / this.cols), i % this.cols];
+  }
+
+  private gridToLinear(r: number, c: number): number {
+    return r * this.cols + c;
   }
 }

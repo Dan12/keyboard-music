@@ -1,8 +1,6 @@
 /// <reference path="../files/file-manager.ts"/>
-/// <reference path="../zip-handler.ts"/>
 
 function loadSounds(urls: string[], callback: () => void) {
-    ZipHandler.initialize();
     let i = 0;
 
     let nextUrl = () => {
@@ -12,8 +10,8 @@ function loadSounds(urls: string[], callback: () => void) {
         callback();
         return;
       }
-      ZipHandler.loadZip(urls[i], nextUrl);
+      NewZip.loadZip(urls[i], nextUrl);
     };
 
-    ZipHandler.loadZip(urls[i], nextUrl);
+    NewZip.loadZip(urls[i], nextUrl);
 }

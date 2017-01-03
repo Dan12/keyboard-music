@@ -9,12 +9,12 @@
 
   "container_settings": [
     [
-      [0, [["chain1/c1.mp3"]], false],
-      [12, [["chain1/c3.mp3"]], false]
+      [0, [["eq/chain1/c1.mp3"]], false],
+      [12, [["eq/chain1/c3.mp3"]], false]
     ],
     [
-      [0, [["chain2/a13.mp3"]], false],
-      [12, [["chain2/c1.mp3"]], false]
+      [0, [["eq/chain2/a13.mp3"]], false],
+      [12, [["eq/chain2/c1.mp3"]], false]
     ]
 
   ],
