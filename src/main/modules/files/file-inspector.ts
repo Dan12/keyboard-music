@@ -17,11 +17,14 @@ class FileInspector extends JQElement {
   private canvas: HTMLElement;
   private ctx: CanvasRenderingContext2D;
 
-  private inTime: number;
-  private outTime: number;
+  private inTime = 0;
+  private outTime = 0;
+  // pixels per sample
   private scale = 0.08;
   private offset = 0;
   private padding = 30;
+  // samples per second
+  private sampleRate: number;
 
   private cursorAt = 0;
 
@@ -29,8 +32,11 @@ class FileInspector extends JQElement {
 
   private ch1: Float32Array;
   private ch2: Float32Array;
+  private nextPos = 0;
 
   private refreshInterval: number;
+
+  private mousedown = false;
 
   /**
    * return the singleton instance of this class
@@ -57,6 +63,24 @@ class FileInspector extends JQElement {
                                     Your Browser Does Not Support The Canvas Element
                                    </canvas>`
                                  );
+
+    let setIn = $('<button disabled="disabled">Set in point</button>');
+    let setOut = $('<button disabled="disabled">Set out point</button>');
+    this.asElement().append(setIn);
+    this.asElement().append(setOut);
+    setIn.click(() => {
+      if (this.currentSound && this.cursorAt < this.outTime) {
+        this.inTime = this.cursorAt;
+        this.setSprite();
+      }
+    });
+
+    setOut.click(() => {
+      if (this.currentSound && this.cursorAt > this.inTime) {
+        this.outTime = this.cursorAt;
+        this.setSprite();
+      }
+    });
   }
 
   private initContext() {
@@ -68,14 +92,37 @@ class FileInspector extends JQElement {
     this.canvas.addEventListener('wheel', (e: WheelEvent) => {
       if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
         this.offset -= e.deltaX;
-        // this.offset = Math.min(Math.max(this.offset, ));
       } else {
-        this.scale += e.deltaY / (500 / this.scale);
-        this.scale = Math.min(Math.max(this.scale, 0.002), 0.33);
+        this.scale -= e.deltaY / (500 / this.scale);
       }
+
+      // clamp scale and offset, offset depends on scale
+      this.scale = Math.min(Math.max(this.scale, this.canvas.width / this.ch1.length), 0.33);
+      this.offset = Math.min(Math.max(this.offset, - this.ch1.length * this.scale + this.canvas.width), 0);
+
       e.preventDefault();
       return false;
     });
+
+    this.waveformContainer.mousedown((e: JQueryMouseEventObject) => {
+      this.setNextPos(e.pageX);
+      this.mousedown = true;
+    });
+
+    this.waveformContainer.mousemove((e: JQueryMouseEventObject) => {
+      if (this.mousedown)
+       this.setNextPos(e.pageX);
+    });
+
+    this.waveformContainer.mouseup((e: JQueryMouseEventObject) => {
+      this.mousedown = false;
+    });
+  }
+
+  private setNextPos(mouseX: number) {
+    if (this.currentSound)
+      this.currentSound.pause();
+    this.nextPos = (mouseX + this.offset - this.waveformContainer.offset().left) / this.scale / this.sampleRate - this.inTime;
   }
 
   /**
@@ -86,9 +133,27 @@ class FileInspector extends JQElement {
   public pressSpace() {
     // make sure that there is a sound
     if (this.currentSound) {
-      // TODO allow pause and playback
-      this.currentSound.play();
+      // if the sound is paused
+      if (this.currentSound.pos() === 0) {
+        this.currentSound.play('sample');
+
+        // set the playback if set
+        if (this.nextPos > 0 && this.nextPos < this.outTime - this.inTime) {
+            this.currentSound.pos(this.nextPos);
+        } else {
+          this.nextPos = 0;
+        }
+      } else {
+        this.currentSound.pause();
+        this.nextPos = this.currentSound.pos();
+      }
+
     }
+  }
+
+  private setSprite() {
+    this.currentSound.sprite({sample: [this.inTime * 1000, (this.outTime - this.inTime) * 1000]});
+    this.nextPos = 0;
   }
 
   /**
@@ -137,12 +202,21 @@ class FileInspector extends JQElement {
     this.audioCtx.decodeAudioData(data, (buffer: AudioBuffer) => {
       this.ch1 = buffer.getChannelData(0);
       this.ch2 = buffer.getChannelData(1);
+      this.sampleRate = buffer.sampleRate;
+      this.nextPos = 0;
+      this.inTime = 0;
+      this.outTime = buffer.duration;
+      this.scale = this.canvas.width / this.ch1.length;
 
-      let temp = setInterval(() => {
+      this.setSprite();
+
+      if (this.refreshInterval) {
+        clearInterval(this.refreshInterval);
+      }
+
+      this.refreshInterval = setInterval(() => {
         this.refreshCanvas();
       }, 50);
-
-      this.refreshInterval = temp;
     });
   }
 
@@ -150,7 +224,6 @@ class FileInspector extends JQElement {
   private refreshCanvas() {
     this.ctx.fillStyle = 'black';
 
-    // TODO make constant x scale and allow scrolling
     // TODO allow scrubbing
 
     // compute the scales
@@ -158,19 +231,18 @@ class FileInspector extends JQElement {
 
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    let interval = Math.floor(1 / (3 * this.scale));
-    let start = Math.floor(this.offset / (this.scale * interval)) * interval;
-    let end = Math.ceil((this.offset + this.canvas.width) / this.scale);
+    let start = Math.floor(-this.offset / (this.scale));
+    let end = Math.ceil((this.canvas.width - this.offset) / this.scale);
 
-    console.log(this.offset);
-    console.log(this.scale);
-    console.log(start);
-    console.log(end);
+    let constance = 3;
+
+    let interval = Math.ceil((end - start) / (1000 * constance)) * constance;
+    start = Math.floor(start / constance) * constance;
 
     if (this.ch1) {
       // draw first channel
       this.ctx.beginPath();
-      this.ctx.moveTo(this.offset, yScale);
+      this.ctx.moveTo(0, yScale);
       for (let i = start; i < end; i += interval) {
         this.ctx.lineTo(this.offset + i * this.scale, (this.ch1[i] + 1) * yScale);
       }
@@ -178,12 +250,28 @@ class FileInspector extends JQElement {
 
       // draw second channel
       this.ctx.beginPath();
-      this.ctx.moveTo(this.offset, yScale * 3);
+      this.ctx.moveTo(0, yScale * 3);
       for (let i = start; i < end; i += interval) {
         this.ctx.lineTo(this.offset + i * this.scale, (this.ch2[i] + 3) * yScale);
       }
       this.ctx.stroke();
+
+      // seconds * samples per second * pixels per sample
+      this.cursorAt = this.currentSound.pos();
+      if (this.cursorAt === 0) {
+        this.cursorAt = this.nextPos;
+      }
+      this.cursorAt += this.inTime;
+
+      this.drawCursorAtTime(this.cursorAt);
+      this.ctx.fillStyle =  'blue';
+      this.drawCursorAtTime(this.inTime);
+      this.drawCursorAtTime(this.outTime);
     }
+  }
+
+  private drawCursorAtTime(x: number) {
+    this.ctx.fillRect((x * this.sampleRate * this.scale) + this.offset - 1, 0, 2, this.canvas.height);
   }
 
   // convert a base64 array to a byte array

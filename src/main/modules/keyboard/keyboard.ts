@@ -50,6 +50,8 @@ class Keyboard extends PayloadReceiver implements InputReciever {
     [90, 88, 67, 86, 66, 78, 77, 188, 190, 191, 16,  -1]
   ];
 
+  // TODO custom keypairs
+
   // a mapping from a keycode to keyboard row and column
   private keyMap = {};
 
