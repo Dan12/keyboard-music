@@ -9,9 +9,7 @@ class ColorManager {
   constructor(keys: KeyboardKey[][]) {
     this.keys = keys;
 
-    this.routine = (r: number, c: number, p: boolean) => {
-      return [{row: r, col: c, r: p ? 255 : -1, g: p ? 160 : -1, b: p ? 0 : -1}];
-    };
+    this.routine = ColorManager.standardColorRoutine(255, 160, 0);
   }
 
   public setRoutine(routine: (r: number, c: number, p: boolean) => RoutineResult[]) {
@@ -36,6 +34,12 @@ class ColorManager {
         this.keys[result.row][result.col].setColor(result.r, result.g, result.b);
       }
     }
+  }
+
+  public static standardColorRoutine(red: number, green: number, blue: number): (r: number, c: number, p: boolean) => RoutineResult[] {
+    return (r: number, c: number, p: boolean) => {
+              return [{row: r, col: c, r: p ? red : -1, g: p ? green : -1, b: p ? blue : -1}];
+           };
   }
 }
 

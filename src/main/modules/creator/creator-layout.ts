@@ -1,3 +1,5 @@
+/// <reference path="./payload-keyboard.ts"/>
+
 /**
  * the class to parent the creator gui for creating songs
  * @class Creator
@@ -13,10 +15,12 @@ class Creator extends JQElement implements InputReciever {
   private inspectorHeight = 120;
   private padding = 6;
 
-  private square: Keyboard;
+  private square: PayloadKeyboard;
   private mapTo: Keyboard;
 
   private song: Song;
+
+  private testLayoutSounds: {[location: number]: SoundFile};
 
   /**
    * return the singleton instance of this class
@@ -37,9 +41,9 @@ class Creator extends JQElement implements InputReciever {
 
     // initialize the keyboards
 
-    this.square = new Keyboard(KeyBoardType.SQUARE);
-    this.square.resize(0.6);
-    this.square.centerVertical();
+    this.square = new PayloadKeyboard(KeyBoardType.SQUARE);
+    this.square.getKeyboard().resize(0.6);
+    this.square.getKeyboard().centerVertical();
     // add some spacing to the square
     this.square.asElement().css({'margin-right': '30px'});
     this.square.setAddSoundCallback(
@@ -48,13 +52,10 @@ class Creator extends JQElement implements InputReciever {
       }
     );
     // turn square green when active
-    this.square.getColorManager().setRoutine(
-      (r: number, c: number, p: boolean) => {
-        return [{row: r, col: c, r: p ? 100 : -1, g: p ? 255 : -1, b: p ? 100 : -1}];
-      }
-    );
+    this.square.getKeyboard().getColorManager().setRoutine( ColorManager.standardColorRoutine(100, 255, 100));
 
     this.song = new Song();
+    this.testLayoutSounds = {};
 
     this.mapTo = new Keyboard(KeyBoardType.STANDARD);
     this.mapTo.resize(0.6);
@@ -72,21 +73,19 @@ class Creator extends JQElement implements InputReciever {
 
     this.main_content.append(this.square.asElement());
 
-    let h1 = $('<div class="horizontal-column"></div>');
-    this.main_content.append(h1);
-    let h2 = $('<div class="horizontal-column"></div>');
-    this.main_content.append(h2);
-
     // add the keyboards to the columns
-    h1.append(this.square.asElement());
-    h2.append(this.mapTo.asElement());
+    let h = $('<div class="horizontal-column"></div>');
+    this.main_content.append(h);
+    h.append(this.mapTo.asElement());
 
     // layout the elements
     this.layoutElements();
   }
 
   private addSquareSound(r: number, c: number, sound: SoundFile) {
-    this.square.getColorManager().pressedKey(r, c);
+    this.square.getKeyboard().getColorManager().pressedKey(r, c);
+
+    this.testLayoutSounds[KeyboardUtils.gridToLinear(r, c, 8)] = sound;
   }
 
   // set the element layout

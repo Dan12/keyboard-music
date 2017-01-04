@@ -7,19 +7,10 @@
  * @class KeyboardKey
  * @constructor
  */
-class KeyboardKey extends PayloadReceiver {
+class KeyboardKey extends JQElement {
 
-  private payloadHook: (payload: Payload, r: number, c: number) => void;
-  private row: number;
-  private col: number;
-
-  constructor(symbol: string, r: number, c: number, hook: (payload: Payload, r: number, c: number) => void) {
+  constructor(symbol: string) {
     super($(`<div class="keyboard_key primary_color">${symbol}</div>`));
-
-    this.row = r;
-    this.col = c;
-
-    this.payloadHook = hook;
   }
 
   /**
@@ -59,14 +50,6 @@ class KeyboardKey extends PayloadReceiver {
    */
   public setColor(r: number, g: number, b: number) {
     this.asElement().css('background-color', `rgb(${r}, ${g}, ${b})`);
-  }
-
-  public canReceive(payload: Payload): boolean {
-    return payload instanceof SoundFile;
-  }
-
-  public receivePayload(payload: Payload) {
-    this.payloadHook(payload, this.row, this.col);
   }
 
 }

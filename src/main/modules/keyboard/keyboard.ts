@@ -3,6 +3,7 @@
 /// <reference path="../../interfaces/input-reciever.ts"/>
 /// <reference path="./color-manager.ts"/>
 /// <reference path="./keyboard-utils.ts"/>
+/// <reference path="../creator/payload-keyboard-key.ts"/>
 
 /**
  * The keyboard module to represent an html keyboard.
@@ -10,7 +11,7 @@
  * @class Keyboard
  * @extends PayloadReceiver
  */
-class Keyboard extends PayloadReceiver implements InputReciever {
+class Keyboard extends JQElement implements InputReciever {
 
   private rows: KeyboardKey[][];
   private numRows = 4;
@@ -26,8 +27,7 @@ class Keyboard extends PayloadReceiver implements InputReciever {
 
   private colorManager: ColorManager;
 
-  private addKeyCallback: (r: number, c: number, sound: SoundFile) => void;
-
+  // used to keep track of currently pressed keys so that a key can only be triggered once when pressed
   private pressed: {};
 
   // TODO custom keypairs
@@ -35,7 +35,7 @@ class Keyboard extends PayloadReceiver implements InputReciever {
   // a mapping from a keycode to keyboard row and column
   private keyMap = {};
 
-  public constructor(type: KeyBoardType) {
+  public constructor(type: KeyBoardType, payloadHook?: (payload: Payload, r: number, c: number) => void) {
     super($('<div class="keyboard"></div>'));
 
     let size = KeyboardUtils.getKeyboardSize(type);
@@ -46,10 +46,6 @@ class Keyboard extends PayloadReceiver implements InputReciever {
       this.modifierActive = false;
     }
 
-    let keyHook = (payload: Payload, r: number, c: number) => {
-      this.runAddKeyCallback(r, c, payload);
-    };
-
     this.rows = [];
     // push row elements and new keyboard key elements to each row
     for (let r = 0; r < this.numRows; r++) {
@@ -57,12 +53,19 @@ class Keyboard extends PayloadReceiver implements InputReciever {
       let nextRow = $(`<div class="row" id="row_${r}"></div>`);
       this.asElement().append(nextRow);
       for (let c = 0; c < this.numCols; c++) {
-        let nextCell = new KeyboardKey(KeyboardUtils.keyboardSymbols[r % 4][c], r, c, keyHook);
-        this.rows[r].push(nextCell);
-        nextRow.append(this.rows[r][c].asElement());
+        // construct the payload key
+        if(payloadHook) {
+          let newKey = new PayloadKeyboardKey(KeyboardUtils.keyboardSymbols[r % 4][c], r, c, payloadHook);
+          this.rows[r].push(newKey.getKey());
+          nextRow.append(newKey.asElement());
+        } else {
+          let newKey = new KeyboardKey(KeyboardUtils.keyboardSymbols[r % 4][c]);
+          this.rows[r].push(newKey);
+          nextRow.append(newKey.asElement());
+        }
 
         if (r < 4) {
-          nextCell.asElement().addClass('bolder');
+          this.rows[r][c].asElement().addClass('bolder');
         }
       }
     }
@@ -89,20 +92,6 @@ class Keyboard extends PayloadReceiver implements InputReciever {
     this.colorManager = new ColorManager(this.rows);
   }
 
-  public setAddSoundCallback(callback: (r: number, c: number, sound: SoundFile) => void) {
-    this.addKeyCallback = callback;
-  }
-
-  private runAddKeyCallback(r: number, c: number, payload: any) {
-    if (payload instanceof SoundFile)
-      if (this.addKeyCallback)
-        this.addKeyCallback(r, c, <SoundFile> payload);
-      else
-        collectErrorMessage('Key Callback does not exist on keyboard');
-    else
-      collectErrorMessage('Payload type does not match soundfile type in keyboard', payload);
-  }
-
   /**
    * @method getColorManager
    */
@@ -110,6 +99,7 @@ class Keyboard extends PayloadReceiver implements InputReciever {
     return this.colorManager;
   }
 
+  // set the visibility of the key symbols
   private setVisible() {
     let cssObj = {'color': this.showKeys ? '' : 'rgba(0,0,0,0)'};
     for (let r = 0; r < this.numRows; r++) {
@@ -189,32 +179,6 @@ class Keyboard extends PayloadReceiver implements InputReciever {
     }
   }
 
-  public canReceive(payload: Payload): boolean {
-    return payload instanceof Directory;
-  }
-
-  public receivePayload(payload: Payload) {
-    if (payload instanceof Directory) {
-      let lowestDir = <Directory> payload;
-      while (lowestDir.numFiles() === 0 && lowestDir.numDirs() > 0) {
-        lowestDir = lowestDir.getFirstDir();
-      }
-      let sounds = lowestDir.getFiles();
-      for (let sound of sounds) {
-        let sLetter = sound.toLowerCase().charCodeAt(0) - 97;
-        let sNum = parseInt(sound.substring(1, sound.length));
-        if (sLetter >= 0 && sLetter <= 3 && sNum >= 0 && sNum <= 15) {
-          let r = Math.floor(sLetter / 2) * 4 + Math.floor(sNum / 4);
-          let c = (sLetter % 2) * 4 + (sNum % 4);
-
-          this.runAddKeyCallback(r, c, lowestDir.getFile(sound));
-        }
-      }
-    } else {
-      collectErrorMessage('Payload is not directory in keyboard');
-    }
-  }
-
   // where a key officially gets pressed
   private pressedKey(r: number, c: number) {
     this.colorManager.pressedKey(r, c);
@@ -225,6 +189,7 @@ class Keyboard extends PayloadReceiver implements InputReciever {
     this.colorManager.releasedKey(r, c);
   }
 
+  // bold or unbold keys based on the modifier active flag
   private changeModiferKeys() {
     for (let r = 0; r < this.numRows; r++) {
       for (let c = 0; c < this.numCols; c++) {

@@ -43,6 +43,15 @@ class KeyboardUtils {
         return {rows: 4, cols: 12};
     }
   }
+
+  // returns in [row, col] order
+  public static linearToGrid(i: number, cols: number): number[] {
+    return [Math.floor(i / cols), i % cols];
+  }
+
+  public static gridToLinear(r: number, c: number, cols: number): number {
+    return r * cols + c;
+  }
 }
 
 interface KeyBoardSize {

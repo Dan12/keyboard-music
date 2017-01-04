@@ -14,6 +14,8 @@ class FileInspector extends JQElement {
   private currentSound: Howl;
 
   private nameElement: JQuery;
+  private waveformContainer: JQuery;
+  private setPoints: JQuery;
   private canvas: HTMLElement;
   private ctx: CanvasRenderingContext2D;
 
@@ -27,8 +29,6 @@ class FileInspector extends JQElement {
   private sampleRate: number;
 
   private cursorAt = 0;
-
-  private waveformContainer: JQuery;
 
   private ch1: Float32Array;
   private ch2: Float32Array;
@@ -55,6 +55,7 @@ class FileInspector extends JQElement {
   private constructor() {
     super($('<div id="file-inspector"></div>'));
 
+    // create the name and waveform elements
     this.nameElement = $('<div id="f-name">File Name</div>');
     this.asElement().append(this.nameElement);
     this.waveformContainer = $('<div id="waveform"></div>');
@@ -64,65 +65,74 @@ class FileInspector extends JQElement {
                                    </canvas>`
                                  );
 
-    let setIn = $('<button disabled="disabled">Set in point</button>');
-    let setOut = $('<button disabled="disabled">Set out point</button>');
-    this.asElement().append(setIn);
-    this.asElement().append(setOut);
+    // create the set points buttons and listeners
+    this.setPoints = $('<div></div>');
+    let setIn = $('<button>Set in point</button>');
+    let setOut = $('<button>Set out point</button>');
+    this.setPoints.append(setIn);
+    this.setPoints.append(setOut);
     setIn.click(() => {
       if (this.currentSound && this.cursorAt < this.outTime) {
         this.inTime = this.cursorAt;
         this.setSprite();
       }
     });
-
     setOut.click(() => {
       if (this.currentSound && this.cursorAt > this.inTime) {
         this.outTime = this.cursorAt;
         this.setSprite();
       }
     });
-  }
 
-  private initContext() {
-    this.canvas = document.getElementById('waveform-canvas');
-    this.ctx = this.canvas.getContext('2d');
-    this.canvas.width = this.waveformContainer.width();
-    this.canvas.height = this.waveformContainer.height();
-
-    this.canvas.addEventListener('wheel', (e: WheelEvent) => {
-      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-        this.offset -= e.deltaX;
-      } else {
-        this.scale -= e.deltaY / (500 / this.scale);
-      }
-
-      // clamp scale and offset, offset depends on scale
-      this.scale = Math.min(Math.max(this.scale, this.canvas.width / this.ch1.length), 0.33);
-      this.offset = Math.min(Math.max(this.offset, - this.ch1.length * this.scale + this.canvas.width), 0);
-
-      e.preventDefault();
-      return false;
-    });
-
+    // set scrubbing listeners
     this.waveformContainer.mousedown((e: JQueryMouseEventObject) => {
       this.setNextPos(e.pageX);
       this.mousedown = true;
     });
-
     this.waveformContainer.mousemove((e: JQueryMouseEventObject) => {
       if (this.mousedown)
        this.setNextPos(e.pageX);
     });
-
     this.waveformContainer.mouseup((e: JQueryMouseEventObject) => {
       this.mousedown = false;
     });
+
+    // initially hide the elements
+    this.nameElement.hide();
+    this.waveformContainer.hide();
+    this.setPoints.hide();
   }
 
-  private setNextPos(mouseX: number) {
-    if (this.currentSound)
-      this.currentSound.pause();
-    this.nextPos = (mouseX + this.offset - this.waveformContainer.offset().left) / this.scale / this.sampleRate - this.inTime;
+  private showSoundContext(setPoints: boolean) {
+    if (this.canvas === undefined) {
+      this.canvas = document.getElementById('waveform-canvas');
+      this.ctx = this.canvas.getContext('2d');
+      this.canvas.width = this.waveformContainer.width();
+      this.canvas.height = this.waveformContainer.height();
+
+      // set scale and scroll listeners
+      this.canvas.addEventListener('wheel', (e: WheelEvent) => {
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+          this.offset -= e.deltaX;
+        } else {
+          this.scale -= e.deltaY / (500 / this.scale);
+        }
+
+        // clamp scale and offset, offset depends on scale
+        this.scale = Math.min(Math.max(this.scale, this.canvas.width / this.ch1.length), 0.33);
+        this.offset = Math.min(Math.max(this.offset, - this.ch1.length * this.scale + this.canvas.width), 0);
+
+        e.preventDefault();
+        return false;
+      });
+    }
+
+    this.nameElement.show();
+    this.waveformContainer.show();
+    if (setPoints)
+      this.setPoints.show();
+    else
+      this.setPoints.hide();
   }
 
   /**
@@ -151,11 +161,6 @@ class FileInspector extends JQElement {
     }
   }
 
-  private setSprite() {
-    this.currentSound.sprite({sample: [this.inTime * 1000, (this.outTime - this.inTime) * 1000]});
-    this.nextPos = 0;
-  }
-
   /**
    * clear the inspector
    * @method clear
@@ -163,6 +168,16 @@ class FileInspector extends JQElement {
   public clear() {
     this.currentSound = undefined;
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  public inspectSongSound() {
+    // TODO
+    throw 'Unsuported operation';
+  }
+
+  public inspectKey() {
+    // TODO
+    throw 'Unsuported operation';
   }
 
   public inspectSound(sound: Sound) {
@@ -183,16 +198,15 @@ class FileInspector extends JQElement {
     // set the current sound
     this.currentSound = sound.sound;
 
-    if (this.canvas === undefined) {
-      this.initContext();
-    }
+    this.showSoundContext(false);
 
-    // create a new blank audio source
-    let source = this.audioCtx.createBufferSource();
+    this.displayAudioData();
+  }
 
+  private displayAudioData() {
     // cut out the base64 metadata
     let begin = 'data:audio/mp3;base64,';
-    let raw = sound.sound._src;
+    let raw = this.currentSound._src;
     raw = raw.substring(begin.length, raw.length);
 
     // convert the base64 data to a byte array
@@ -216,15 +230,30 @@ class FileInspector extends JQElement {
 
       this.refreshInterval = setInterval(() => {
         this.refreshCanvas();
-      }, 50);
+      }, 25);
     });
+  }
+
+  // convert a base64 array to a byte array
+  private base64ToArrayBuffer(base64: string): ArrayBuffer {
+    let binaryString = window.atob(base64);
+    let len = binaryString.length;
+    let bytes = new Uint8Array( len );
+    for (let i = 0; i < len; i++)        {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes.buffer;
+  }
+
+  // set the sample sprite for the sound to the current in and out points
+  private setSprite() {
+    this.currentSound.sprite({sample: [this.inTime * 1000, (this.outTime - this.inTime) * 1000]});
+    this.nextPos = 0;
   }
 
   // refresh the canvas with the two channels
   private refreshCanvas() {
     this.ctx.fillStyle = 'black';
-
-    // TODO allow scrubbing
 
     // compute the scales
     let yScale = this.canvas.height / 4;
@@ -270,18 +299,13 @@ class FileInspector extends JQElement {
     }
   }
 
-  private drawCursorAtTime(x: number) {
-    this.ctx.fillRect((x * this.sampleRate * this.scale) + this.offset - 1, 0, 2, this.canvas.height);
+  private setNextPos(mouseX: number) {
+    if (this.currentSound)
+      this.currentSound.pause();
+    this.nextPos = (mouseX + this.offset - this.waveformContainer.offset().left) / this.scale / this.sampleRate - this.inTime;
   }
 
-  // convert a base64 array to a byte array
-  private base64ToArrayBuffer(base64: string): ArrayBuffer {
-    let binaryString = window.atob(base64);
-    let len = binaryString.length;
-    let bytes = new Uint8Array( len );
-    for (let i = 0; i < len; i++)        {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
-    return bytes.buffer;
+  private drawCursorAtTime(x: number) {
+    this.ctx.fillRect((x * this.sampleRate * this.scale) + this.offset - 1, 0, 2, this.canvas.height);
   }
 }

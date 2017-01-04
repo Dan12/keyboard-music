@@ -20,7 +20,7 @@ class SoundPack {
   }
 
   public addContainer(container: SoundContainer, loc: number) {
-    let location = this.linearToGrid(loc);
+    let location = KeyboardUtils.linearToGrid(loc, this.cols);
     let row = location[0];
     let col = location[1];
     if (row < 0 || row >= this.rows || col < 0 || col >= this.cols) {
@@ -28,14 +28,5 @@ class SoundPack {
       return;
     }
     this.sounds[row][col] = container;
-  }
-
-  // returns in [row, col] order
-  private linearToGrid(i: number): number[] {
-    return [Math.floor(i / this.cols), i % this.cols];
-  }
-
-  private gridToLinear(r: number, c: number): number {
-    return r * this.cols + c;
   }
 }
