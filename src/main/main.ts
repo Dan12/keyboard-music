@@ -11,6 +11,7 @@
 /// <reference path="../libraries/misc.d.ts"/>
 
 /// <reference path="./module-loader.ts"/>
+/// <reference path="./tests.ts"/>
 
 $(document).ready(function(){
     console.log('Starting Application');
@@ -20,6 +21,8 @@ $(document).ready(function(){
 
     $('body').append(main_element);
 
-    // call the module loader
-    ModuleLoader(main_element);
+    runTests(() => {
+      // call the module loader
+      ModuleLoader(main_element);
+    });
 });

@@ -6,7 +6,7 @@ class SoundPack {
   private cols: number;
 
   constructor(type: string) {
-    let size = Keyboard.getKeyboardSizeString(type);
+    let size = KeyboardUtils.getKeyboardSizeString(type);
     this.rows = size.rows;
     this.cols = size.cols;
 

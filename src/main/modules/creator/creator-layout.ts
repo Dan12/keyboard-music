@@ -16,6 +16,8 @@ class Creator extends JQElement implements InputReciever {
   private square: Keyboard;
   private mapTo: Keyboard;
 
+  private song: Song;
+
   /**
    * return the singleton instance of this class
    * @method getInstance
@@ -40,6 +42,19 @@ class Creator extends JQElement implements InputReciever {
     this.square.centerVertical();
     // add some spacing to the square
     this.square.asElement().css({'margin-right': '30px'});
+    this.square.setAddSoundCallback(
+      (r: number, c: number, sound: SoundFile) => {
+        this.addSquareSound(r, c, sound);
+      }
+    );
+    // turn square green when active
+    this.square.getColorManager().setRoutine(
+      (r: number, c: number, p: boolean) => {
+        return [{row: r, col: c, r: p ? 100 : -1, g: p ? 255 : -1, b: p ? 100 : -1}];
+      }
+    );
+
+    this.song = new Song();
 
     this.mapTo = new Keyboard(KeyBoardType.STANDARD);
     this.mapTo.resize(0.6);
@@ -68,6 +83,10 @@ class Creator extends JQElement implements InputReciever {
 
     // layout the elements
     this.layoutElements();
+  }
+
+  private addSquareSound(r: number, c: number, sound: SoundFile) {
+    this.square.getColorManager().pressedKey(r, c);
   }
 
   // set the element layout

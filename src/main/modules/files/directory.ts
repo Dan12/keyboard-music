@@ -8,6 +8,9 @@ class Directory extends Payload {
 
   private subDirElement: JQuery;
 
+  private fileSize: number;
+  private dirSize: number;
+
   constructor(name: string, parent: JQuery) {
     super($('<div class="subdirectory-name">' + name + '</div>'));
     this.subDirElement = $('<div class="subdirectory"></div>');
@@ -21,6 +24,26 @@ class Directory extends Payload {
 
     this.files = {};
     this.subdirectories = {};
+
+    this.fileSize = 0;
+    this.dirSize = 0;
+  }
+
+  public numFiles() {
+    return this.fileSize;
+  }
+
+  public numDirs() {
+    return this.dirSize;
+  }
+
+  public getFirstDir(): Directory {
+    let key =  Object.keys(this.subdirectories)[0];
+    return this.subdirectories[key];
+  }
+
+  public getFiles(): string[] {
+    return Object.keys(this.files);
   }
 
   /**
@@ -39,6 +62,7 @@ class Directory extends Payload {
       // if this subdirectory does not exist, make a new one
       if (this.subdirectories[dir] === undefined) {
         this.subdirectories[dir] = new Directory(dir, this.subDirElement);
+        this.dirSize++;
       }
 
       // continue recursion with new relative file location
@@ -65,6 +89,7 @@ class Directory extends Payload {
   private loadedFile(name: string, sound: Howl, fullname: string) {
     let new_sound = new SoundFile(name, sound);
     this.files[name] = new_sound;
+    this.fileSize++;
 
     this.subDirElement.append(new_sound.asElement());
 
