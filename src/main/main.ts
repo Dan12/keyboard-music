@@ -12,6 +12,7 @@
 
 /// <reference path="./module-loader.ts"/>
 /// <reference path="./tests.ts"/>
+/// <reference path="./test-mobile.ts"/>
 
 $(document).ready(function(){
     console.log('Starting Application');
@@ -21,8 +22,12 @@ $(document).ready(function(){
 
     $('body').append(main_element);
 
-    runTests(() => {
-      // call the module loader
-      ModuleLoader(main_element);
-    });
+    if (testMobile()) {
+      main_element.append('<div>This application is currently not supported for mobile</div>');
+    } else {
+      runTests(() => {
+        // call the module loader
+        ModuleLoader(main_element);
+      });
+    }
 });

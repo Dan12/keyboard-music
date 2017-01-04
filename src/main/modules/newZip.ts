@@ -22,6 +22,8 @@ class NewZip {
 
     let baseName = name.substring(name.indexOf('/') + 1, name.indexOf('.'));
 
+    FileManager.getInstance().addBaseDir(baseName, name);
+
     // get request for zip file
     let xhr = new XMLHttpRequest();
     xhr.open('GET', `${NewZip.zipBase}/${name}`);

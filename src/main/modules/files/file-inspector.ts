@@ -96,6 +96,9 @@ class FileInspector extends JQElement {
     this.waveformContainer.mouseup((e: JQueryMouseEventObject) => {
       this.mousedown = false;
     });
+    this.waveformContainer.mouseleave((e: JQueryMouseEventObject) => {
+      this.mousedown = false;
+    });
 
     // initially hide the elements
     this.nameElement.hide();
@@ -145,7 +148,8 @@ class FileInspector extends JQElement {
     if (this.currentSound) {
       // if the sound is paused
       if (this.currentSound.pos() === 0) {
-        this.currentSound.play('sample');
+        // this.currentSound.play('sample');
+        this.currentSound.play();
 
         // set the playback if set
         if (this.nextPos > 0 && this.nextPos < this.outTime - this.inTime) {
@@ -170,24 +174,18 @@ class FileInspector extends JQElement {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  public inspectSongSound() {
+  public inspectKey(sound: SoundContainer) {
     // TODO
     throw 'Unsuported operation';
   }
 
-  public inspectKey() {
-    // TODO
-    throw 'Unsuported operation';
-  }
-
-  public inspectSound(sound: Sound) {
-    // TODO
-    throw 'Unsuported operation';
+  public inspectSound(sound: SoundFile) {
+    this.inspectFile(sound.name, sound);
   }
 
   /**
    * inspect the given sound file with the given name
-   * @method inspect
+   * @method inspectFile
    * @param {String} name the name of the file
    * @param {SoundFile} sound the sound file
    */
@@ -222,7 +220,7 @@ class FileInspector extends JQElement {
       this.outTime = buffer.duration;
       this.scale = this.canvas.width / this.ch1.length;
 
-      this.setSprite();
+      // this.setSprite();
 
       if (this.refreshInterval) {
         clearInterval(this.refreshInterval);

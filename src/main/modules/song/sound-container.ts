@@ -6,19 +6,29 @@
  * @constructor
  */
 class SoundContainer {
-  private pitches: Sound[];
-  private looped: boolean;
-  private quaternized: number;
-  private holdToPlay: boolean;
+  public pitches: Sound[];
+  public looped: boolean;
+  public quaternized: number;
+  public holdToPlay: boolean;
 
-  constructor(hold_to_play: boolean, quaternized: number, looped: boolean) {
+  constructor(hold_to_play?: boolean, quaternized?: number, looped?: boolean) {
     this.pitches = [];
     this.looped = looped === undefined ? false : looped;
     this.quaternized = quaternized === undefined ? 0 : quaternized;
     this.holdToPlay = hold_to_play === undefined ? false : hold_to_play;
   }
 
-  public addPitches(sound: SoundFile, start_time: number, end_time: number) {
+  public addPitch(sound: SoundFile, start_time?: number, end_time?: number) {
     this.pitches.push(new Sound(sound.name, sound.sound, this.looped, start_time, end_time));
+  }
+
+  public pressed() {
+    if (this.pitches.length > 0)
+      this.pitches[0].play();
+  }
+
+  public released() {
+    if (this.pitches.length > 0)
+      this.pitches[0].stop();
   }
 }

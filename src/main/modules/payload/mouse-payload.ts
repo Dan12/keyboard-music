@@ -1,5 +1,6 @@
 /// <reference path="./payload.ts"/>
 /// <reference path="./payload-receiver.ts"/>
+/// <reference path="./hybrid-payload.ts"/>
 
 /**
  * Maintain the current payload of the mouse
@@ -31,7 +32,7 @@ class MousePayload {
         if (MousePayload.payloadElement === undefined) {
           MousePayload.payloadElement = MousePayload.payload.asElement().clone();
           MousePayload.listen_element.append(MousePayload.payloadElement);
-          MousePayload.payloadElement.css({'position': 'absolute', 'pointer-events': 'none'});
+          MousePayload.payloadElement.css({'position': 'absolute', 'pointer-events': 'none', 'opacity': '0.5'});
         }
         MousePayload.payloadElement.css(
           {'left': (e.pageX + MousePayload.xOffset) + 'px', 'top': (e.pageY + MousePayload.yOffset) + 'px'}

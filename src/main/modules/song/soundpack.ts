@@ -1,32 +1,19 @@
 /// <reference path="./sound-container.ts"/>
 
 class SoundPack {
-  private sounds: SoundContainer[][];
-  private rows: number;
-  private cols: number;
+  private sounds: {[loc: number]: SoundContainer};
 
-  constructor(type: string) {
-    let size = KeyboardUtils.getKeyboardSizeString(type);
-    this.rows = size.rows;
-    this.cols = size.cols;
+  private linkedAreas: number[][];
 
-    this.sounds = [];
-    for (let i = 0; i < this.rows; i++) {
-      this.sounds.push([]);
-      for (let j = 0; j < this.cols; j++) {
-        this.sounds[i].push(null);
-      }
-    }
+  constructor() {
+    this.sounds = {};
   }
 
   public addContainer(container: SoundContainer, loc: number) {
-    let location = KeyboardUtils.linearToGrid(loc, this.cols);
-    let row = location[0];
-    let col = location[1];
-    if (row < 0 || row >= this.rows || col < 0 || col >= this.cols) {
-      console.log(`Invalid soundpack index at ${row},${col}`);
-      return;
-    }
-    this.sounds[row][col] = container;
+    this.sounds[loc] = container;
+  }
+
+  public getContainer(loc: number) {
+    return this.sounds[loc];
   }
 }

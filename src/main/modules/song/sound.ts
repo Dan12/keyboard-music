@@ -21,7 +21,7 @@ class Sound {
 
   private asSprite: boolean;
 
-  public constructor(name: string, howlObj: Howl, looped: boolean, start_time: number, end_time: number) {
+  public constructor(name: string, howlObj: Howl, looped: boolean, start_time?: number, end_time?: number) {
     this.name = name;
     this.howl_object = howlObj;
 
@@ -29,6 +29,7 @@ class Sound {
 
     if (start_time !== undefined && end_time !== undefined) {
       this.howl_object.sprite({sprite: [start_time, end_time - start_time]});
+      this.asSprite = true;
     }
   }
 

@@ -16,9 +16,7 @@ class Creator extends JQElement implements InputReciever {
   private padding = 6;
 
   private square: PayloadKeyboard;
-  private mapTo: Keyboard;
-
-  private song: Song;
+  private mapTo: PayloadKeyboard;
 
   private testLayoutSounds: {[location: number]: SoundFile};
 
@@ -52,14 +50,48 @@ class Creator extends JQElement implements InputReciever {
       }
     );
     // turn square green when active
-    this.square.getKeyboard().getColorManager().setRoutine( ColorManager.standardColorRoutine(100, 255, 100));
+    this.square.getKeyboard().getColorManager().setRoutine(ColorManager.standardColorRoutine(100, 255, 100));
+    this.square.getKeyboard().setPressKeyListener((r: number, c: number) => {
+      let sound = this.testLayoutSounds[KeyboardUtils.gridToLinear(r, c, 8)];
+      if (sound)
+        FileInspector.getInstance().inspectSound(sound);
+    });
 
-    this.song = new Song();
+    // initialize the song manager for the song creation
+    SongManager.getInstance().newSong();
+    SongManager.getSong().addPack();
+    SongManager.getInstance().setSoundPack(0);
+
     this.testLayoutSounds = {};
 
-    this.mapTo = new Keyboard(KeyBoardType.STANDARD);
-    this.mapTo.resize(0.6);
-    this.mapTo.centerVertical();
+    this.mapTo = new PayloadKeyboard(KeyBoardType.STANDARD);
+    this.mapTo.getKeyboard().resize(0.6);
+    this.mapTo.getKeyboard().centerVertical();
+    this.mapTo.setAddSoundCallback(
+      (r: number, c: number, sound: SoundFile) => {
+        // add the sound to the song
+        SongManager.getSong().addSound(
+          0,
+          KeyboardUtils.gridToLinear(r, c, KeyboardUtils.getKeyboardSize(KeyBoardType.STANDARD).cols),
+          sound
+        );
+
+        this.mapTo.getKeyboard().getColorManager().releasedKey(r, c);
+      }
+    );
+    // turn square green when there is a key on it
+    this.mapTo.getKeyboard().getColorManager().setRoutine(
+      (r: number, c: number, p: boolean) => {
+        let hasElement = SongManager.getCurrentPack().getContainer(
+          KeyboardUtils.gridToLinear(r, c, KeyboardUtils.getKeyboardSize(KeyBoardType.STANDARD).cols)
+        ) !== undefined;
+
+        return [{row: r, col: c, r: p ? 255 : hasElement ? 100 : -1, g: p ? 160 : hasElement ? 255 : -1, b: p ? 0 : hasElement ? 100 : -1}];
+      }
+    );
+    this.mapTo.getKeyboard().setPressKeyListener((r: number, c: number) => {
+      console.log(`inspect ${r},${c}`);
+    });
 
     // add the file gui
     this.asElement().append(FileGUI.getInstance().asElement());
@@ -72,11 +104,7 @@ class Creator extends JQElement implements InputReciever {
     this.asElement().append(this.main_content);
 
     this.main_content.append(this.square.asElement());
-
-    // add the keyboards to the columns
-    let h = $('<div class="horizontal-column"></div>');
-    this.main_content.append(h);
-    h.append(this.mapTo.asElement());
+    this.main_content.append(this.mapTo.asElement());
 
     // layout the elements
     this.layoutElements();
@@ -100,10 +128,10 @@ class Creator extends JQElement implements InputReciever {
   }
 
   public keyDown(key: number) {
-    this.mapTo.keyDown(key);
+    this.mapTo.getKeyboard().keyDown(key);
   }
 
   public keyUp(key: number) {
-    this.mapTo.keyUp(key);
+    this.mapTo.getKeyboard().keyUp(key);
   }
 }

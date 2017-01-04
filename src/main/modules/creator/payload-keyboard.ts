@@ -7,7 +7,11 @@ class PayloadKeyboard extends PayloadReceiver {
   constructor(type: KeyBoardType) {
     super($('<div class="horizontal-column"></div>'));
 
-    this.keyboard = new Keyboard(type);
+    let keyHook = (payload: Payload, r: number, c: number) => {
+      this.runAddKeyCallback(r, c, payload);
+    };
+
+    this.keyboard = new Keyboard(type, keyHook);
 
     this.asElement().append(this.keyboard.asElement());
   }
@@ -53,7 +57,11 @@ class PayloadKeyboard extends PayloadReceiver {
           let r = Math.floor(sLetter / 2) * 4 + Math.floor(sNum / 4);
           let c = (sLetter % 2) * 4 + (sNum % 4);
 
-          this.runAddKeyCallback(r, c, lowestDir.getFile(sound));
+          let soundFile = lowestDir.getFile(sound);
+
+          this.runAddKeyCallback(r, c, soundFile);
+
+          this.keyboard.getKey(r, c).setPayload(soundFile);
         }
       }
     } else {

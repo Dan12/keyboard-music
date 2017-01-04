@@ -11,6 +11,9 @@ class FileManager {
   // define several file directories with a base location pointing to a directory
   private files: {[name: string]: Directory};
 
+  // stores the physical location of each base dir
+  private rootLocations: {[name: string]: string};
+
   private baseSongDir = 'sounds/';
 
   private static instance: FileManager;
@@ -32,6 +35,17 @@ class FileManager {
   private constructor() {
     // create the root file directory and append the element
     this.files = {};
+
+    this.rootLocations = {};
+  }
+
+  public addBaseDir(name: string, location: string) {
+    this.rootLocations[name] = location;
+
+    // if the base directory doesn't exists yet, create it
+    if (this.files[name] === undefined) {
+      this.files[name] = new Directory(name, FileGUI.getInstance().asElement());
+    }
   }
 
   /**
@@ -44,12 +58,13 @@ class FileManager {
   public addFile(baseLocation: string, name: string, data: string) {
     if (this.validFile(name)) {
       let fileName = this.trimName(name);
-      // if the base directory doesn't exists yet, create it
+
       if (this.files[baseLocation] === undefined) {
-        this.files[baseLocation] = new Directory(baseLocation, FileGUI.getInstance().asElement());
+        collectErrorMessage('Error: Never initliaized Base Directory');
+      } else {
+        // add the file to the base directory
+        this.files[baseLocation].addFile(fileName, data, baseLocation + '/' + fileName);
       }
-      // add the file to the base directory
-      this.files[baseLocation].addFile(fileName, data, baseLocation + '/' + fileName);
     } else {
       collectErrorMessage('Add file error, invalid name', name);
     }

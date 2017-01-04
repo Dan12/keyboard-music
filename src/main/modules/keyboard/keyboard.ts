@@ -3,7 +3,6 @@
 /// <reference path="../../interfaces/input-reciever.ts"/>
 /// <reference path="./color-manager.ts"/>
 /// <reference path="./keyboard-utils.ts"/>
-/// <reference path="../creator/payload-keyboard-key.ts"/>
 
 /**
  * The keyboard module to represent an html keyboard.
@@ -53,19 +52,12 @@ class Keyboard extends JQElement implements InputReciever {
       let nextRow = $(`<div class="row" id="row_${r}"></div>`);
       this.asElement().append(nextRow);
       for (let c = 0; c < this.numCols; c++) {
-        // construct the payload key
-        if(payloadHook) {
-          let newKey = new PayloadKeyboardKey(KeyboardUtils.keyboardSymbols[r % 4][c], r, c, payloadHook);
-          this.rows[r].push(newKey.getKey());
-          nextRow.append(newKey.asElement());
-        } else {
-          let newKey = new KeyboardKey(KeyboardUtils.keyboardSymbols[r % 4][c]);
-          this.rows[r].push(newKey);
-          nextRow.append(newKey.asElement());
-        }
+        let newKey = new KeyboardKey(KeyboardUtils.keyboardSymbols[r % 4][c], r, c, payloadHook);
+        this.rows[r].push(newKey);
+        nextRow.append(newKey.asElement());
 
         if (r < 4) {
-          this.rows[r][c].asElement().addClass('bolder');
+          newKey.asElement().addClass('bolder');
         }
       }
     }
@@ -90,6 +82,21 @@ class Keyboard extends JQElement implements InputReciever {
     this.setVisible();
 
     this.colorManager = new ColorManager(this.rows);
+  }
+
+  public getKey(r: number, c: number): KeyboardKey {
+    return this.rows[r][c];
+  }
+
+  public setPressKeyListener(callback: (r: number, c: number) => void) {
+    for (let r = 0; r < this.numRows; r++) {
+      for (let c = 0; c < this.numCols; c++) {
+        this.rows[r][c].asElement().click(() => {
+          callback(r, c);
+        });
+        this.rows[r][c].asElement().css('cursor', 'pointer');
+      }
+    }
   }
 
   /**
@@ -182,11 +189,15 @@ class Keyboard extends JQElement implements InputReciever {
   // where a key officially gets pressed
   private pressedKey(r: number, c: number) {
     this.colorManager.pressedKey(r, c);
+
+    SongManager.getInstance().pressedKey(KeyboardUtils.gridToLinear(r, c, this.numCols));
   }
 
   // where a key officially gets released
   private releasedKey(r: number, c: number) {
     this.colorManager.releasedKey(r, c);
+
+    SongManager.getInstance().releasedKey(KeyboardUtils.gridToLinear(r, c, this.numCols));
   }
 
   // bold or unbold keys based on the modifier active flag

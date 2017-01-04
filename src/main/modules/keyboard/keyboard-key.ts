@@ -7,10 +7,20 @@
  * @class KeyboardKey
  * @constructor
  */
-class KeyboardKey extends JQElement {
+class KeyboardKey extends HybridPayload {
 
-  constructor(symbol: string) {
+  private payloadHook: (payload: Payload, r: number, c: number) => void;
+  private row: number;
+  private col: number;
+  private payload: Payload;
+
+  constructor(symbol: string, r?: number, c?: number, hook?: (payload: Payload, r: number, c: number) => void) {
     super($(`<div class="keyboard_key primary_color">${symbol}</div>`));
+
+    this.row = r;
+    this.col = c;
+
+    this.payloadHook = hook;
   }
 
   /**
@@ -50,6 +60,33 @@ class KeyboardKey extends JQElement {
    */
   public setColor(r: number, g: number, b: number) {
     this.asElement().css('background-color', `rgb(${r}, ${g}, ${b})`);
+  }
+
+  public canReceive(payload: Payload): boolean {
+    return this.payloadHook !== undefined && (payload instanceof SoundFile || payload instanceof KeyboardKey);
+  }
+
+  public receivePayload(payload: Payload) {
+    if (payload !== this) {
+      this.setPayload(payload);
+      this.payloadHook(this.payload, this.row, this.col);
+    }
+  }
+
+  public canBePayload(): boolean {
+    return this.payload !== undefined;
+  }
+
+  public getPayload(): Payload {
+    return this.payload;
+  }
+
+  public setPayload(payload: Payload) {
+    this.payload = payload;
+    if (this.payload instanceof KeyboardKey)
+      this.payload = (<KeyboardKey> this.payload).payload;
+    if (!(this.payload instanceof SoundFile))
+      collectErrorMessage('invalid key payload', payload);
   }
 
 }
