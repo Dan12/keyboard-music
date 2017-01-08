@@ -7,10 +7,7 @@
 /// <reference path="./modules/song/song-manager.ts"/>
 /// <reference path="./modules/mode-handler.ts"/>
 /// <reference path="./modules/creator/creator-layout.ts"/>
-
-/// <reference path="./modules/newZip.ts"/>
-// /// <reference path="./modules/zip-handler.ts"/>
-
+/// <reference path="./modules/zip.ts"/>
 /// <reference path="./modules/error-collector.ts"/>
 
 /**
