@@ -8,8 +8,16 @@ class MapToKeyboard {
 
     let keyHook = (type: PayloadHookRequest, payload?: Payload, objData?: KeyboardKey): boolean => {
       if (type === PayloadHookRequest.RECEIVED) {
-        this.addSound(objData.getRow(), objData.getCol(), payload);
+        if (payload instanceof SoundFile)
+          this.addSound(objData.getRow(), objData.getCol(), payload);
+        else if (payload instanceof KeyboardKey) {
+          let sound = KeyPayloadManager.getInstance().getSoundFromKey(<KeyboardKey> payload);
+          this.addSound(objData.getRow(), objData.getCol(), sound);
+        }
+        else
+          collectErrorMessage('Payload type does not match soundfile type in keyboard', payload);
       } else if (type === PayloadHookRequest.CAN_RECEIVE) {
+
         return payload instanceof SoundFile || payload instanceof KeyboardKey;
       } else if (type === PayloadHookRequest.IS_PAYLOAD) {
         return true;
@@ -36,15 +44,7 @@ class MapToKeyboard {
     });
   }
 
-  private addSound(r: number, c: number, payload: Payload) {
-    let sound;
-    if (payload instanceof SoundFile)
-      sound = <SoundFile> payload;
-    else if (payload instanceof KeyboardKey)
-      sound = null;
-    else
-      collectErrorMessage('Payload type does not match soundfile type in keyboard', sound);
-
+  private addSound(r: number, c: number, sound: SoundFile) {
     // add the sound to the song
     SongManager.getSong().addSound(
       0,
@@ -53,6 +53,7 @@ class MapToKeyboard {
     );
 
     this.mapTo.getKeyboard().getColorManager().releasedKey(r, c);
+    this.mapTo.getKeyboard().getKey(r, c).setPreviousColor();
   }
 
   public getElement(): JQuery {

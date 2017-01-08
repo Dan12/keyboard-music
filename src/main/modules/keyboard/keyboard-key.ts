@@ -10,10 +10,12 @@
 class KeyboardKey extends HybridPayload<KeyboardKey> {
   private row: number;
   private col: number;
+  private keyboard: Keyboard;
 
-  constructor(symbol: string, transition: boolean, r: number, c: number, hook?: PayloadHookFunc<KeyboardKey>) {
+  constructor(symbol: string, transition: boolean, k: Keyboard, r: number, c: number, hook?: PayloadHookFunc<KeyboardKey>) {
     super($(`<div class="keyboard_key primary_color ${(transition ? 'transition' : '')}">${symbol}</div>`), hook);
 
+    this.keyboard = k;
     this.row = r;
     this.col = c;
   }
@@ -67,5 +69,9 @@ class KeyboardKey extends HybridPayload<KeyboardKey> {
 
   public getCol(): number {
     return this.col;
+  }
+
+  public getKeyboard(): Keyboard {
+    return this.keyboard;
   }
 }

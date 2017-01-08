@@ -1,11 +1,8 @@
 class SquareKeyboard {
 
   private square: PayloadKeyboard;
-  private testLayoutSounds: {[location: number]: SoundFile};
 
   constructor() {
-    this.testLayoutSounds = {};
-
     let squarePayloadFunc = (type: PayloadHookRequest, payload?: Payload, objData?: number): boolean => {
       if (type === PayloadHookRequest.RECEIVED) {
         this.processPayload(payload);
@@ -20,7 +17,13 @@ class SquareKeyboard {
 
     let keyHook = (type: PayloadHookRequest, payload?: Payload, objData?: KeyboardKey): boolean => {
       if (type === PayloadHookRequest.RECEIVED) {
-        this.addSound(objData.getRow(), objData.getCol(), payload);
+        if (payload instanceof SoundFile)
+          this.addSquareSound(objData.getRow(), objData.getCol(), payload);
+        else if (payload instanceof KeyboardKey) {
+          let sound = KeyPayloadManager.getInstance().getSoundFromKey(<KeyboardKey> payload);
+          this.addSquareSound(objData.getRow(), objData.getCol(), sound);
+        } else
+          collectErrorMessage('Payload type does not match soundfile type in keyboard', payload);
       } else if (type === PayloadHookRequest.CAN_RECEIVE) {
         return payload instanceof SoundFile || payload instanceof KeyboardKey;
       } else if (type === PayloadHookRequest.IS_PAYLOAD) {
@@ -38,7 +41,10 @@ class SquareKeyboard {
     // turn square green when active
     this.square.getKeyboard().getColorManager().setRoutine(ColorManager.standardColorRoutine(100, 255, 100));
     this.square.getKeyboard().setPressKeyListener((r: number, c: number) => {
-      let sound = this.testLayoutSounds[KeyboardUtils.gridToLinear(r, c, 8)];
+      let sound = KeyPayloadManager.getInstance().getKey(
+        this.square.getKeyboard().getID(),
+        KeyboardUtils.gridToLinear(r, c, this.square.getKeyboard().getNumCols())
+      );
       if (sound)
         FileInspector.getInstance().inspectSound(sound);
     });
@@ -46,15 +52,6 @@ class SquareKeyboard {
 
   public getElement(): JQuery {
     return this.square.asElement();
-  }
-
-  private addSound(r: number, c: number, sound: Payload) {
-    if (sound instanceof SoundFile)
-      this.addSquareSound(r, c, sound);
-    else if (sound instanceof KeyboardKey)
-      this.addSquareSound(r, c, null);
-    else
-      collectErrorMessage('Payload type does not match soundfile type in keyboard', sound);
   }
 
   // called when a directory payload is recieved
@@ -88,10 +85,14 @@ class SquareKeyboard {
   }
 
   private addSquareSound(r: number, c: number, sound: SoundFile) {
+    // Set the color
     this.square.getKeyboard().getColorManager().pressedKey(r, c);
-    console.log(this.square.getKeyboard().getKey(r, c).asElement().css('background-color'));
     this.square.getKeyboard().getKey(r, c).setPreviousColor();
 
-    this.testLayoutSounds[KeyboardUtils.gridToLinear(r, c, 8)] = sound;
+    // add the soundfile to the keyboard pool
+    KeyPayloadManager.getInstance().addKey(
+      this.square.getKeyboard().getID(),
+      KeyboardUtils.gridToLinear(r, c, this.square.getKeyboard().getNumCols()), sound
+    );
   }
 }
