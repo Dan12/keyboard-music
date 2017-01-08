@@ -1,4 +1,6 @@
 /// <reference path="./payload-keyboard.ts"/>
+/// <reference path="./creator-square-keyboard.ts"/>
+/// <reference path="./creator-mapto-keyboard.ts"/>
 
 /**
  * the class to parent the creator gui for creating songs
@@ -15,10 +17,8 @@ class Creator extends JQElement implements InputReciever {
   private inspectorHeight = 120;
   private padding = 6;
 
-  private square: PayloadKeyboard;
-  private mapTo: PayloadKeyboard;
-
-  private testLayoutSounds: {[location: number]: SoundFile};
+  private mapTo: MapToKeyboard;
+  private square: SquareKeyboard;
 
   /**
    * return the singleton instance of this class
@@ -38,60 +38,13 @@ class Creator extends JQElement implements InputReciever {
     super($('<div id="creator"></div>'));
 
     // initialize the keyboards
-
-    this.square = new PayloadKeyboard(KeyBoardType.SQUARE);
-    this.square.getKeyboard().resize(0.6);
-    this.square.getKeyboard().centerVertical();
-    // add some spacing to the square
-    this.square.asElement().css({'margin-right': '30px'});
-    this.square.setAddSoundCallback(
-      (r: number, c: number, sound: SoundFile) => {
-        this.addSquareSound(r, c, sound);
-      }
-    );
-    // turn square green when active
-    this.square.getKeyboard().getColorManager().setRoutine(ColorManager.standardColorRoutine(100, 255, 100));
-    this.square.getKeyboard().setPressKeyListener((r: number, c: number) => {
-      let sound = this.testLayoutSounds[KeyboardUtils.gridToLinear(r, c, 8)];
-      if (sound)
-        FileInspector.getInstance().inspectSound(sound);
-    });
+    this.square = new SquareKeyboard();
+    this.mapTo = new MapToKeyboard();
 
     // initialize the song manager for the song creation
     SongManager.getInstance().newSong();
     SongManager.getSong().addPack();
     SongManager.getInstance().setSoundPack(0);
-
-    this.testLayoutSounds = {};
-
-    this.mapTo = new PayloadKeyboard(KeyBoardType.STANDARD);
-    this.mapTo.getKeyboard().resize(0.6);
-    this.mapTo.getKeyboard().centerVertical();
-    this.mapTo.setAddSoundCallback(
-      (r: number, c: number, sound: SoundFile) => {
-        // add the sound to the song
-        SongManager.getSong().addSound(
-          0,
-          KeyboardUtils.gridToLinear(r, c, KeyboardUtils.getKeyboardSize(KeyBoardType.STANDARD).cols),
-          sound
-        );
-
-        this.mapTo.getKeyboard().getColorManager().releasedKey(r, c);
-      }
-    );
-    // turn square green when there is a key on it
-    this.mapTo.getKeyboard().getColorManager().setRoutine(
-      (r: number, c: number, p: boolean) => {
-        let hasElement = SongManager.getCurrentPack().getContainer(
-          KeyboardUtils.gridToLinear(r, c, KeyboardUtils.getKeyboardSize(KeyBoardType.STANDARD).cols)
-        ) !== undefined;
-
-        return [{row: r, col: c, r: p ? 255 : hasElement ? 100 : -1, g: p ? 160 : hasElement ? 255 : -1, b: p ? 0 : hasElement ? 100 : -1}];
-      }
-    );
-    this.mapTo.getKeyboard().setPressKeyListener((r: number, c: number) => {
-      console.log(`inspect ${r},${c}`);
-    });
 
     // add the file gui
     this.asElement().append(FileGUI.getInstance().asElement());
@@ -103,17 +56,11 @@ class Creator extends JQElement implements InputReciever {
     this.main_content = $('<div style="position: absolute; display: inline-block; overflow: hidden;"></div>');
     this.asElement().append(this.main_content);
 
-    this.main_content.append(this.square.asElement());
-    this.main_content.append(this.mapTo.asElement());
+    this.main_content.append(this.square.getElement());
+    this.main_content.append(this.mapTo.getElement());
 
     // layout the elements
     this.layoutElements();
-  }
-
-  private addSquareSound(r: number, c: number, sound: SoundFile) {
-    this.square.getKeyboard().getColorManager().pressedKey(r, c);
-
-    this.testLayoutSounds[KeyboardUtils.gridToLinear(r, c, 8)] = sound;
   }
 
   // set the element layout

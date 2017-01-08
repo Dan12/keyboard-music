@@ -11,4 +11,8 @@ function collectErrorMessage(message: string, errorObj?: any) {
   if (errorObj) {
     console.log(errorObj);
   }
+
+  let err = new Error();
+  console.log('At: ');
+  console.log(err.stack);
 }

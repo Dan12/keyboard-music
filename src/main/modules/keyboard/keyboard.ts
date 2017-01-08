@@ -34,7 +34,7 @@ class Keyboard extends JQElement implements InputReciever {
   // a mapping from a keycode to keyboard row and column
   private keyMap = {};
 
-  public constructor(type: KeyBoardType, payloadHook?: (payload: Payload, r: number, c: number) => void) {
+  public constructor(type: KeyBoardType, allowTransition: boolean, payloadHook?: PayloadHookFunc<KeyboardKey>) {
     super($('<div class="keyboard"></div>'));
 
     let size = KeyboardUtils.getKeyboardSize(type);
@@ -52,7 +52,7 @@ class Keyboard extends JQElement implements InputReciever {
       let nextRow = $(`<div class="row" id="row_${r}"></div>`);
       this.asElement().append(nextRow);
       for (let c = 0; c < this.numCols; c++) {
-        let newKey = new KeyboardKey(KeyboardUtils.keyboardSymbols[r % 4][c], r, c, payloadHook);
+        let newKey = new KeyboardKey(KeyboardUtils.keyboardSymbols[r % 4][c], allowTransition, r, c, payloadHook);
         this.rows[r].push(newKey);
         nextRow.append(newKey.asElement());
 

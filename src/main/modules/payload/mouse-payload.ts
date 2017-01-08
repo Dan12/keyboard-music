@@ -1,6 +1,7 @@
 /// <reference path="./payload.ts"/>
 /// <reference path="./payload-receiver.ts"/>
 /// <reference path="./hybrid-payload.ts"/>
+/// <reference path="./payload-utils.ts"/>
 
 /**
  * Maintain the current payload of the mouse

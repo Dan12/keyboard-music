@@ -4,17 +4,20 @@
 class Song {
   private name: string;
 
-  // array of time stamps and the corresponding bpm.
+  // array of bpm and time steps
   // Invariant: must be at least of length 1 and the first cell must have timestamp 0
   private bpms: number[][];
 
   private soundPacks: SoundPack[];
 
+  // TODO keyboard type
+  // TODO to json
+
   constructor() {
     this.soundPacks = [];
 
     // default bpm
-    this.bpms = [[0, 140]];
+    this.bpms = [[140, 0]];
 
     this.name = 'Untitled';
   }
