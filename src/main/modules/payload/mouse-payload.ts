@@ -10,11 +10,11 @@
  */
 class MousePayload {
 
-  private static listen_element: JQuery;
+  private static listen_element: JQueryWrapper;
 
   private static payload: Payload;
 
-  private static payloadElement: JQuery;
+  private static payloadElement: JQueryWrapper;
   private static xOffset: number;
   private static yOffset: number;
 
@@ -23,7 +23,7 @@ class MousePayload {
    * @method initialize
    * @static
    */
-  public static initialize(element: JQuery) {
+  public static initialize(element: JQueryWrapper) {
     MousePayload.listen_element = element;
 
     MousePayload.listen_element.mousemove((e: JQueryMouseEventObject) => {

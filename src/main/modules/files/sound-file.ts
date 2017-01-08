@@ -13,7 +13,7 @@ class SoundFile extends Payload {
   public location: string;
 
   constructor(name: string, sound: Howl, location: string) {
-    super($('<div class="file">' + name + '</div>'));
+    super(new JQueryWrapper('<div class="file">' + name + '</div>'));
 
     this.name = name;
     this.sound = sound;

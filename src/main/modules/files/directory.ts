@@ -6,14 +6,14 @@ class Directory extends Payload {
   private files: {[name: string]: SoundFile};
   private subdirectories: {[name: string]: Directory};
 
-  private subDirElement: JQuery;
+  private subDirElement: JQueryWrapper;
 
   private fileSize: number;
   private dirSize: number;
 
-  constructor(name: string, parent: JQuery) {
-    super($('<div class="subdirectory-name">' + name + '</div>'));
-    this.subDirElement = $('<div class="subdirectory"></div>');
+  constructor(name: string, parent: JQueryWrapper) {
+    super(new JQueryWrapper('<div class="subdirectory-name">' + name + '</div>'));
+    this.subDirElement = new JQueryWrapper('<div class="subdirectory"></div>');
 
     parent.append(this.asElement());
     parent.append(this.subDirElement);

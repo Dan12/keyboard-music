@@ -22,10 +22,10 @@ class FileGUI extends JQElement {
   }
 
   private constructor() {
-    super($('<div id="file-manager"></div>'));
+    super(new JQueryWrapper('<div id="file-manager"></div>'));
 
     // add the main directory to the file structure
-    this.asElement().append($('<div id="main-directory"></div>'));
+    this.asElement().append(new JQueryWrapper('<div id="main-directory"></div>'));
   }
 
   /**

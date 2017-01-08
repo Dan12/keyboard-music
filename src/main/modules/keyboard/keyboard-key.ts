@@ -13,7 +13,7 @@ class KeyboardKey extends HybridPayload<KeyboardKey> {
   private keyboard: Keyboard;
 
   constructor(symbol: string, transition: boolean, k: Keyboard, r: number, c: number, hook?: PayloadHookFunc<KeyboardKey>) {
-    super($(`<div class="keyboard_key primary_color ${(transition ? 'transition' : '')}">${symbol}</div>`), hook);
+    super(new JQueryWrapper(`<div class="keyboard_key primary_color ${(transition ? 'transition' : '')}">${symbol}</div>`), hook);
 
     this.keyboard = k;
     this.row = r;

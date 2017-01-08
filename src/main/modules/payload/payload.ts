@@ -5,7 +5,7 @@
  * @class Payload
  */
 abstract class Payload extends JQElement {
-  constructor(element: JQuery) {
+  constructor(element: JQueryWrapper) {
     super(element);
 
     this.asElement().mousedown((e: JQueryMouseEventObject) => {

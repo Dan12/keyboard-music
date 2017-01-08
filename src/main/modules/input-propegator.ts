@@ -19,7 +19,7 @@ class InputEventPropegator {
    * @method initKeyMaps
    */
   private static initKeyMaps() {
-    $('body').keydown((event: JQueryKeyEventObject) => {
+    (new JQueryWrapper('body')).keydown((event: JQueryKeyEventObject) => {
       switch (ModeHandler.getMode()) {
         case Mode.KEYBOARD:
           KeyboardLayout.getInstance().getKeyboard().keyDown(event.keyCode);
@@ -35,7 +35,7 @@ class InputEventPropegator {
       }
     });
 
-    $('body').keyup((event: JQueryKeyEventObject) => {
+    (new JQueryWrapper('body')).keyup((event: JQueryKeyEventObject) => {
       switch (ModeHandler.getMode()) {
         case Mode.KEYBOARD:
           KeyboardLayout.getInstance().getKeyboard().keyUp(event.keyCode);
@@ -53,7 +53,7 @@ class InputEventPropegator {
    * @method initKeyMaps
    */
   private static initMouseMaps() {
-    $('body').mousedown((event: JQueryMouseEventObject) => {
+    (new JQueryWrapper('body')).mousedown((event: JQueryMouseEventObject) => {
       // console.log(event);
     });
   }

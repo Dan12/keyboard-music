@@ -1,5 +1,5 @@
 abstract class HybridPayload<T> extends PayloadReceiver<T> {
-  constructor(element: JQuery, hook: PayloadHookFunc<T>) {
+  constructor(element: JQueryWrapper, hook: PayloadHookFunc<T>) {
     super(element, hook);
 
     this.asElement().mousedown((e: JQueryMouseEventObject) => {

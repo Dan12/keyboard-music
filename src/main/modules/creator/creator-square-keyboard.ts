@@ -47,7 +47,7 @@ class SquareKeyboard {
     });
   }
 
-  public getElement(): JQuery {
+  public getElement(): JQueryWrapper {
     return this.square.asElement();
   }
 

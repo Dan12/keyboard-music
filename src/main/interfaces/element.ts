@@ -4,12 +4,12 @@
  *
  * @class JQElement
  * @constructor
- * @param elelemt {JQuery} the jQuery element representing this object
+ * @param elelemt {JQueryWrapper} the jQuery element representing this object
  */
 abstract class JQElement {
-  protected element: JQuery;
+  protected element: JQueryWrapper;
 
-  constructor(element: JQuery) {
+  constructor(element: JQueryWrapper) {
     this.element = element;
   }
 
@@ -17,7 +17,7 @@ abstract class JQElement {
    * @method asElement
    * @return {JQuery} This element's jQuery elelemt
    */
-  public asElement(): JQuery {
+  public asElement(): JQueryWrapper {
     return this.element;
   }
 }

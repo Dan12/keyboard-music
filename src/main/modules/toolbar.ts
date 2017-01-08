@@ -13,9 +13,9 @@ class Toolbar extends JQElement {
   // the current sound being inspected
   private currentSound: Howl;
 
-  private nameElement: JQuery;
-  private waveformContainer: JQuery;
-  private setPoints: JQuery;
+  private nameElement: JQueryWrapper;
+  private waveformContainer: JQueryWrapper;
+  private setPoints: JQueryWrapper;
   private canvas: HTMLElement;
   private ctx: CanvasRenderingContext2D;
 
@@ -53,20 +53,20 @@ class Toolbar extends JQElement {
   }
 
   private constructor() {
-    super($('<div id="toolbar"></div>'));
+    super(new JQueryWrapper('<div id="toolbar"></div>'));
 
-    let songElement = $('<div id="song-tools" class="horizontal-column"></div>');
+    let songElement = new JQueryWrapper('<div id="song-tools" class="horizontal-column"></div>');
     this.asElement().append(songElement);
-    let loadButton = $('<button>Load Song</button>');
+    let loadButton = new JQueryWrapper('<button>Load Song</button>');
     songElement.append(loadButton);
     loadButton.click(() => {
       SongManager.getInstance().loadSong('songs/equinox.json', () => {
         Creator.getInstance().loadedSong();
-        console.log(SongManager.getSong())
+        console.log(SongManager.getSong());
       });
     });
 
-    let saveButton = $('<button>Save Song</button>');
+    let saveButton = new JQueryWrapper('<button>Save Song</button>');
 
     songElement.append(saveButton);
     saveButton.click(() => {
@@ -74,13 +74,13 @@ class Toolbar extends JQElement {
       console.log(JSON.stringify(song));
     });
 
-    let fileTools = $('<div id="file-tools" class="horizontal-column"></div>');
+    let fileTools = new JQueryWrapper('<div id="file-tools" class="horizontal-column"></div>');
     this.asElement().append(fileTools);
 
     // create the name and waveform elements
-    this.nameElement = $('<div id="file-name">File Name</div>');
+    this.nameElement = new JQueryWrapper('<div id="file-name">File Name</div>');
     fileTools.append(this.nameElement);
-    this.waveformContainer = $('<div id="waveform"></div>');
+    this.waveformContainer = new JQueryWrapper('<div id="waveform"></div>');
     fileTools.append(this.waveformContainer);
     this.waveformContainer.append(`<canvas id="waveform-canvas" width="200" height="100">
                                     Your Browser Does Not Support The Canvas Element
@@ -88,11 +88,11 @@ class Toolbar extends JQElement {
                                  );
 
     // create the set points buttons and listeners
-    this.setPoints = $('<div></div>');
+    this.setPoints = new JQueryWrapper('<div></div>');
     fileTools.append(this.setPoints);
 
-    let setIn = $('<button>Set in point</button>');
-    let setOut = $('<button>Set out point</button>');
+    let setIn = new JQueryWrapper('<button>Set in point</button>');
+    let setOut = new JQueryWrapper('<button>Set out point</button>');
     this.setPoints.append(setIn);
     this.setPoints.append(setOut);
     setIn.click(() => {

@@ -17,9 +17,9 @@ $(document).ready(function(){
     console.log('Starting Application');
 
     // add the main container element to the dom
-    let main_element = $('<div id="main_container" style="width: 100vw; height: 100vh; overflow: hidden"></div>');
+    let main_element = new JQueryWrapper('<div id="main_container" style="width: 100vw; height: 100vh; overflow: hidden"></div>');
 
-    $('body').append(main_element);
+    (new JQueryWrapper('body')).append(main_element);
 
     if (testMobile()) {
       main_element.append('<div>This application is currently not supported for mobile</div>');

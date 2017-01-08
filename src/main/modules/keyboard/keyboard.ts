@@ -43,7 +43,7 @@ class Keyboard extends JQElement implements InputReciever {
   private keyboardID: number;
 
   public constructor(type: KeyBoardType, allowTransition: boolean, payloadHook?: PayloadHookFunc<KeyboardKey>) {
-    super($('<div class="keyboard"></div>'));
+    super(new JQueryWrapper('<div class="keyboard"></div>'));
 
     this.keyboardID = Keyboard.assignNextID();
 
@@ -59,7 +59,7 @@ class Keyboard extends JQElement implements InputReciever {
     // push row elements and new keyboard key elements to each row
     for (let r = 0; r < this.numRows; r++) {
       this.rows.push([]);
-      let nextRow = $(`<div class="row" id="row_${r}"></div>`);
+      let nextRow = new JQueryWrapper(`<div class="row" id="row_${r}"></div>`);
       this.asElement().append(nextRow);
       for (let c = 0; c < this.numCols; c++) {
         let newKey = new KeyboardKey(KeyboardUtils.keyboardSymbols[r % 4][c], allowTransition, this, r, c, payloadHook);

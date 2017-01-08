@@ -9,6 +9,7 @@
 /// <reference path="./modules/creator/creator-layout.ts"/>
 /// <reference path="./modules/zip.ts"/>
 /// <reference path="./modules/error-collector.ts"/>
+/// <reference path="./modules/jquery_wrapper/jquery-wrapper.ts"/>
 
 /**
  * Loads certain modules onto the main element
@@ -17,7 +18,7 @@
  * @for Main
  * @param main_element {JQuery} the jQuery element to load the modules onto
  */
-function ModuleLoader(main_element: JQuery) {
+function ModuleLoader(main_element: JQueryWrapper) {
   // add the keyboard
   main_element.append(KeyboardLayout.getInstance().asElement());
 

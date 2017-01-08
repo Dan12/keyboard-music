@@ -6,7 +6,7 @@ abstract class PayloadReceiver<T> extends JQElement {
   private previousColor: string;
   protected payloadHook: PayloadHookFunc<T>;
 
-  constructor(element: JQuery, hook: PayloadHookFunc<T>) {
+  constructor(element: JQueryWrapper, hook: PayloadHookFunc<T>) {
     super(element);
 
     this.payloadHook = hook;
