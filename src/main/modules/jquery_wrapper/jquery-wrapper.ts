@@ -6,6 +6,10 @@ class JQueryWrapper {
     this.jqObject = $(obj);
   }
 
+  public getJQ(): JQuery {
+    return this.jqObject;
+  }
+
   public append(other: JQueryWrapper | string) {
     if (other instanceof JQueryWrapper) {
       this.jqObject.append((<JQueryWrapper> other).jqObject);
@@ -15,10 +19,10 @@ class JQueryWrapper {
   }
 
   public css(prop: any, value?: any): any {
-    if (value) {
-      this.jqObject.css(prop, value);
-    } else {
+    if (value === undefined) {
       return this.jqObject.css(prop);
+    } else {
+      return this.jqObject.css(prop, value);
     }
   }
 

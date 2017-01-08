@@ -65,7 +65,7 @@ class Creator extends JQElement implements InputReciever {
   }
 
   public loadedSong() {
-    KeyPayloadManager.getInstance().clear();
+    KeyPayloadManager.getInstance().clearKeyboard(this.mapTo.getKeyboard().getID());
     let pack = SongManager.getCurrentPack();
     if (pack) {
       let containers = pack.getContainers();
