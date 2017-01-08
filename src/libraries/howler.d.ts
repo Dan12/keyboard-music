@@ -25,7 +25,7 @@ interface IHowlProperties {
     loop?: boolean;
     sprite?: IHowlSoundSpriteDefinition;
     volume?: number;
-    urls?: string[];
+    src?: string[];
     onend?: Function;
     onload?: Function;
     onloaderror?: Function;
@@ -54,7 +54,7 @@ interface Howl {
     fade(from: number, to: number, duration: number, callback?: Function, soundId?: number): Howl;
     loop(): boolean;
     loop(loop: boolean): Howl;
-    pos(position?: number, soundId?: number): number;
+    seek(position?: number, soundId?: number): number;
     pos3d(x: number, y: number, z: number, soundId?: number): any;
     sprite(definition?: IHowlSoundSpriteDefinition): IHowlSoundSpriteDefinition;
     volume(): number;

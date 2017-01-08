@@ -35,6 +35,7 @@ class Sound {
       this.asSprite = true;
       this.start_time = start_time;
       this.end_time = end_time;
+      console.log('sprite');
     }
   }
 
@@ -51,7 +52,6 @@ class Sound {
    * @method play
    */
   public play(): void {
-    console.log('pressed'+this.name);
     if (this.asSprite) {
       this.howl_object.play('sprite');
     } else {
@@ -64,7 +64,6 @@ class Sound {
    * @method stop
    */
   public stop(): void {
-    console.log('released'+this.name);
     this.howl_object.stop();
   }
 

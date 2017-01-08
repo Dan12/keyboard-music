@@ -58,6 +58,13 @@ class MapToKeyboard {
       sound
     );
 
+    // add sound to key payload manager
+    KeyPayloadManager.getInstance().addKey(
+      this.mapTo.getKeyboard().getID(),
+      KeyboardUtils.gridToLinear(r, c, this.mapTo.getKeyboard().getNumCols()),
+      sound
+    );
+
     this.showSoundActive(r, c);
   }
 

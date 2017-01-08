@@ -73,7 +73,7 @@ class Directory extends Payload {
         let _this_ = this;
         // create a new howl object and pass it the load file constructor
         new Howl({
-          urls: [data],
+          src: [data],
 
           onload: function() {
             // this refers to the howl object

@@ -26,6 +26,7 @@ class SoundContainer {
     return ret;
   }
 
+  // TODO consider duplicating howler sounds. Only an issue if the same sound is on the same key
   public addPitch(sound: SoundFile, start_time?: number, end_time?: number) {
     this.pitches.push(new Sound(sound.location, sound.sound, this.looped, start_time, end_time));
   }

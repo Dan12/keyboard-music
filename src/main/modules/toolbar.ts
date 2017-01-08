@@ -171,20 +171,20 @@ class Toolbar extends JQElement {
     // make sure that there is a sound
     if (this.currentSound) {
       // if the sound is paused
-      if (this.currentSound.pos() === 0) {
+      if (this.currentSound.seek() === 0) {
         // this.currentSound.play('sample');
         this.currentSound.play();
 
         // set the playback if set
         if (this.nextPos > 0 && this.nextPos < this.outTime - this.inTime) {
-            this.currentSound.pos(this.nextPos);
+            this.currentSound.seek(this.nextPos);
             // TODO consider setting nextPos to 0
         } else {
           this.nextPos = 0;
         }
       } else {
         this.currentSound.pause();
-        this.nextPos = this.currentSound.pos();
+        this.nextPos = this.currentSound.seek();
       }
 
     }
@@ -309,7 +309,7 @@ class Toolbar extends JQElement {
       this.ctx.stroke();
 
       // seconds * samples per second * pixels per sample
-      this.cursorAt = this.currentSound.pos();
+      this.cursorAt = this.currentSound.seek();
       if (this.cursorAt === 0) {
         this.cursorAt = this.nextPos;
       }
