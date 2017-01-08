@@ -51,7 +51,7 @@ class Creator extends JQElement implements InputReciever {
     this.asElement().append(FileGUI.getInstance().asElement());
 
     // add the sound inspector
-    this.asElement().append(FileInspector.getInstance().asElement());
+    this.asElement().append(Toolbar.getInstance().asElement());
 
     // set the main content container
     this.main_content = $('<div style="position: absolute; display: inline-block; overflow: hidden;"></div>');
@@ -67,7 +67,7 @@ class Creator extends JQElement implements InputReciever {
   // set the element layout
   private layoutElements() {
     FileGUI.getInstance().asElement().css({'left': '0', 'top': '0', 'width': this.fileWidth + 'px', 'height': '100vh'});
-    FileInspector.getInstance().asElement().css(
+    Toolbar.getInstance().asElement().css(
       {'left': (this.fileWidth + this.padding) + 'px', 'bottom': '0', 'right': '0', 'height': this.inspectorHeight + 'px'}
     );
     this.main_content.css(

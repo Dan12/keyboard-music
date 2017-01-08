@@ -46,7 +46,7 @@ class SquareKeyboard {
         KeyboardUtils.gridToLinear(r, c, this.square.getKeyboard().getNumCols())
       );
       if (sound)
-        FileInspector.getInstance().inspectSound(sound);
+        Toolbar.getInstance().inspectSound(sound);
     });
   }
 

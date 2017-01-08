@@ -28,7 +28,7 @@ class InputEventPropegator {
           Creator.getInstance().keyDown(event.keyCode);
 
           if (event.keyCode === 32) {
-            FileInspector.getInstance().pressSpace();
+            Toolbar.getInstance().pressSpace();
             return false;
           }
           break;

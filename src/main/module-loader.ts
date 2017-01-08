@@ -2,7 +2,7 @@
 /// <reference path="./modules/keyboard/keyboard-layout.ts"/>
 /// <reference path="./modules/files/file-manager.ts"/>
 /// <reference path="./modules/files/file-gui.ts"/>
-/// <reference path="./modules/files/file-inspector.ts"/>
+/// <reference path="./modules/toolbar.ts"/>
 /// <reference path="./modules/input-propegator.ts"/>
 /// <reference path="./modules/song/song-manager.ts"/>
 /// <reference path="./modules/mode-handler.ts"/>

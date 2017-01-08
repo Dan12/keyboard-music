@@ -3,9 +3,9 @@
  * @class FileInspector
  * @static
  */
-class FileInspector extends JQElement {
+class Toolbar extends JQElement {
 
-  private static instance: FileInspector;
+  private static instance: Toolbar;
 
   // the audio context for the file inspector
   private audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -44,12 +44,12 @@ class FileInspector extends JQElement {
    * @static
    * @return {FileInspector} the instance
    */
-  public static getInstance(): FileInspector {
-    if (FileInspector.instance === undefined) {
-      FileInspector.instance = new FileInspector();
+  public static getInstance(): Toolbar {
+    if (Toolbar.instance === undefined) {
+      Toolbar.instance = new Toolbar();
     }
 
-    return FileInspector.instance;
+    return Toolbar.instance;
   }
 
   private constructor() {
