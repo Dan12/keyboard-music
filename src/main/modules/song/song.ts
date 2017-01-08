@@ -4,22 +4,55 @@
 class Song {
   private name: string;
 
+  private files: string[];
+
   // array of bpm and time steps
   // Invariant: must be at least of length 1 and the first cell must have timestamp 0
   private bpms: number[][];
 
   private soundPacks: SoundPack[];
 
-  // TODO keyboard type
-  // TODO to json
+  private keyboardType: KeyBoardType;
 
-  constructor() {
+  constructor(type: KeyBoardType) {
+    this.keyboardType = type;
+
     this.soundPacks = [];
 
     // default bpm
     this.bpms = [[140, 0]];
 
     this.name = 'Untitled';
+
+    this.files = [];
+  }
+
+  public constructJSON(): SongStruct {
+    return {
+      name: this.name,
+      bpms: this.bpms,
+      files: this.files,
+      keyboard_type: KeyboardUtils.KeyboardTypeToString(this.keyboardType),
+      container_settings: this.getContainerSettings(),
+      linked_areas: this.getLinkedAreas(),
+      colors: null
+    };
+  }
+
+  private getContainerSettings(): [number, string[][], boolean][][] {
+    let ret = <[number, string[][], boolean][][]>[];
+    for (let i = 0; i < this.soundPacks.length; i++) {
+      ret.push(this.soundPacks[i].getContainers());
+    }
+    return ret;
+  }
+
+  private getLinkedAreas(): number[][][] {
+    let ret = <number[][][]> [];
+    for (let i = 0; i < this.soundPacks.length; i++) {
+      ret.push(this.soundPacks[i].getLinkedAreas());
+    }
+    return ret;
   }
 
   public addPack() {
@@ -43,6 +76,17 @@ class Song {
       }
 
       container.addPitch(file);
+
+      // get root file
+      let rootFile = file.location.substring(0, file.location.indexOf('/'));
+      for (let i = 0; i < this.files.length; i++) {
+        if (this.files[i] === rootFile) {
+          break;
+        }
+        if (i === this.files.length - 1) {
+          this.files.push(rootFile);
+        }
+      }
     } else {
       collectErrorMessage('Pack does not exists, ' + pack);
     }

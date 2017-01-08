@@ -1,4 +1,5 @@
 /// <reference path="./song.ts"/>
+/// <reference path="./song-struct.ts"/>
 
 class SongManager {
 
@@ -20,9 +21,13 @@ class SongManager {
     this.currentSoundPack = 0;
   }
 
-  public newSong() {
+  public constructJSON(): SongStruct {
+    return null;
+  }
+
+  public newSong(type: KeyBoardType) {
     // TODO check for save
-    this.song = new Song();
+    this.song = new Song(type);
     this.currentSoundPack = 0;
   }
 

@@ -87,7 +87,7 @@ class Directory extends Payload {
 
   // called when a file is loaded to add it to the file data structure and gui
   private loadedFile(name: string, sound: Howl, fullname: string) {
-    let new_sound = new SoundFile(name, sound);
+    let new_sound = new SoundFile(name, sound, fullname);
     this.files[name] = new_sound;
     this.fileSize++;
 

@@ -1,4 +1,4 @@
-/// <reference path="./file.ts"/>
+/// <reference path="./sound-file.ts"/>
 /// <reference path="./directory.ts"/>
 
 /**
@@ -48,6 +48,10 @@ class FileManager {
     }
   }
 
+  public getRootLocation(base: string): string {
+    return this.rootLocations[base];
+  }
+
   /**
    * add the given file with the data to the file manager
    * @method addFile
@@ -94,6 +98,8 @@ class FileManager {
    */
   public clearFiles() {
     this.files = {};
+
+    this.rootLocations = {};
 
     FileGUI.getInstance().notifyClear();
   }

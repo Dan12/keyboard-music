@@ -10,11 +10,13 @@ class SoundFile extends Payload {
 
   public sound: Howl;
   public name: string;
+  public location: string;
 
-  constructor(name: string, sound: Howl) {
+  constructor(name: string, sound: Howl, location: string) {
     super($('<div class="file">' + name + '</div>'));
 
     this.name = name;
     this.sound = sound;
+    this.location = location;
   }
 }

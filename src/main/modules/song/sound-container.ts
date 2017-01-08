@@ -18,6 +18,14 @@ class SoundContainer {
     this.holdToPlay = hold_to_play === undefined ? false : hold_to_play;
   }
 
+  public getPitchLocations(): (string|number)[][] {
+    let ret = <(string|number)[][]>[];
+    for (let i = 0; i < this.pitches.length; i++) {
+      ret.push(this.pitches[i].toArr());
+    }
+    return ret;
+  }
+
   public addPitch(sound: SoundFile, start_time?: number, end_time?: number) {
     this.pitches.push(new Sound(sound.name, sound.sound, this.looped, start_time, end_time));
   }

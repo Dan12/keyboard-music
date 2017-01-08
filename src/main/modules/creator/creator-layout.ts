@@ -43,7 +43,7 @@ class Creator extends JQElement implements InputReciever {
     this.mapTo = new MapToKeyboard();
 
     // initialize the song manager for the song creation
-    SongManager.getInstance().newSong();
+    SongManager.getInstance().newSong(KeyBoardType.STANDARD);
     SongManager.getSong().addPack();
     SongManager.getInstance().setSoundPack(0);
 

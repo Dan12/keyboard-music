@@ -33,6 +33,17 @@ class KeyboardUtils {
     }
   }
 
+  public static KeyboardTypeToString(type: KeyBoardType): string {
+    switch (type) {
+      case KeyBoardType.SQUARE:
+        return 'SQUARE';
+      case KeyBoardType.DOUBLE:
+        return 'DOUBLE';
+      default:
+        return 'STANDARD';
+    }
+  }
+
   public static getKeyboardSize(type: KeyBoardType): KeyBoardSize {
     switch (type) {
       case KeyBoardType.SQUARE:

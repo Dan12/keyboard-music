@@ -9,6 +9,18 @@ class SoundPack {
     this.sounds = {};
   }
 
+  public getContainers(): [number, string[][], boolean][] {
+    let containers = <[number, string[][], boolean][]>[];
+    for (let loc in this.sounds) {
+      containers.push([parseInt(loc), [['']], false]);
+    }
+    return containers;
+  }
+
+  public getLinkedAreas(): number[][] {
+    return this.linkedAreas;
+  }
+
   public addContainer(container: SoundContainer, loc: number) {
     this.sounds[loc] = container;
   }

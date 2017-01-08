@@ -21,6 +21,9 @@ class Sound {
 
   private asSprite: boolean;
 
+  private start_time: number;
+  private end_time: number;
+
   public constructor(name: string, howlObj: Howl, looped: boolean, start_time?: number, end_time?: number) {
     this.name = name;
     this.howl_object = howlObj;
@@ -30,6 +33,16 @@ class Sound {
     if (start_time !== undefined && end_time !== undefined) {
       this.howl_object.sprite({sprite: [start_time, end_time - start_time]});
       this.asSprite = true;
+      this.start_time = start_time;
+      this.end_time = end_time;
+    }
+  }
+
+  public toArr(): (string|number)[] {
+    if (this.start_time) {
+      return [this.name, this.start_time, this.end_time];
+    } else {
+      return [this.name];
     }
   }
 
