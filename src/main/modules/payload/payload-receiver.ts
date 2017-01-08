@@ -2,11 +2,11 @@
  * a class that can recieve a payload
  * @class PayloadReceiver
  */
-abstract class PayloadReceiver<T> extends JQElement {
+abstract class PayloadReceiver<T> extends DomElement {
   private previousColor: string;
   protected payloadHook: PayloadHookFunc<T>;
 
-  constructor(element: JQueryWrapper, hook: PayloadHookFunc<T>) {
+  constructor(element: JQW, hook: PayloadHookFunc<T>) {
     super(element);
 
     this.payloadHook = hook;

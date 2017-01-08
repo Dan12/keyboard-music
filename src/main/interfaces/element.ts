@@ -4,20 +4,20 @@
  *
  * @class JQElement
  * @constructor
- * @param elelemt {JQueryWrapper} the jQuery element representing this object
+ * @param elelemt {JQW} the jQuery element representing this object
  */
-abstract class JQElement {
-  protected element: JQueryWrapper;
+abstract class DomElement {
+  protected element: JQW;
 
-  constructor(element: JQueryWrapper) {
+  constructor(element: JQW) {
     this.element = element;
   }
 
   /**
    * @method asElement
-   * @return {JQuery} This element's jQuery elelemt
+   * @return {JQW} This element's jQuery elelemt
    */
-  public asElement(): JQueryWrapper {
+  public asElement(): JQW {
     return this.element;
   }
 }

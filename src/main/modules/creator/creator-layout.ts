@@ -8,11 +8,11 @@
  * @class Creator
  * @static
  */
-class Creator extends JQElement implements InputReciever {
+class Creator extends DomElement implements InputReciever {
 
   private static instance: Creator;
 
-  private main_content: JQueryWrapper;
+  private main_content: JQW;
 
   private fileWidth = 160;
   private inspectorHeight = 120;
@@ -36,7 +36,7 @@ class Creator extends JQElement implements InputReciever {
   }
 
   private constructor() {
-    super(new JQueryWrapper('<div id="creator"></div>'));
+    super(new JQW('<div id="creator"></div>'));
 
     // initialize the keyboards
     this.square = new SquareKeyboard();
@@ -54,7 +54,7 @@ class Creator extends JQElement implements InputReciever {
     this.asElement().append(Toolbar.getInstance().asElement());
 
     // set the main content container
-    this.main_content = new JQueryWrapper('<div style="position: absolute; display: inline-block; overflow: hidden;"></div>');
+    this.main_content = new JQW('<div style="position: absolute; display: inline-block; overflow: hidden;"></div>');
     this.asElement().append(this.main_content);
 
     this.main_content.append(this.square.getElement());

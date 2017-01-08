@@ -1,4 +1,4 @@
-class JQueryWrapper {
+class JQW {
 
   private jqObject: JQuery;
 
@@ -10,9 +10,9 @@ class JQueryWrapper {
     return this.jqObject;
   }
 
-  public append(other: JQueryWrapper | string) {
-    if (other instanceof JQueryWrapper) {
-      this.jqObject.append((<JQueryWrapper> other).jqObject);
+  public append(other: JQW | string) {
+    if (other instanceof JQW) {
+      this.jqObject.append((<JQW> other).jqObject);
     } else {
       this.jqObject.append(other);
     }
@@ -26,8 +26,8 @@ class JQueryWrapper {
     }
   }
 
-  public clone(): JQueryWrapper {
-    let ret = new JQueryWrapper('');
+  public clone(): JQW {
+    let ret = new JQW('');
     ret.jqObject = this.jqObject.clone();
     return ret;
   }

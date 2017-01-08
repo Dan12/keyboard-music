@@ -3,7 +3,7 @@
  * @class FileInspector
  * @static
  */
-class Toolbar extends JQElement {
+class Toolbar extends DomElement {
 
   private static instance: Toolbar;
 
@@ -13,9 +13,9 @@ class Toolbar extends JQElement {
   // the current sound being inspected
   private currentSound: Howl;
 
-  private nameElement: JQueryWrapper;
-  private waveformContainer: JQueryWrapper;
-  private setPoints: JQueryWrapper;
+  private nameElement: JQW;
+  private waveformContainer: JQW;
+  private setPoints: JQW;
   private canvas: HTMLElement;
   private ctx: CanvasRenderingContext2D;
 
@@ -53,11 +53,11 @@ class Toolbar extends JQElement {
   }
 
   private constructor() {
-    super(new JQueryWrapper('<div id="toolbar"></div>'));
+    super(new JQW('<div id="toolbar"></div>'));
 
-    let songElement = new JQueryWrapper('<div id="song-tools" class="horizontal-column"></div>');
+    let songElement = new JQW('<div id="song-tools" class="horizontal-column"></div>');
     this.asElement().append(songElement);
-    let loadButton = new JQueryWrapper('<button>Load Song</button>');
+    let loadButton = new JQW('<button>Load Song</button>');
     songElement.append(loadButton);
     loadButton.click(() => {
       SongManager.getInstance().loadSong('songs/equinox.json', () => {
@@ -66,7 +66,7 @@ class Toolbar extends JQElement {
       });
     });
 
-    let saveButton = new JQueryWrapper('<button>Save Song</button>');
+    let saveButton = new JQW('<button>Save Song</button>');
 
     songElement.append(saveButton);
     saveButton.click(() => {
@@ -74,13 +74,13 @@ class Toolbar extends JQElement {
       console.log(JSON.stringify(song));
     });
 
-    let fileTools = new JQueryWrapper('<div id="file-tools" class="horizontal-column"></div>');
+    let fileTools = new JQW('<div id="file-tools" class="horizontal-column"></div>');
     this.asElement().append(fileTools);
 
     // create the name and waveform elements
-    this.nameElement = new JQueryWrapper('<div id="file-name">File Name</div>');
+    this.nameElement = new JQW('<div id="file-name">File Name</div>');
     fileTools.append(this.nameElement);
-    this.waveformContainer = new JQueryWrapper('<div id="waveform"></div>');
+    this.waveformContainer = new JQW('<div id="waveform"></div>');
     fileTools.append(this.waveformContainer);
     this.waveformContainer.append(`<canvas id="waveform-canvas" width="200" height="100">
                                     Your Browser Does Not Support The Canvas Element
@@ -88,11 +88,11 @@ class Toolbar extends JQElement {
                                  );
 
     // create the set points buttons and listeners
-    this.setPoints = new JQueryWrapper('<div></div>');
+    this.setPoints = new JQW('<div></div>');
     fileTools.append(this.setPoints);
 
-    let setIn = new JQueryWrapper('<button>Set in point</button>');
-    let setOut = new JQueryWrapper('<button>Set out point</button>');
+    let setIn = new JQW('<button>Set in point</button>');
+    let setOut = new JQW('<button>Set out point</button>');
     this.setPoints.append(setIn);
     this.setPoints.append(setOut);
     setIn.click(() => {

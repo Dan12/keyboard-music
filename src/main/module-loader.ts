@@ -16,9 +16,9 @@
  *
  * @method ModuleLoader
  * @for Main
- * @param main_element {JQuery} the jQuery element to load the modules onto
+ * @param main_element {JQW} the jQuery element to load the modules onto
  */
-function ModuleLoader(main_element: JQueryWrapper) {
+function ModuleLoader(main_element: JQW) {
   // add the keyboard
   main_element.append(KeyboardLayout.getInstance().asElement());
 

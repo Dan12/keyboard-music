@@ -5,7 +5,7 @@ class PayloadKeyboard extends PayloadReceiver<number> {
   private keyboard: Keyboard;
 
   constructor(type: KeyBoardType, hook: PayloadHookFunc<number>, keyHook: PayloadHookFunc<KeyboardKey>) {
-    super(new JQueryWrapper('<div class="horizontal-column"></div>'), hook);
+    super(new JQW('<div class="horizontal-column"></div>'), hook);
 
     this.keyboard = new Keyboard(type, false, keyHook);
 

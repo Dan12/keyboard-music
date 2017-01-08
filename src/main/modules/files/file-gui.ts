@@ -3,7 +3,7 @@
  * @class FileGUI
  * @static
  */
-class FileGUI extends JQElement {
+class FileGUI extends DomElement {
 
   private static instance: FileGUI;
 
@@ -22,10 +22,10 @@ class FileGUI extends JQElement {
   }
 
   private constructor() {
-    super(new JQueryWrapper('<div id="file-manager"></div>'));
+    super(new JQW('<div id="file-manager"></div>'));
 
     // add the main directory to the file structure
-    this.asElement().append(new JQueryWrapper('<div id="main-directory"></div>'));
+    this.asElement().append(new JQW('<div id="main-directory"></div>'));
   }
 
   /**

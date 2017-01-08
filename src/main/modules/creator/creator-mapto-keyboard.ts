@@ -73,7 +73,7 @@ class MapToKeyboard {
     this.mapTo.getKeyboard().getKey(r, c).setPreviousColor();
   }
 
-  public getElement(): JQueryWrapper {
+  public getElement(): JQW {
     return this.mapTo.asElement();
   }
 

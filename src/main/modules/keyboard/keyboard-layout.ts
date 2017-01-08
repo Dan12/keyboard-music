@@ -1,6 +1,6 @@
 /// <reference path="keyboard.ts"/>
 
-class KeyboardLayout extends JQElement {
+class KeyboardLayout extends DomElement {
 
   private static instance: KeyboardLayout;
 
@@ -15,7 +15,7 @@ class KeyboardLayout extends JQElement {
   }
 
   constructor() {
-    super(new JQueryWrapper('<div id="keyboard"></div>'));
+    super(new JQW('<div id="keyboard"></div>'));
 
     this.keyboard = new Keyboard(KeyBoardType.STANDARD, true);
     this.keyboard.centerVertical();
