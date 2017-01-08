@@ -39,8 +39,8 @@ class Song {
     };
   }
 
-  private getContainerSettings(): [number, string[][], boolean][][] {
-    let ret = <[number, string[][], boolean][][]>[];
+  private getContainerSettings(): [number, (string|number)[][], boolean][][] {
+    let ret = <[number, (string|number)[][], boolean][][]>[];
     for (let i = 0; i < this.soundPacks.length; i++) {
       ret.push(this.soundPacks[i].getContainers());
     }
@@ -78,13 +78,18 @@ class Song {
       container.addPitch(file);
 
       // get root file
-      let rootFile = file.location.substring(0, file.location.indexOf('/'));
-      for (let i = 0; i < this.files.length; i++) {
-        if (this.files[i] === rootFile) {
-          break;
-        }
-        if (i === this.files.length - 1) {
-          this.files.push(rootFile);
+      let rootFile = FileManager.getInstance().getRootLocation(file.location.substring(0, file.location.indexOf('/')));
+
+      if (this.files.length === 0) {
+        this.files.push(rootFile);
+      } else {
+        for (let i = 0; i < this.files.length; i++) {
+          if (this.files[i] === rootFile) {
+            break;
+          }
+          if (i === this.files.length - 1) {
+            this.files.push(rootFile);
+          }
         }
       }
     } else {

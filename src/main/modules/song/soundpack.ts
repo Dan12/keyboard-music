@@ -7,12 +7,14 @@ class SoundPack {
 
   constructor() {
     this.sounds = {};
+
+    this.linkedAreas = [];
   }
 
-  public getContainers(): [number, string[][], boolean][] {
-    let containers = <[number, string[][], boolean][]>[];
+  public getContainers(): [number, (string|number)[][], boolean][] {
+    let containers = <[number, (string|number)[][], boolean][]>[];
     for (let loc in this.sounds) {
-      containers.push([parseInt(loc), [['']], false]);
+      containers.push([parseInt(loc), this.sounds[loc].getPitchLocations(), false]);
     }
     return containers;
   }

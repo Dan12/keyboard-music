@@ -27,7 +27,7 @@ class SoundContainer {
   }
 
   public addPitch(sound: SoundFile, start_time?: number, end_time?: number) {
-    this.pitches.push(new Sound(sound.name, sound.sound, this.looped, start_time, end_time));
+    this.pitches.push(new Sound(sound.location, sound.sound, this.looped, start_time, end_time));
   }
 
   public pressed() {

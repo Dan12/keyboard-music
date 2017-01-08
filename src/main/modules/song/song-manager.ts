@@ -22,7 +22,7 @@ class SongManager {
   }
 
   public constructJSON(): SongStruct {
-    return null;
+    return this.song.constructJSON();
   }
 
   public newSong(type: KeyBoardType) {

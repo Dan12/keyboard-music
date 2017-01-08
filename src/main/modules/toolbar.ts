@@ -53,13 +53,26 @@ class Toolbar extends JQElement {
   }
 
   private constructor() {
-    super($('<div id="file-inspector"></div>'));
+    super($('<div id="toolbar"></div>'));
+
+    let songElement = $('<div id="song-tools" class="horizontal-column"></div>');
+    this.asElement().append(songElement);
+    let saveButton = $('<button>Save Song</button>');
+
+    songElement.append(saveButton);
+    saveButton.click(() => {
+      let song = SongManager.getInstance().constructJSON();
+      console.log(JSON.stringify(song, null, 2));
+    });
+
+    let fileTools = $('<div id="file-tools" class="horizontal-column"></div>');
+    this.asElement().append(fileTools);
 
     // create the name and waveform elements
-    this.nameElement = $('<div id="f-name">File Name</div>');
-    this.asElement().append(this.nameElement);
+    this.nameElement = $('<div id="file-name">File Name</div>');
+    fileTools.append(this.nameElement);
     this.waveformContainer = $('<div id="waveform"></div>');
-    this.asElement().append(this.waveformContainer);
+    fileTools.append(this.waveformContainer);
     this.waveformContainer.append(`<canvas id="waveform-canvas" width="200" height="100">
                                     Your Browser Does Not Support The Canvas Element
                                    </canvas>`
@@ -67,6 +80,8 @@ class Toolbar extends JQElement {
 
     // create the set points buttons and listeners
     this.setPoints = $('<div></div>');
+    fileTools.append(this.setPoints);
+
     let setIn = $('<button>Set in point</button>');
     let setOut = $('<button>Set out point</button>');
     this.setPoints.append(setIn);

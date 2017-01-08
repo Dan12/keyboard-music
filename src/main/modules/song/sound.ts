@@ -26,6 +26,7 @@ class Sound {
 
   public constructor(name: string, howlObj: Howl, looped: boolean, start_time?: number, end_time?: number) {
     this.name = name;
+    console.log(this.name);
     this.howl_object = howlObj;
 
     this.asSprite = false;

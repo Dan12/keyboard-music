@@ -3,7 +3,7 @@ interface SongStruct {
   bpms: number[][];
   files: string[];
   keyboard_type: string;
-  container_settings: [number, string[][], boolean][][];
+  container_settings: [number, (string|number)[][], boolean][][];
   linked_areas: number[][][];
   colors: any;
 }
