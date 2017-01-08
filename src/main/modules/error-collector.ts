@@ -13,6 +13,9 @@ function collectErrorMessage(message: string, errorObj?: any) {
   }
 
   let err = new Error();
-  console.log('At: ');
   console.log(err.stack);
+}
+
+function collectWarningMessage(message: string) {
+  // console.log(message);
 }

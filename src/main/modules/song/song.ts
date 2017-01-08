@@ -106,30 +106,40 @@ class Song {
     });
   }
 
-  private loadPacks(songData: any) {
-    for (let i = 0; i < songData['container_settings'].length; i++) {
-      this.soundPacks.push(
-        new SoundPack()
-      );
+  private loadPacks(songData: SongStruct) {
+    this.bpms = songData['bpms'];
+    this.name = songData['name'];
+    this.files = songData['files'];
+    this.keyboardType = KeyboardUtils.getKeyboardTypeFromString(songData['keyboard_type'].toUpperCase());
 
-      // keyboard size data
-      // songData['keyboard_type'].toUpperCase()
+    for (let i = 0; i < songData['container_settings'].length; i++) {
+      this.soundPacks.push(new SoundPack());
 
       for (let j = 0; j < songData['container_settings'][i].length; j++) {
         let data = songData['container_settings'][i][j];
 
         // format: location, pitches, hold to play, quaternize, loop
-        // pitches: [location, start time, end time]
-        let container = new SoundContainer(data[2], data[3], data[4]);
+        let container = new SoundContainer(data[2], <number> data[3], <boolean> data[4]);
 
+        // pitches: [location, start time, end time]
         let pitches = data[1];
         for (let i = 0; i < pitches.length; i++) {
           // TODO verify correctness
-          let baseDir = pitches[i][0].substring(0, pitches[i][0].indexOf('/'));
-          let location = pitches[i][0].substring(pitches[i][0].indexOf('/') + 1, pitches[i][0].length);
-          container.addPitch(FileManager.getInstance().getSound(baseDir, pitches[i][0]), pitches[i][1], pitches[i][2]);
+          let loc = (<string> pitches[i][0]);
+          let baseDir = loc.substring(0, loc.indexOf('/'));
+          let fileLocation = loc.substring(loc.indexOf('/') + 1, loc.length);
+          container.addPitch(FileManager.getInstance().getSound(baseDir, fileLocation), <number> pitches[i][1], <number> pitches[i][2]);
         }
         this.soundPacks[i].addContainer(container, data[0]);
+      }
+
+      // add the linked areas for this sound pack
+      let linkedArea = songData['linked_areas'][i];
+      for (let j = 0; j < linkedArea.length; j++) {
+          let linkedNum = this.soundPacks[i].addLinkedArea();
+          for (let k = 0; k < linkedArea[j].length; k++) {
+            this.soundPacks[i].addToLinkedArea(linkedNum, linkedArea[j][k]);
+          }
       }
     }
   }

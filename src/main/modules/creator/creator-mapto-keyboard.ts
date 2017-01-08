@@ -20,7 +20,7 @@ class MapToKeyboard {
 
         return payload instanceof SoundFile || payload instanceof KeyboardKey;
       } else if (type === PayloadHookRequest.IS_PAYLOAD) {
-        return true;
+        return this.getPayload(objData.getRow(), objData.getCol()) !== undefined;
       }
 
       return false;
@@ -32,9 +32,8 @@ class MapToKeyboard {
     // turn square green when there is a key on it
     this.mapTo.getKeyboard().getColorManager().setRoutine(
       (r: number, c: number, p: boolean) => {
-        let hasElement = SongManager.getCurrentPack().getContainer(
-          KeyboardUtils.gridToLinear(r, c, KeyboardUtils.getKeyboardSize(KeyBoardType.STANDARD).cols)
-        ) !== undefined;
+        // check if this
+        let hasElement = this.getPayload(r, c) !== undefined;
 
         return [{row: r, col: c, r: p ? 255 : hasElement ? 100 : -1, g: p ? 160 : hasElement ? 255 : -1, b: p ? 0 : hasElement ? 100 : -1}];
       }
@@ -42,6 +41,13 @@ class MapToKeyboard {
     this.mapTo.getKeyboard().setPressKeyListener((r: number, c: number) => {
       console.log(`inspect ${r},${c}`);
     });
+  }
+
+  private getPayload(r: number, c: number): SoundFile {
+    return KeyPayloadManager.getInstance().getKey(
+      this.mapTo.getKeyboard().getID(),
+      KeyboardUtils.gridToLinear(r, c, this.mapTo.getKeyboard().getNumCols())
+    );
   }
 
   private addSound(r: number, c: number, sound: SoundFile) {
@@ -52,6 +58,10 @@ class MapToKeyboard {
       sound
     );
 
+    this.showSoundActive(r, c);
+  }
+
+  public showSoundActive(r: number, c: number) {
     this.mapTo.getKeyboard().getColorManager().releasedKey(r, c);
     this.mapTo.getKeyboard().getKey(r, c).setPreviousColor();
   }

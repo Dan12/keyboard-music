@@ -6,7 +6,6 @@
 // library imports
 /// <reference path="../libraries/howler.d.ts"/>
 /// <reference path="../libraries/jquery.d.ts"/>
-/// <reference path="../libraries/zip.d.ts"/>
 /// <reference path="../libraries/jszip.d.ts"/>
 /// <reference path="../libraries/misc.d.ts"/>
 

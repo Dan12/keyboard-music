@@ -40,7 +40,11 @@ class FileManager {
   }
 
   public addBaseDir(name: string, location: string) {
-    this.rootLocations[name] = location;
+    if (this.rootLocations[name] === undefined) {
+      this.rootLocations[name] = location;
+    } else {
+      collectWarningMessage('Warning: Base directory already exists. Will not overwrite: ' + name + ',' + location);
+    }
 
     // if the base directory doesn't exists yet, create it
     if (this.files[name] === undefined) {

@@ -15,6 +15,10 @@ class KeyPayloadManager {
     this.keys = {};
   }
 
+  public clear() {
+    this.keys = {};
+  }
+
   public addSoundFromKey(key: KeyboardKey, sound: SoundFile) {
     let location = KeyboardUtils.gridToLinear(key.getRow(), key.getCol(), key.getKeyboard().getNumCols());
     this.addKey(key.getKeyboard().getID(), location, sound);

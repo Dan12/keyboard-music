@@ -27,7 +27,7 @@ class SquareKeyboard {
       } else if (type === PayloadHookRequest.CAN_RECEIVE) {
         return payload instanceof SoundFile || payload instanceof KeyboardKey;
       } else if (type === PayloadHookRequest.IS_PAYLOAD) {
-        return true;
+        return this.getPayload(objData.getRow(), objData.getCol()) !== undefined;
       }
 
       return false;
@@ -41,10 +41,7 @@ class SquareKeyboard {
     // turn square green when active
     this.square.getKeyboard().getColorManager().setRoutine(ColorManager.standardColorRoutine(100, 255, 100));
     this.square.getKeyboard().setPressKeyListener((r: number, c: number) => {
-      let sound = KeyPayloadManager.getInstance().getKey(
-        this.square.getKeyboard().getID(),
-        KeyboardUtils.gridToLinear(r, c, this.square.getKeyboard().getNumCols())
-      );
+      let sound = this.getPayload(r, c);
       if (sound)
         Toolbar.getInstance().inspectSound(sound);
     });
@@ -52,6 +49,13 @@ class SquareKeyboard {
 
   public getElement(): JQuery {
     return this.square.asElement();
+  }
+
+  private getPayload(r: number, c: number): SoundFile {
+    return KeyPayloadManager.getInstance().getKey(
+      this.square.getKeyboard().getID(),
+      KeyboardUtils.gridToLinear(r, c, this.square.getKeyboard().getNumCols())
+    );
   }
 
   // called when a directory payload is recieved

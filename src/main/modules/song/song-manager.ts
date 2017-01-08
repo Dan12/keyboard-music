@@ -31,6 +31,12 @@ class SongManager {
     this.currentSoundPack = 0;
   }
 
+  public loadSong(location: string, callback: () => void) {
+    this.song = new Song(KeyBoardType.STANDARD);
+    this.currentSoundPack = 0;
+    this.song.loadFromSource(location, callback);
+  }
+
   public static getSong(): Song {
     return SongManager.getInstance().song;
   }

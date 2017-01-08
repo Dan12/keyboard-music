@@ -64,6 +64,23 @@ class Creator extends JQElement implements InputReciever {
     this.layoutElements();
   }
 
+  public loadedSong() {
+    KeyPayloadManager.getInstance().clear();
+    let pack = SongManager.getCurrentPack();
+    if (pack) {
+      let containers = pack.getContainers();
+      for (let container of containers) {
+        let gridLoc = KeyboardUtils.linearToGrid(container[0], this.mapTo.getKeyboard().getNumCols());
+        let loc = <string> container[1][0][0];
+        let baseDir = loc.substring(0, loc.indexOf('/'));
+        let fileLocation = loc.substring(loc.indexOf('/') + 1, loc.length);
+        let sound = FileManager.getInstance().getSound(baseDir, fileLocation);
+        KeyPayloadManager.getInstance().addKey(this.mapTo.getKeyboard().getID(), container[0], sound);
+        this.mapTo.showSoundActive(gridLoc[0], gridLoc[1]);
+      }
+    }
+  }
+
   // set the element layout
   private layoutElements() {
     FileGUI.getInstance().asElement().css({'left': '0', 'top': '0', 'width': this.fileWidth + 'px', 'height': '100vh'});

@@ -1,9 +1,10 @@
 /**
- * The new way to load a zip file.
+ * The way to load a zip file.
  * TODO check browser compatibility, probably fails on IE
- * @class NewZip
+ * @class ZipHandler
+ * @static
  */
-class NewZip {
+class ZipHandler {
   private static zipBase = 'songs';
 
   private static numToLoad = 0;
@@ -26,14 +27,15 @@ class NewZip {
 
     // get request for zip file
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', `${NewZip.zipBase}/${name}`);
+    xhr.open('GET', `${ZipHandler.zipBase}/${name}`);
     xhr.responseType = 'blob';
     xhr.onload = function(){
       let f = xhr.response;
       // load the zip file from the response
       zip.loadAsync(f).then(function(zip) {
         // calculate the number of objects to load
-        NewZip.numToLoad = Object.keys(zip.files).length;
+        ZipHandler.numToLoad = Object.keys(zip.files).length;
+        ZipHandler.numLoaded = 0;
 
         zip.forEach(function (relativePath, zipEntry) {
           if (zipEntry.name.endsWith('.mp3')) {
@@ -42,10 +44,10 @@ class NewZip {
 
               FileManager.getInstance().addFile(baseName, zipEntry.name, data);
 
-              NewZip.checkCallback(callback);
+              ZipHandler.checkCallback(callback);
             });
           } else {
-            NewZip.checkCallback(callback);
+            ZipHandler.checkCallback(callback);
           }
         });
       }, function (e) {
@@ -58,8 +60,8 @@ class NewZip {
 
   // increment the num loaded and check if we ca callback
   private static checkCallback(callback?: () => void) {
-    NewZip.numLoaded += 1;
-    if (NewZip.numLoaded >= NewZip.numToLoad) {
+    ZipHandler.numLoaded += 1;
+    if (ZipHandler.numLoaded >= ZipHandler.numToLoad) {
       if (callback) {
         callback();
       }

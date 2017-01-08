@@ -57,12 +57,21 @@ class Toolbar extends JQElement {
 
     let songElement = $('<div id="song-tools" class="horizontal-column"></div>');
     this.asElement().append(songElement);
+    let loadButton = $('<button>Load Song</button>');
+    songElement.append(loadButton);
+    loadButton.click(() => {
+      SongManager.getInstance().loadSong('songs/equinox.json', () => {
+        Creator.getInstance().loadedSong();
+        console.log(SongManager.getSong())
+      });
+    });
+
     let saveButton = $('<button>Save Song</button>');
 
     songElement.append(saveButton);
     saveButton.click(() => {
       let song = SongManager.getInstance().constructJSON();
-      console.log(JSON.stringify(song, null, 2));
+      console.log(JSON.stringify(song));
     });
 
     let fileTools = $('<div id="file-tools" class="horizontal-column"></div>');
@@ -169,6 +178,7 @@ class Toolbar extends JQElement {
         // set the playback if set
         if (this.nextPos > 0 && this.nextPos < this.outTime - this.inTime) {
             this.currentSound.pos(this.nextPos);
+            // TODO consider setting nextPos to 0
         } else {
           this.nextPos = 0;
         }

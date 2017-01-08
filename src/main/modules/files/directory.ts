@@ -68,20 +68,24 @@ class Directory extends Payload {
       // continue recursion with new relative file location
       this.subdirectories[dir].addFile(location.substring(location.indexOf('/') + 1, location.length), data, fullname);
     } else {
-      // only add the file to the file manager when it has been loaded
-      let _this_ = this;
-      // create a new howl object and pass it the load file constructor
-      new Howl({
-        urls: [data],
+      if (this.files[location] === undefined) {
+        // only add the file to the file manager when it has been loaded
+        let _this_ = this;
+        // create a new howl object and pass it the load file constructor
+        new Howl({
+          urls: [data],
 
-        onload: function() {
-          // this refers to the howl object
-          _this_.loadedFile(location, this, fullname);
-        },
-        onloaderror: function() {
-          collectErrorMessage('Error loading file', {name: fullname, d: data});
-        }
-      });
+          onload: function() {
+            // this refers to the howl object
+            _this_.loadedFile(location, this, fullname);
+          },
+          onloaderror: function() {
+            collectErrorMessage('Error loading file', {name: fullname, d: data});
+          }
+        });
+      } else {
+        collectWarningMessage('Warning: File already exists. Will not overwrite: ' + fullname);
+      }
     }
   }
 

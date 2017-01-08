@@ -22,15 +22,19 @@ class KeyboardUtils {
     [90, 88, 67, 86, 66, 78, 77, 188, 190, 191, 16,  -1]
   ];
 
-  public static getKeyboardSizeString(type: String): KeyBoardSize {
+  public static getKeyboardTypeFromString(type: string): KeyBoardType {
     switch (type) {
       case 'SQUARE':
-        return KeyboardUtils.getKeyboardSize(KeyBoardType.SQUARE);
+        return KeyBoardType.SQUARE;
       case 'DOUBLE':
-        return KeyboardUtils.getKeyboardSize(KeyBoardType.DOUBLE);
+        return KeyBoardType.DOUBLE;
       default:
-        return KeyboardUtils.getKeyboardSize(KeyBoardType.STANDARD);
+        return KeyBoardType.STANDARD;
     }
+  }
+
+  public static getKeyboardSizeString(type: string) {
+    return KeyboardUtils.getKeyboardSize(KeyboardUtils.getKeyboardTypeFromString(type));
   }
 
   public static KeyboardTypeToString(type: KeyBoardType): string {

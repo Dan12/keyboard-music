@@ -26,7 +26,6 @@ class Sound {
 
   public constructor(name: string, howlObj: Howl, looped: boolean, start_time?: number, end_time?: number) {
     this.name = name;
-    console.log(this.name);
     this.howl_object = howlObj;
 
     this.asSprite = false;
@@ -52,6 +51,7 @@ class Sound {
    * @method play
    */
   public play(): void {
+    console.log('pressed'+this.name);
     if (this.asSprite) {
       this.howl_object.play('sprite');
     } else {
@@ -64,6 +64,7 @@ class Sound {
    * @method stop
    */
   public stop(): void {
+    console.log('released'+this.name);
     this.howl_object.stop();
   }
 

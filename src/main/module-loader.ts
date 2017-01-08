@@ -34,18 +34,11 @@ function ModuleLoader(main_element: JQuery) {
   // initilize the event propegator
   InputEventPropegator.init();
 
-  // let song = new Song('songs/equinox.json', () => {
-  //   console.log(song);
-  // });
-
   // intialize the file manager data object
   let manager = FileManager.getInstance();
 
   // load eq.zip into the file manager
-  NewZip.loadZip('eq.zip');
-
-  // ZipHandler.initialize();
-  // ZipHandler.loadZip('eq.zip', function() {
-  //   console.log('loaded');
-  // });
+  ZipHandler.loadZip('eq.zip', () => {
+    console.log('loaded eq.zip');
+  });
 };

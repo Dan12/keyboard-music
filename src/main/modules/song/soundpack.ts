@@ -23,6 +23,16 @@ class SoundPack {
     return this.linkedAreas;
   }
 
+  public addLinkedArea(): number {
+    this.linkedAreas.push([]);
+
+    return this.linkedAreas.length - 1;
+  }
+
+  public addToLinkedArea(area: number, location: number) {
+    this.linkedAreas[area].push(location);
+  }
+
   public addContainer(container: SoundContainer, loc: number) {
     this.sounds[loc] = container;
   }
