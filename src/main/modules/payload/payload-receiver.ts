@@ -1,10 +1,10 @@
 /**
  * a class that can recieve a payload
- * @class PayloadReceiver
- * @extends DomElement
  */
 abstract class PayloadReceiver<T> extends DomElement {
   private previousColor: string;
+
+  /** the paylod hook function to externally define the payload data and behavior */
   protected payloadHook: PayloadHookFunc<T>;
 
   constructor(element: JQW, hook: PayloadHookFunc<T>) {
@@ -37,26 +37,33 @@ abstract class PayloadReceiver<T> extends DomElement {
     });
   }
 
-  // set the previous color to this element's current color
+  /**
+   * set the previous color to this element's current color
+   */
   public setPreviousColor() {
     this.previousColor = this.asElement().css('background-color');
   }
 
-  public canReceive(payload: Payload): boolean {
+  /**
+   * Returns true if this receiver can receive the given payload.
+   * This check is performed through the payload hook using the CAN_RECEIVE request type.
+   */
+  private canReceive(payload: Payload): boolean {
     return this.payloadHook !== undefined && this.payloadHook(PayloadHookRequest.CAN_RECEIVE, payload);
   }
 
   /**
-   * handle the payload that was received.
+   * Handle the payload that was received.
    * It will be a payload that can be received as defined by canReceive.
-   * @method receivePayload
-   * @param {Payload} payload
    */
-  public receivePayload(payload: Payload): void {
+  private receivePayload(payload: Payload): void {
     if (this.payloadHook !== undefined) {
       this.payloadHook(PayloadHookRequest.RECEIVED, payload, this.getObjectData());
     }
   }
 
+  /**
+   * @returns this receiver's object data, as defined by the generic type
+   */
   abstract getObjectData(): T;
 }

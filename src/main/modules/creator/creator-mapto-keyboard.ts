@@ -47,8 +47,8 @@ class MapToKeyboard {
         return [{row: r, col: c, r: p ? 255 : hasElement ? 100 : -1, g: p ? 160 : hasElement ? 255 : -1, b: p ? 0 : hasElement ? 100 : -1}];
       }
     );
-    this.mapTo.getKeyboard().setPressKeyListener((r: number, c: number) => {
-      console.log(`inspect ${r},${c}`);
+    this.mapTo.getKeyboard().setPressKeyListener((key: KeyboardKey) => {
+      console.log(`inspect ${key.getRow()},${key.getCol()}`);
     });
 
     this.container = new JQW('<div class="horizontal-column"></div>');
@@ -72,7 +72,7 @@ class MapToKeyboard {
     // add the sound to the song
     SongManager.getSong().addSound(
       0,
-      KeyboardUtils.gridToLinear(r, c, KeyboardUtils.getKeyboardSize(KeyBoardType.STANDARD).cols),
+      KeyboardUtils.gridToLinear(r, c, KeyboardUtils.keyboardTypeToSize(KeyBoardType.STANDARD).cols),
       sound
     );
 

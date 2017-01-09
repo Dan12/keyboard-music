@@ -1,8 +1,7 @@
 /// <reference path="../../interfaces/element.ts"/>
 
 /**
- * a payload class for an element
- * @class Payload
+ * an extension to the element class that represents a payload
  */
 abstract class Payload extends DomElement {
   constructor(element: JQW) {

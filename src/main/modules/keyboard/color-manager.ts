@@ -1,9 +1,14 @@
 // TODO add customization
+/**
+ * A color manager class for a keyboard. Able to abstract color routines for a keyboard press.
+ */
 class ColorManager {
   private keys: KeyboardKey[][];
 
-  // a function that takes a row, column, and a pressed flag as an input
-  // and outputs a set of actions
+  /**
+   * a function that takes a row, column, and a pressed flag as an input
+   * and outputs a set of actions. A -1 in an rgb result automatically resets the key
+   */
   private routine: (r: number, c: number, p: boolean) => RoutineResult[];
 
   constructor(keys: KeyboardKey[][]) {
@@ -24,6 +29,9 @@ class ColorManager {
     this.runRoutine(r, c, false);
   }
 
+  /**
+   * run the routine for the key at the given row and column
+   */
   private runRoutine(r: number, c: number, p: boolean) {
     let results = this.routine(r, c, p);
     for (let i = 0; i < results.length; i++) {
@@ -36,6 +44,9 @@ class ColorManager {
     }
   }
 
+  /**
+   * the standard same key press color routine for the given rgb color
+   */
   public static standardColorRoutine(red: number, green: number, blue: number): (r: number, c: number, p: boolean) => RoutineResult[] {
     return (r: number, c: number, p: boolean) => {
               return [{row: r, col: c, r: p ? red : -1, g: p ? green : -1, b: p ? blue : -1}];
@@ -44,7 +55,7 @@ class ColorManager {
 }
 
 /**
- * @class RoutineResult
+ * a structure for the result of the color routine
  */
 interface RoutineResult {
   row: number;

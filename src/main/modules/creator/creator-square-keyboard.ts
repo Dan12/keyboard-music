@@ -46,10 +46,10 @@ class SquareKeyboard {
     this.square.asElement().css({'margin-right': '30px'});
     // turn square green when active
     this.square.getKeyboard().getColorManager().setRoutine(ColorManager.standardColorRoutine(100, 255, 100));
-    this.square.getKeyboard().setPressKeyListener((r: number, c: number) => {
-      let sound = this.getPayload(r, c);
+    this.square.getKeyboard().setPressKeyListener((key: KeyboardKey) => {
+      let sound = this.getPayload(key.getRow(), key.getCol());
       if (sound)
-        Toolbar.getInstance().inspectSound(sound);
+        Toolbar.getInstance().inspectFile(sound);
     });
 
     this.container = new JQW('<div class="horizontal-column"></div>');

@@ -6,9 +6,6 @@
 
 /**
  * The keyboard module to represent an html keyboard.
- *
- * @class Keyboard
- * @extends PayloadReceiver
  */
 class Keyboard extends DomElement implements InputReciever {
 
@@ -29,8 +26,6 @@ class Keyboard extends DomElement implements InputReciever {
   // used to keep track of currently pressed keys so that a key can only be triggered once when pressed
   private pressed: {};
 
-  // TODO custom keypairs
-
   // a mapping from a keycode to keyboard row and column
   private keyMap = {};
 
@@ -47,7 +42,7 @@ class Keyboard extends DomElement implements InputReciever {
 
     this.keyboardID = Keyboard.assignNextID();
 
-    let size = KeyboardUtils.getKeyboardSize(type);
+    let size = KeyboardUtils.keyboardTypeToSize(type);
     this.numRows = size.rows;
     this.numCols = size.cols;
 
@@ -110,25 +105,28 @@ class Keyboard extends DomElement implements InputReciever {
     return this.rows[r][c];
   }
 
-  public setPressKeyListener(callback: (r: number, c: number) => void) {
+  /**
+   * set a click listener for all of the keys
+   */
+  public setPressKeyListener(callback: (key: KeyboardKey) => void) {
     for (let r = 0; r < this.numRows; r++) {
       for (let c = 0; c < this.numCols; c++) {
-        this.rows[r][c].asElement().click(() => {
-          callback(r, c);
+        let key = this.rows[r][c];
+        key.asElement().click(() => {
+          callback(key);
         });
-        this.rows[r][c].asElement().css('cursor', 'pointer');
+        key.asElement().css('cursor', 'pointer');
       }
     }
   }
 
-  /**
-   * @method getColorManager
-   */
   public getColorManager(): ColorManager {
     return this.colorManager;
   }
 
-  // set the visibility of the key symbols
+  /**
+   * set the visibility of the key symbols based on the showKey flag
+   */
   private setVisible() {
     let cssObj = {'color': this.showKeys ? '' : 'rgba(0,0,0,0)'};
     for (let r = 0; r < this.numRows; r++) {
@@ -139,7 +137,7 @@ class Keyboard extends DomElement implements InputReciever {
   }
 
   /**
-   * @method resize
+   * resize the keyboard keys based on the scale. 1 is a 60 x 60 key
    */
   public resize(scale = 1) {
     let css = KeyboardKey.getScaleCSS(scale);
@@ -152,17 +150,12 @@ class Keyboard extends DomElement implements InputReciever {
   }
 
   /**
-   * @method centerVertical
+   * apply the vertical-align class to center this keyboard vertiacally
    */
   public centerVertical() {
     this.asElement().addClass('vertical-align');
   }
 
-  /**
-   * called when the key with the given keycode is pressed down
-   * @method keyDown
-   * @param {number} key the keycode
-   */
   public keyDown(key: number) {
     if (!this.pressed[key]) {
       if (this.modifierActive !== undefined && key === this.modifierKeyCode) {
@@ -185,11 +178,6 @@ class Keyboard extends DomElement implements InputReciever {
     }
   }
 
-  /**
-   * called when the key with the given keycode is released
-   * @method keyUp
-   * @param {number} key the keycode
-   */
   public keyUp(key: number) {
     if (this.pressed[key]) {
       // only set to false if the modifier key is down and we have to hold to trigger
@@ -208,21 +196,27 @@ class Keyboard extends DomElement implements InputReciever {
     }
   }
 
-  // where a key officially gets pressed
+  /**
+   * where a key officially gets pressed
+   */
   private pressedKey(r: number, c: number) {
     this.colorManager.pressedKey(r, c);
 
     SongManager.getInstance().pressedKey(KeyboardUtils.gridToLinear(r, c, this.numCols));
   }
 
-  // where a key officially gets released
+  /**
+   * where a key officially gets pressed
+   */
   private releasedKey(r: number, c: number) {
     this.colorManager.releasedKey(r, c);
 
     SongManager.getInstance().releasedKey(KeyboardUtils.gridToLinear(r, c, this.numCols));
   }
 
-  // bold or unbold keys based on the modifier active flag
+  /**
+   * bold or unbold keys based on the modifier active flag
+   */
   private changeModiferKeys() {
     for (let r = 0; r < this.numRows; r++) {
       for (let c = 0; c < this.numCols; c++) {

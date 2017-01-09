@@ -1,22 +1,16 @@
 /**
  * a selective key and mouse event propegator
- * @class InputEventPropegator
- * @static
  */
 class InputEventPropegator {
   /**
    * initialize the propegtor
-   * @method init
    */
   public static init() {
     InputEventPropegator.initKeyMaps();
-
-    InputEventPropegator.initMouseMaps();
   }
 
   /**
    * initialize the key event listeners and mode callback events
-   * @method initKeyMaps
    */
   private static initKeyMaps() {
     (new JQW('body')).keydown((event: JQueryKeyEventObject) => {
@@ -44,17 +38,6 @@ class InputEventPropegator {
           Creator.getInstance().keyUp(event.keyCode);
           break;
       }
-    });
-  }
-
-  /**
-   * initialize the key event listeners and mode callback events
-   * TODO consider removing
-   * @method initKeyMaps
-   */
-  private static initMouseMaps() {
-    (new JQW('body')).mousedown((event: JQueryMouseEventObject) => {
-      // console.log(event);
     });
   }
 }

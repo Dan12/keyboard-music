@@ -1,11 +1,17 @@
 /// <reference path="keyboard.ts"/>
 
+/**
+ * the layout class for the keyboard mode
+ */
 class KeyboardLayout extends DomElement {
 
   private static instance: KeyboardLayout;
 
   private keyboard: Keyboard;
 
+  /**
+   * @return the singleton instance of this class
+   */
   public static getInstance(): KeyboardLayout {
     if (KeyboardLayout.instance === undefined) {
       KeyboardLayout.instance = new KeyboardLayout();
@@ -23,9 +29,6 @@ class KeyboardLayout extends DomElement {
     this.asElement().append(this.keyboard.asElement());
   }
 
-  /**
-   * @method getKeyboard
-   */
   public getKeyboard(): Keyboard {
     return this.keyboard;
   }

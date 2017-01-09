@@ -1,3 +1,6 @@
+/**
+ * load all of the sounds from the given list of urls. Call the callback when done loading the sounds
+ */
 function loadSounds(urls: string[], callback: () => void) {
     let i = 0;
 
@@ -8,12 +11,8 @@ function loadSounds(urls: string[], callback: () => void) {
         callback();
         return;
       }
-      loadSoundFile(urls[i], nextUrl);
+      ZipHandler.loadZip(urls[i], nextUrl);
     };
 
-    loadSoundFile(urls[i], nextUrl);
-}
-
-function loadSoundFile(url: string, callback: () => void) {
-  ZipHandler.loadZip(url, callback);
+    ZipHandler.loadZip(urls[i], nextUrl);
 }

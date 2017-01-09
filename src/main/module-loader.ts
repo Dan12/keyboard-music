@@ -13,10 +13,7 @@
 
 /**
  * Loads certain modules onto the main element
- *
- * @method ModuleLoader
- * @for Main
- * @param main_element {JQW} the jQuery element to load the modules onto
+ * @param main_element the jQuery element to load the modules onto
  */
 function ModuleLoader(main_element: JQW) {
   // add the keyboard

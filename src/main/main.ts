@@ -1,8 +1,3 @@
-/**
- * The main file that starts the module loader and creates the main container
- * @class Main
- */
-
 // library imports
 /// <reference path="../libraries/howler.d.ts"/>
 /// <reference path="../libraries/jquery.d.ts"/>
@@ -13,6 +8,9 @@
 /// <reference path="./tests.ts"/>
 /// <reference path="./test-mobile.ts"/>
 
+/**
+ * The main function that starts the module loader and creates the main container
+ */
 $(document).ready(function(){
     console.log('Starting Application');
 
