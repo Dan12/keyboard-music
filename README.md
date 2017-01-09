@@ -1,7 +1,7 @@
 # Keyboard Music
 
 ## Dependancies
-- [sudo] npm install -g tslint typescript yuidocjs
+- [sudo] npm install -g tslint typescript typedoc
 - [sudo] gem install sass
 
 ## Running
@@ -10,4 +10,5 @@
 - run: python -m SimpleHTTPServer 8080
 
 ## Documentation
-- yuidoc --server ./lib
+- Will generate a documentation folder. Open the index.html file in the documentation folder to navigate the project docs
+- typedoc --out documentation/ --mode file src/main/

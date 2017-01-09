@@ -1,6 +1,5 @@
 /**
  * A directory class with files and recursive subdirectories
- * @class Directory
  */
 class Directory extends Payload {
   private files: {[name: string]: SoundFile};
@@ -29,19 +28,31 @@ class Directory extends Payload {
     this.dirSize = 0;
   }
 
-  public numFiles() {
+  /**
+   * @return the number of files in this directory. Does not recursively count other directories
+   */
+  public numFiles(): number {
     return this.fileSize;
   }
 
-  public numDirs() {
+  /**
+   * @return the number of sub directories in this directory
+   */
+  public numDirs(): number {
     return this.dirSize;
   }
 
+  /**
+   * @return the first directory in the sub directories map
+   */
   public getFirstDir(): Directory {
     let key =  Object.keys(this.subdirectories)[0];
     return this.subdirectories[key];
   }
 
+  /**
+   * @return an array of the files in this directory only; no files returned from any subdirectories
+   */
   public getFiles(): string[] {
     return Object.keys(this.files);
   }
@@ -49,10 +60,9 @@ class Directory extends Payload {
   /**
    * recursively add the file to this directory.
    * Create new subdirectories if needed.
-   * @method addFile
-   * @param {String} location the location of the file relative to this directory
-   * @param {String} data the file data
-   * @param {String} fullname the full location of the file
+   * @param location the location of the file relative to this directory
+   * @param data the file data
+   * @param fullname the full location of the file
    */
   public addFile(location: string, data: string, fullname: string) {
     // if this is still a subdirectory
@@ -104,8 +114,7 @@ class Directory extends Payload {
 
   /**
    * recursively get the given file
-   * @method getFile
-   * @param {String} location the relative file path to this directory
+   * @param location the relative file path to this directory
    */
   public getFile(location: string): SoundFile {
     if (location.indexOf('/') !== -1) {

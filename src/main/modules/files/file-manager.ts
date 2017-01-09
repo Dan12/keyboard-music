@@ -3,7 +3,6 @@
 
 /**
  * A file manager for managing all of the sounds.
- * @class FileManager
  * @static
  */
 class FileManager {
@@ -19,10 +18,7 @@ class FileManager {
   private static instance: FileManager;
 
   /**
-   * return the singleton instance of this class
-   * @method getInstance
-   * @static
-   * @return {FileManager} the instance
+   * @return the singleton instance of this class
    */
   public static getInstance(): FileManager {
     if (FileManager.instance === undefined) {

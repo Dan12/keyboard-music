@@ -5,15 +5,17 @@
 
 /**
  * the class to parent the creator gui for creating songs
- * @class Creator
  * @static
  */
 class Creator extends DomElement implements InputReciever {
 
   private static instance: Creator;
 
+  /** The container for the creator dom objects */
   private main_content: JQW;
 
+  // initial size metrics
+  // TODO add ability to update
   private fileWidth = 160;
   private inspectorHeight = 120;
   private padding = 6;
@@ -22,10 +24,7 @@ class Creator extends DomElement implements InputReciever {
   private square: SquareKeyboard;
 
   /**
-   * return the singleton instance of this class
-   * @method getInstance
-   * @static
-   * @return {Creator} the instance
+   * @return the singleton instance of this class
    */
   public static getInstance(): Creator {
     if (Creator.instance === undefined) {
@@ -64,6 +63,9 @@ class Creator extends DomElement implements InputReciever {
     this.layoutElements();
   }
 
+  /**
+   * this should be called when a song is loaded to update the creator gui
+   */
   public loadedSong() {
     KeyPayloadManager.getInstance().clearKeyboard(this.mapTo.getKeyboard().getID());
     let pack = SongManager.getCurrentPack();
@@ -81,7 +83,9 @@ class Creator extends DomElement implements InputReciever {
     }
   }
 
-  // set the element layout
+  /**
+   * set the element layout
+   */
   private layoutElements() {
     FileGUI.getInstance().asElement().css({'left': '0', 'top': '0', 'width': this.fileWidth + 'px', 'height': '100vh'});
     Toolbar.getInstance().asElement().css(

@@ -3,3 +3,4 @@
 !/lib/libraries/*
 .DS_Store
 /.sass-cache
+/documentation/*

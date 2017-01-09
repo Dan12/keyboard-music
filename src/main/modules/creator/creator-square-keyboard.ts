@@ -1,8 +1,13 @@
+/**
+ * handles the logic and hooks for the square reference keyboard
+ */
 class SquareKeyboard {
 
   private square: PayloadKeyboard;
+  private container: JQW;
 
   constructor() {
+    // the hook for the keyboard, process the directory payload and update multiple files
     let squarePayloadFunc = (type: PayloadHookRequest, payload?: Payload, objData?: number): boolean => {
       if (type === PayloadHookRequest.RECEIVED) {
         this.processPayload(payload);
@@ -15,6 +20,7 @@ class SquareKeyboard {
       return false;
     };
 
+    // the hook for the keyboard keys, receives a sound file
     let keyHook = (type: PayloadHookRequest, payload?: Payload, objData?: KeyboardKey): boolean => {
       if (type === PayloadHookRequest.RECEIVED) {
         if (payload instanceof SoundFile)
@@ -35,7 +41,7 @@ class SquareKeyboard {
 
     this.square = new PayloadKeyboard(KeyBoardType.SQUARE, squarePayloadFunc, keyHook);
     this.square.getKeyboard().resize(0.6);
-    this.square.getKeyboard().centerVertical();
+    this.square.centerVertical();
     // add some spacing to the square
     this.square.asElement().css({'margin-right': '30px'});
     // turn square green when active
@@ -45,12 +51,18 @@ class SquareKeyboard {
       if (sound)
         Toolbar.getInstance().inspectSound(sound);
     });
+
+    this.container = new JQW('<div class="horizontal-column"></div>');
+    this.container.append(this.square.asElement());
   }
 
   public getElement(): JQW {
-    return this.square.asElement();
+    return this.container;
   }
 
+  /**
+   * get the payload for this keyboard at the specified location
+   */
   private getPayload(r: number, c: number): SoundFile {
     return KeyPayloadManager.getInstance().getKey(
       this.square.getKeyboard().getID(),
@@ -58,7 +70,9 @@ class SquareKeyboard {
     );
   }
 
-  // called when a directory payload is recieved
+  /**
+   * called when a directory payload is recieved
+   */
   private processPayload(payload: Payload) {
     if (payload instanceof Directory) {
       // find the lowest directory with a file, stop if no subdirectory
@@ -79,8 +93,6 @@ class SquareKeyboard {
           let soundFile = lowestDir.getFile(sound);
 
           this.addSquareSound(r, c, soundFile);
-
-          // this.keyboard.getKey(r, c).setPayload(soundFile);
         }
       }
     } else {
@@ -88,6 +100,9 @@ class SquareKeyboard {
     }
   }
 
+  /**
+   * add the sound to the payload manager and set the gui
+   */
   private addSquareSound(r: number, c: number, sound: SoundFile) {
     // Set the color
     this.square.getKeyboard().getColorManager().pressedKey(r, c);

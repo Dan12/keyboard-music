@@ -1,12 +1,9 @@
 /**
  * The abstract element class. It tells the client that the extending
  * class can be treated as a JQuery element
- *
- * @class JQElement
- * @constructor
- * @param elelemt {JQW} the jQuery element representing this object
  */
 abstract class DomElement {
+  /** the element representing this object */
   protected element: JQW;
 
   constructor(element: JQW) {
@@ -14,8 +11,7 @@ abstract class DomElement {
   }
 
   /**
-   * @method asElement
-   * @return {JQW} This element's jQuery elelemt
+   * @return This objects's elelemt
    */
   public asElement(): JQW {
     return this.element;

@@ -1,6 +1,5 @@
 /**
  * a class to display the data from the file mananger
- * @class FileGUI
  * @static
  */
 class FileGUI extends DomElement {
@@ -8,10 +7,7 @@ class FileGUI extends DomElement {
   private static instance: FileGUI;
 
   /**
-   * return the singleton instance of this class
-   * @method getInstance
-   * @static
-   * @return {FileGUI} the instance
+   * @return the singleton instance of this class
    */
   public static getInstance(): FileGUI {
     if (FileGUI.instance === undefined) {
@@ -30,7 +26,6 @@ class FileGUI extends DomElement {
 
   /**
    * called when the clear method is called on the
-   * @method notifyClear
    */
   public notifyClear() {
     this.asElement().remove();

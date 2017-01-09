@@ -1,6 +1,7 @@
 /**
  * a class that can recieve a payload
  * @class PayloadReceiver
+ * @extends DomElement
  */
 abstract class PayloadReceiver<T> extends DomElement {
   private previousColor: string;

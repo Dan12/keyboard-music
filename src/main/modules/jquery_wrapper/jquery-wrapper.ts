@@ -2,6 +2,8 @@ class JQW {
 
   private jqObject: JQuery;
 
+  private domObject: HTMLElement;
+
   constructor(obj: string) {
     this.jqObject = $(obj);
   }
