@@ -1,10 +1,7 @@
 /**
  * Handles application errors
- *
- * @method collectErrorMessage
- * @for Main
- * @param {String} message jQuery element to load the modules onto
- * @param {Object} [errorObj] optional object connected to the error message
+ * @param message jQuery element to load the modules onto
+ * @param errorObj optional object connected to the error message
  */
 function collectErrorMessage(message: string, errorObj?: any) {
   console.log(message);

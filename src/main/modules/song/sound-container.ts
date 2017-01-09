@@ -2,8 +2,6 @@
 
 /**
  * a container class for a single key's sound. Can contain multiple sounds in the form of pitches.
- * @class SoundContainer
- * @constructor
  */
 class SoundContainer {
   public pitches: Sound[];
@@ -18,6 +16,9 @@ class SoundContainer {
     this.holdToPlay = hold_to_play === undefined ? false : hold_to_play;
   }
 
+  /**
+   * @return an array of all of the pitches in the format of pitch data: [location, start time, end time] 
+   */
   public getPitchLocations(): (string|number)[][] {
     let ret = <(string|number)[][]>[];
     for (let i = 0; i < this.pitches.length; i++) {

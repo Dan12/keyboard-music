@@ -1,3 +1,6 @@
+/**
+ * a handy set of keyboard utilities
+ */
 class KeyboardUtils {
   public static keyboardSymbols = [
     ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-',  '='],
@@ -22,7 +25,9 @@ class KeyboardUtils {
     [90, 88, 67, 86, 66, 78, 77, 188, 190, 191, 16,  -1]
   ];
 
-  public static getKeyboardTypeFromString(type: string): KeyBoardType {
+  // TODO custom keypairs
+
+  public static keyboardStringToType(type: string): KeyBoardType {
     switch (type) {
       case 'SQUARE':
         return KeyBoardType.SQUARE;
@@ -33,11 +38,11 @@ class KeyboardUtils {
     }
   }
 
-  public static getKeyboardSizeString(type: string) {
-    return KeyboardUtils.getKeyboardSize(KeyboardUtils.getKeyboardTypeFromString(type));
+  public static keyboardStringToSize(type: string): KeyBoardSize {
+    return KeyboardUtils.keyboardTypeToSize(KeyboardUtils.keyboardStringToType(type));
   }
 
-  public static KeyboardTypeToString(type: KeyBoardType): string {
+  public static keyboardTypeToString(type: KeyBoardType): string {
     switch (type) {
       case KeyBoardType.SQUARE:
         return 'SQUARE';
@@ -48,7 +53,7 @@ class KeyboardUtils {
     }
   }
 
-  public static getKeyboardSize(type: KeyBoardType): KeyBoardSize {
+  public static keyboardTypeToSize(type: KeyBoardType): KeyBoardSize {
     switch (type) {
       case KeyBoardType.SQUARE:
         return {rows: 8, cols: 8};
@@ -69,11 +74,17 @@ class KeyboardUtils {
   }
 }
 
+/**
+ * a keyboard size structur
+ */
 interface KeyBoardSize {
   rows: number;
   cols: number;
 }
 
+/**
+ * the 3 different keyboard types
+ */
 enum KeyBoardType {
   STANDARD, // original 4*12 grid
   SQUARE, // 8*8 grid like actual pad, modifier to access lower grid

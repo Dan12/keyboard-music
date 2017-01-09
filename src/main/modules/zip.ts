@@ -1,8 +1,5 @@
 /**
  * The way to load a zip file.
- * TODO check browser compatibility, probably fails on IE
- * @class ZipHandler
- * @static
  */
 class ZipHandler {
   private static zipBase = 'songs';
@@ -13,9 +10,8 @@ class ZipHandler {
   /**
    * load the contents of the zip file at the given location into the file manager.
    * Only loads .mp3 files and the location has to be a valid zip file
-   * @method loadZip
-   * @param {String} name the file name/location
-   * @param {Callback} [callback] optional callback
+   * @param name the file name/location
+   * @param callback optional callback that is called when done loading
    */
   public static loadZip(name: string, callback?: () => void) {
 

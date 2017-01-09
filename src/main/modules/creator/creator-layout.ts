@@ -5,15 +5,17 @@
 
 /**
  * the class to parent the creator gui for creating songs
- * @class Creator
  * @static
  */
-class Creator extends JQElement implements InputReciever {
+class Creator extends DomElement implements InputReciever {
 
   private static instance: Creator;
 
-  private main_content: JQuery;
+  /** The container for the creator dom objects */
+  private main_content: JQW;
 
+  // initial size metrics
+  // TODO add ability to update
   private fileWidth = 160;
   private inspectorHeight = 120;
   private padding = 6;
@@ -22,10 +24,7 @@ class Creator extends JQElement implements InputReciever {
   private square: SquareKeyboard;
 
   /**
-   * return the singleton instance of this class
-   * @method getInstance
-   * @static
-   * @return {Creator} the instance
+   * @return the singleton instance of this class
    */
   public static getInstance(): Creator {
     if (Creator.instance === undefined) {
@@ -36,7 +35,7 @@ class Creator extends JQElement implements InputReciever {
   }
 
   private constructor() {
-    super($('<div id="creator"></div>'));
+    super(new JQW('<div id="creator"></div>'));
 
     // initialize the keyboards
     this.square = new SquareKeyboard();
@@ -54,7 +53,7 @@ class Creator extends JQElement implements InputReciever {
     this.asElement().append(Toolbar.getInstance().asElement());
 
     // set the main content container
-    this.main_content = $('<div style="position: absolute; display: inline-block; overflow: hidden;"></div>');
+    this.main_content = new JQW('<div style="position: absolute; display: inline-block; overflow: hidden;"></div>');
     this.asElement().append(this.main_content);
 
     this.main_content.append(this.square.getElement());
@@ -64,8 +63,11 @@ class Creator extends JQElement implements InputReciever {
     this.layoutElements();
   }
 
+  /**
+   * this should be called when a song is loaded to update the creator gui
+   */
   public loadedSong() {
-    KeyPayloadManager.getInstance().clear();
+    KeyPayloadManager.getInstance().clearKeyboard(this.mapTo.getKeyboard().getID());
     let pack = SongManager.getCurrentPack();
     if (pack) {
       let containers = pack.getContainers();
@@ -81,7 +83,9 @@ class Creator extends JQElement implements InputReciever {
     }
   }
 
-  // set the element layout
+  /**
+   * set the element layout
+   */
   private layoutElements() {
     FileGUI.getInstance().asElement().css({'left': '0', 'top': '0', 'width': this.fileWidth + 'px', 'height': '100vh'});
     Toolbar.getInstance().asElement().css(

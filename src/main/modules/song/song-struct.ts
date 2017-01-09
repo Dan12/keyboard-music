@@ -1,3 +1,6 @@
+/**
+ * define the song json structure
+ */
 interface SongStruct {
   name: string;
   bpms: number[][];

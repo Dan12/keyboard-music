@@ -1,13 +1,18 @@
 /// <reference path="./soundpack.ts"/>
 /// <reference path="./sound-loader.ts"/>
 
+/**
+ * a class that represents a song
+ */
 class Song {
   private name: string;
 
   private files: string[];
 
-  // array of bpm and time steps
-  // Invariant: must be at least of length 1 and the first cell must have timestamp 0
+  /**
+   * array of bpms and time steps
+   * Invariant: must be at least of length 1 and the first cell must have timestamp 0
+   */
   private bpms: number[][];
 
   private soundPacks: SoundPack[];
@@ -27,18 +32,22 @@ class Song {
     this.files = [];
   }
 
+  /**
+   * @return the json representaion of this song
+   */
   public constructJSON(): SongStruct {
     return {
       name: this.name,
       bpms: this.bpms,
       files: this.files,
-      keyboard_type: KeyboardUtils.KeyboardTypeToString(this.keyboardType),
+      keyboard_type: KeyboardUtils.keyboardTypeToString(this.keyboardType),
       container_settings: this.getContainerSettings(),
       linked_areas: this.getLinkedAreas(),
       colors: null
     };
   }
 
+  // get the container settings for the song json
   private getContainerSettings(): [number, (string|number)[][], boolean][][] {
     let ret = <[number, (string|number)[][], boolean][][]>[];
     for (let i = 0; i < this.soundPacks.length; i++) {
@@ -47,6 +56,7 @@ class Song {
     return ret;
   }
 
+  // get the lined areas for the song json
   private getLinkedAreas(): number[][][] {
     let ret = <number[][][]> [];
     for (let i = 0; i < this.soundPacks.length; i++) {
@@ -55,6 +65,9 @@ class Song {
     return ret;
   }
 
+  /**
+   * add a sound pack to this song at the end of the sound pack array
+   */
   public addPack() {
     this.soundPacks.push(new SoundPack());
   }
@@ -63,12 +76,21 @@ class Song {
     return this.soundPacks.length;
   }
 
+  /**
+   * @return the soundpack at the given location. May return undefined.
+   */
   public getPack(pack: number): SoundPack {
     return this.soundPacks[pack];
   }
 
+  /**
+   * add the given sound to the given pack at the given location.
+   * Will create a container if none exists at the given location in the given pack
+   */
   public addSound(pack: number, location: number, file: SoundFile) {
+    // verify pack correctness
     if (pack >= 0 && pack < this.soundPacks.length) {
+      // if the container does not yet exist, create it
       let container = this.soundPacks[pack].getContainer(location);
       if (container === undefined) {
         container = new SoundContainer();
@@ -80,6 +102,7 @@ class Song {
       // get root file
       let rootFile = FileManager.getInstance().getRootLocation(file.location.substring(0, file.location.indexOf('/')));
 
+      // add the root file to the song files array if it is not already in it
       if (this.files.length === 0) {
         this.files.push(rootFile);
       } else {
@@ -97,31 +120,40 @@ class Song {
     }
   }
 
+  /**
+   * load a song from a file source using ajax. Call the callback function when done
+   */
   public loadFromSource(location: string, callback: () => void) {
     $.getJSON(location, (data) => {
       loadSounds(data.files, () => {
-        this.loadPacks(data);
+        this.loadData(data);
         callback();
       });
     });
   }
 
-  private loadPacks(songData: SongStruct) {
+  /**
+   * load the song data from the given json data
+   */
+  private loadData(songData: SongStruct) {
+    // load song variables
     this.bpms = songData['bpms'];
     this.name = songData['name'];
     this.files = songData['files'];
-    this.keyboardType = KeyboardUtils.getKeyboardTypeFromString(songData['keyboard_type'].toUpperCase());
+    this.keyboardType = KeyboardUtils.keyboardStringToType(songData['keyboard_type'].toUpperCase());
 
+    // load the soundpacks
     for (let i = 0; i < songData['container_settings'].length; i++) {
       this.soundPacks.push(new SoundPack());
 
+      // load the containers in the given soundpack
       for (let j = 0; j < songData['container_settings'][i].length; j++) {
         let data = songData['container_settings'][i][j];
 
         // format: location, pitches, hold to play, quaternize, loop
         let container = new SoundContainer(data[2], <number> data[3], <boolean> data[4]);
 
-        // pitches: [location, start time, end time]
+        // pitches format: [location, start time, end time]
         let pitches = data[1];
         for (let i = 0; i < pitches.length; i++) {
           // TODO verify correctness

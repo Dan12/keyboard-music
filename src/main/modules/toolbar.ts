@@ -1,9 +1,7 @@
 /**
  * A gui class for inspecting a sound file
- * @class FileInspector
- * @static
  */
-class Toolbar extends JQElement {
+class Toolbar extends DomElement {
 
   private static instance: Toolbar;
 
@@ -13,9 +11,9 @@ class Toolbar extends JQElement {
   // the current sound being inspected
   private currentSound: Howl;
 
-  private nameElement: JQuery;
-  private waveformContainer: JQuery;
-  private setPoints: JQuery;
+  private nameElement: JQW;
+  private waveformContainer: JQW;
+  private setPoints: JQW;
   private canvas: HTMLElement;
   private ctx: CanvasRenderingContext2D;
 
@@ -39,10 +37,7 @@ class Toolbar extends JQElement {
   private mousedown = false;
 
   /**
-   * return the singleton instance of this class
-   * @method getInstance
-   * @static
-   * @return {FileInspector} the instance
+   * @return the singleton instance of this class
    */
   public static getInstance(): Toolbar {
     if (Toolbar.instance === undefined) {
@@ -53,20 +48,20 @@ class Toolbar extends JQElement {
   }
 
   private constructor() {
-    super($('<div id="toolbar"></div>'));
+    super(new JQW('<div id="toolbar"></div>'));
 
-    let songElement = $('<div id="song-tools" class="horizontal-column"></div>');
+    let songElement = new JQW('<div id="song-tools" class="horizontal-column"></div>');
     this.asElement().append(songElement);
-    let loadButton = $('<button>Load Song</button>');
+    let loadButton = new JQW('<button>Load Song</button>');
     songElement.append(loadButton);
     loadButton.click(() => {
       SongManager.getInstance().loadSong('songs/equinox.json', () => {
         Creator.getInstance().loadedSong();
-        console.log(SongManager.getSong())
+        console.log(SongManager.getSong());
       });
     });
 
-    let saveButton = $('<button>Save Song</button>');
+    let saveButton = new JQW('<button>Save Song</button>');
 
     songElement.append(saveButton);
     saveButton.click(() => {
@@ -74,13 +69,13 @@ class Toolbar extends JQElement {
       console.log(JSON.stringify(song));
     });
 
-    let fileTools = $('<div id="file-tools" class="horizontal-column"></div>');
+    let fileTools = new JQW('<div id="file-tools" class="horizontal-column"></div>');
     this.asElement().append(fileTools);
 
     // create the name and waveform elements
-    this.nameElement = $('<div id="file-name">File Name</div>');
+    this.nameElement = new JQW('<div id="file-name">File Name</div>');
     fileTools.append(this.nameElement);
-    this.waveformContainer = $('<div id="waveform"></div>');
+    this.waveformContainer = new JQW('<div id="waveform"></div>');
     fileTools.append(this.waveformContainer);
     this.waveformContainer.append(`<canvas id="waveform-canvas" width="200" height="100">
                                     Your Browser Does Not Support The Canvas Element
@@ -88,11 +83,11 @@ class Toolbar extends JQElement {
                                  );
 
     // create the set points buttons and listeners
-    this.setPoints = $('<div></div>');
+    this.setPoints = new JQW('<div></div>');
     fileTools.append(this.setPoints);
 
-    let setIn = $('<button>Set in point</button>');
-    let setOut = $('<button>Set out point</button>');
+    let setIn = new JQW('<button>Set in point</button>');
+    let setOut = new JQW('<button>Set out point</button>');
     this.setPoints.append(setIn);
     this.setPoints.append(setOut);
     setIn.click(() => {
@@ -130,6 +125,10 @@ class Toolbar extends JQElement {
     this.setPoints.hide();
   }
 
+  /**
+   * show the sound context
+   * @param setPoints if true, show the set in and out points for the
+   */
   private showSoundContext(setPoints: boolean) {
     if (this.canvas === undefined) {
       this.canvas = document.getElementById('waveform-canvas');
@@ -165,7 +164,6 @@ class Toolbar extends JQElement {
   /**
    * called when the space bar is pressed
    * and the inspector is in the current mode
-   * @method pressSpace
    */
   public pressSpace() {
     // make sure that there is a sound
@@ -192,31 +190,27 @@ class Toolbar extends JQElement {
 
   /**
    * clear the inspector
-   * @method clear
    */
   public clear() {
     this.currentSound = undefined;
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
+  /**
+   * inspect the given sound container
+   */
   public inspectKey(sound: SoundContainer) {
     // TODO
     throw 'Unsuported operation';
   }
 
-  public inspectSound(sound: SoundFile) {
-    this.inspectFile(sound.name, sound);
-  }
-
   /**
-   * inspect the given sound file with the given name
-   * @method inspectFile
-   * @param {String} name the name of the file
-   * @param {SoundFile} sound the sound file
+   * inspect the given sound file with the given name=
+   * @param sound the sound file
    */
-  public inspectFile(name: string, sound: SoundFile) {
+  public inspectFile(sound: SoundFile) {
     // set the name
-    this.nameElement.html(name);
+    this.nameElement.html(sound.name);
 
     // set the current sound
     this.currentSound = sound.sound;
@@ -226,6 +220,9 @@ class Toolbar extends JQElement {
     this.displayAudioData();
   }
 
+  /**
+   * display the current audio data from the current sound
+   */
   private displayAudioData() {
     // cut out the base64 metadata
     let begin = 'data:audio/mp3;base64,';
@@ -257,7 +254,9 @@ class Toolbar extends JQElement {
     });
   }
 
-  // convert a base64 array to a byte array
+  /**
+   * convert a base64 array to a byte array
+   */
   private base64ToArrayBuffer(base64: string): ArrayBuffer {
     let binaryString = window.atob(base64);
     let len = binaryString.length;
@@ -268,13 +267,17 @@ class Toolbar extends JQElement {
     return bytes.buffer;
   }
 
-  // set the sample sprite for the sound to the current in and out points
+  /**
+   * set the sample sprite for the sound to the current in and out points
+   */
   private setSprite() {
     this.currentSound.sprite({sample: [this.inTime * 1000, (this.outTime - this.inTime) * 1000]});
     this.nextPos = 0;
   }
 
-  // refresh the canvas with the two channels
+  /**
+   * refresh the canvas with the two channels
+   */
   private refreshCanvas() {
     this.ctx.fillStyle = 'black';
 
@@ -322,12 +325,18 @@ class Toolbar extends JQElement {
     }
   }
 
+  /**
+   * set the next playback position based on the mouse position
+   */
   private setNextPos(mouseX: number) {
     if (this.currentSound)
       this.currentSound.pause();
     this.nextPos = (mouseX + this.offset - this.waveformContainer.offset().left) / this.scale / this.sampleRate - this.inTime;
   }
 
+  /**
+   * draw a cursor at the given time. Will scale x to pixels
+   */
   private drawCursorAtTime(x: number) {
     this.ctx.fillRect((x * this.sampleRate * this.scale) + this.offset - 1, 0, 2, this.canvas.height);
   }

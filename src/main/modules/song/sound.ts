@@ -1,19 +1,10 @@
 /**
  * A class to abstract a howl object
- * @class Sound
- * @constructor
- * @param filename {string} the filepath for the sound
- * @param looped {boolean} sound the sound loop or not
- * @param [start_time] {number} what time to start the sound at
- * @param [end_time] {number} what time to end the sound at
  */
 class Sound {
 
   /**
    * The howler js object which this class exposes a simple api for
-   * @property howl_object
-   * @type Howl
-   * @default undefined
    */
   private howl_object: Howl;
 
@@ -24,6 +15,13 @@ class Sound {
   private start_time: number;
   private end_time: number;
 
+  /**
+   * @param name the filepath for the sound
+   * @param howlObj the howler js object of this sound
+   * @param looped sound the sound loop or not
+   * @param start_time what time to start the sound at
+   * @param end_time what time to end the sound at
+   */
   public constructor(name: string, howlObj: Howl, looped: boolean, start_time?: number, end_time?: number) {
     this.name = name;
     this.howl_object = howlObj;
@@ -39,6 +37,9 @@ class Sound {
     }
   }
 
+  /**
+   * @return the array representation of this audio object in the format: [location, start time, end time]
+   */
   public toArr(): (string|number)[] {
     if (this.start_time) {
       return [this.name, this.start_time, this.end_time];
@@ -49,7 +50,6 @@ class Sound {
 
   /**
    * expose the howl object play method
-   * @method play
    */
   public play(): void {
     if (this.asSprite) {
@@ -61,7 +61,6 @@ class Sound {
 
   /**
    * expose the howl object stop method
-   * @method stop
    */
   public stop(): void {
     this.howl_object.stop();

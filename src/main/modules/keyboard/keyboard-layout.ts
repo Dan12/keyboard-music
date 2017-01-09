@@ -1,11 +1,17 @@
 /// <reference path="keyboard.ts"/>
 
-class KeyboardLayout extends JQElement {
+/**
+ * the layout class for the keyboard mode
+ */
+class KeyboardLayout extends DomElement {
 
   private static instance: KeyboardLayout;
 
   private keyboard: Keyboard;
 
+  /**
+   * @return the singleton instance of this class
+   */
   public static getInstance(): KeyboardLayout {
     if (KeyboardLayout.instance === undefined) {
       KeyboardLayout.instance = new KeyboardLayout();
@@ -15,7 +21,7 @@ class KeyboardLayout extends JQElement {
   }
 
   constructor() {
-    super($('<div id="keyboard"></div>'));
+    super(new JQW('<div id="keyboard"></div>'));
 
     this.keyboard = new Keyboard(KeyBoardType.STANDARD, true);
     this.keyboard.centerVertical();
@@ -23,9 +29,6 @@ class KeyboardLayout extends JQElement {
     this.asElement().append(this.keyboard.asElement());
   }
 
-  /**
-   * @method getKeyboard
-   */
   public getKeyboard(): Keyboard {
     return this.keyboard;
   }

@@ -1,11 +1,10 @@
 /// <reference path="../../interfaces/element.ts"/>
 
 /**
- * a payload class for an element
- * @class Payload
+ * an extension to the element class that represents a payload
  */
-abstract class Payload extends JQElement {
-  constructor(element: JQuery) {
+abstract class Payload extends DomElement {
+  constructor(element: JQW) {
     super(element);
 
     this.asElement().mousedown((e: JQueryMouseEventObject) => {

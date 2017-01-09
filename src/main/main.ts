@@ -1,8 +1,3 @@
-/**
- * The main file that starts the module loader and creates the main container
- * @class Main
- */
-
 // library imports
 /// <reference path="../libraries/howler.d.ts"/>
 /// <reference path="../libraries/jquery.d.ts"/>
@@ -13,13 +8,16 @@
 /// <reference path="./tests.ts"/>
 /// <reference path="./test-mobile.ts"/>
 
+/**
+ * The main function that starts the module loader and creates the main container
+ */
 $(document).ready(function(){
     console.log('Starting Application');
 
     // add the main container element to the dom
-    let main_element = $('<div id="main_container" style="width: 100vw; height: 100vh; overflow: hidden"></div>');
+    let main_element = new JQW('<div id="main_container" style="width: 100vw; height: 100vh; overflow: hidden"></div>');
 
-    $('body').append(main_element);
+    (new JQW('body')).append(main_element);
 
     if (testMobile()) {
       main_element.append('<div>This application is currently not supported for mobile</div>');
