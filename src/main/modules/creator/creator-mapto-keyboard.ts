@@ -7,6 +7,8 @@ class MapToKeyboard {
   private container: JQW;
 
   constructor() {
+    // TODO do correct processing of payload files
+
     // the hook for treating the keyboard as a payload receiver.
     // always returns false, so map to keyboard cannot receive payloads
     let maptoPayloadFunc = (type: PayloadHookRequest, payload?: Payload, objData?: number): boolean => {
@@ -17,16 +19,16 @@ class MapToKeyboard {
     let keyHook = (type: PayloadHookRequest, payload?: Payload, objData?: KeyboardKey): boolean => {
       if (type === PayloadHookRequest.RECEIVED) {
         // process the payload and add the sound file represented by the payload to the current song
-        if (payload instanceof SoundFile)
+        if (payload instanceof Sound)
           this.addSound(objData.getRow(), objData.getCol(), payload);
         else if (payload instanceof KeyboardKey) {
-          let sound = KeyPayloadManager.getInstance().getSoundFromKey(<KeyboardKey> payload);
-          this.addSound(objData.getRow(), objData.getCol(), sound);
+          let container = KeyPayloadManager.getInstance().getSoundFromKey(<KeyboardKey> payload);
+          this.setContainer(objData.getRow(), objData.getCol(), container);
         }
         else
           collectErrorMessage('Payload type does not match soundfile or keyboard key in map to', payload);
       } else if (type === PayloadHookRequest.CAN_RECEIVE) {
-        return payload instanceof SoundFile || payload instanceof KeyboardKey;
+        return payload instanceof Sound || payload instanceof KeyboardKey;
       } else if (type === PayloadHookRequest.IS_PAYLOAD) {
         // key can only be used as a payload if it has a sound applied to it
         return this.getPayload(objData.getRow(), objData.getCol()) !== undefined;
@@ -48,7 +50,9 @@ class MapToKeyboard {
       }
     );
     this.mapTo.getKeyboard().setPressKeyListener((key: KeyboardKey) => {
-      console.log(`inspect ${key.getRow()},${key.getCol()}`);
+      let container = this.getPayload(key.getRow(), key.getCol());
+      if (container)
+        Toolbar.getInstance().inspectContainer(container);
     });
 
     this.container = new JQW('<div class="horizontal-column"></div>');
@@ -58,7 +62,7 @@ class MapToKeyboard {
   /**
    * get the sound file from the key payload manager for a key on this keyboard at r,c
    */
-  private getPayload(r: number, c: number): SoundFile {
+  private getPayload(r: number, c: number): SoundContainer {
     return KeyPayloadManager.getInstance().getKey(
       this.mapTo.getKeyboard().getID(),
       KeyboardUtils.gridToLinear(r, c, this.mapTo.getKeyboard().getNumCols())
@@ -66,24 +70,33 @@ class MapToKeyboard {
   }
 
   /**
-   * add the given sound to the song and the payload manager at the given r,c
+   * add the given sound to the song
    */
-  private addSound(r: number, c: number, sound: SoundFile) {
+  private addSound(r: number, c: number, sound: Sound) {
+    let location = KeyboardUtils.gridToLinear(r, c, KeyboardUtils.keyboardTypeToSize(KeyBoardType.STANDARD).cols);
     // add the sound to the song
-    SongManager.getSong().addSound(
-      0,
-      KeyboardUtils.gridToLinear(r, c, KeyboardUtils.keyboardTypeToSize(KeyBoardType.STANDARD).cols),
-      sound
-    );
+    SongManager.getSong().addSound(0, location, sound);
 
-    // add sound to key payload manager
-    KeyPayloadManager.getInstance().addKey(
-      this.mapTo.getKeyboard().getID(),
-      KeyboardUtils.gridToLinear(r, c, this.mapTo.getKeyboard().getNumCols()),
-      sound
-    );
+    // add the container to the key payload manager if it doesn't exist
+    if (KeyPayloadManager.getInstance().getKey(this.getKeyboard().getID(), location) === undefined) {
+      let container = SongManager.getCurrentPack().getContainer(location);
+      KeyPayloadManager.getInstance().addKey(this.getKeyboard().getID(), location, container);
 
-    this.showSoundActive(r, c);
+      this.showSoundActive(r, c);
+    }
+  }
+
+  private setContainer(r: number, c: number, container: SoundContainer) {
+    let location = KeyboardUtils.gridToLinear(r, c, KeyboardUtils.keyboardTypeToSize(KeyBoardType.STANDARD).cols);
+    SongManager.getCurrentPack().addContainer(container, location);
+
+    // add the container to the key payload manager if it doesn't exist
+    if (KeyPayloadManager.getInstance().getKey(this.getKeyboard().getID(), location) === undefined) {
+      let container = SongManager.getCurrentPack().getContainer(location);
+      KeyPayloadManager.getInstance().addKey(this.getKeyboard().getID(), location, container);
+
+      this.showSoundActive(r, c);
+    }
   }
 
   /**

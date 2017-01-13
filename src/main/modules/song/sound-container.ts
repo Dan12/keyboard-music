@@ -17,7 +17,7 @@ class SoundContainer {
   }
 
   /**
-   * @return an array of all of the pitches in the format of pitch data: [location, start time, end time] 
+   * @return an array of all of the pitches in the format of pitch data: [location, start time, end time]
    */
   public getPitchLocations(): (string|number)[][] {
     let ret = <(string|number)[][]>[];
@@ -27,9 +27,13 @@ class SoundContainer {
     return ret;
   }
 
-  // TODO consider duplicating howler sounds. Only an issue if the same sound is on the same key
-  public addPitch(sound: SoundFile, start_time?: number, end_time?: number) {
-    this.pitches.push(new Sound(sound.location, sound.sound, this.looped, start_time, end_time));
+  public addPitch(sound: Sound, start_time?: number, end_time?: number) {
+    let options = {
+      start_time: start_time,
+      end_time: end_time,
+      loop: this.looped
+    };
+    this.pitches.push(new Sound(sound, options));
   }
 
   public pressed() {

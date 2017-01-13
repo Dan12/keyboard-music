@@ -17,12 +17,16 @@ class SoundPack {
   /**
    * @return the array representation of the sound containers in this sound pack
    */
-  public getContainers(): [number, (string|number)[][], boolean][] {
+  public getContainersStruct(): [number, (string|number)[][], boolean][] {
     let containers = <[number, (string|number)[][], boolean][]>[];
     for (let loc in this.sounds) {
       containers.push([parseInt(loc), this.sounds[loc].getPitchLocations(), false]);
     }
     return containers;
+  }
+
+  public getContainers(): {[loc: number]: SoundContainer} {
+    return this.sounds;
   }
 
   public getLinkedAreas(): number[][] {

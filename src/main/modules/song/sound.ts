@@ -1,7 +1,14 @@
 /**
  * A class to abstract a howl object
  */
-class Sound {
+class Sound extends Payload {
+
+  private static nextID = 1;
+  private id: number;
+
+  private static assignID(): number {
+    return Sound.nextID++;
+  }
 
   /**
    * The howler js object which this class exposes a simple api for
@@ -9,53 +16,101 @@ class Sound {
   private howl_object: Howl;
 
   private name: string;
+  private location: string;
 
-  private asSprite: boolean;
-
-  private start_time: number;
-  private end_time: number;
+  private playID: number;
 
   /**
-   * @param name the filepath for the sound
-   * @param howlObj the howler js object of this sound
-   * @param looped sound the sound loop or not
-   * @param start_time what time to start the sound at
-   * @param end_time what time to end the sound at
+   * If created from is a Sound, this will copy the information from the old Sound.
+   * If a start_time, end_time, and loop are specified in the options, those will be used.
+   * Note that start_time and end_time should be in milliseconds
+   *
+   * If created is a string, this will load a new howl object from that string,
+   * set the name and location from options.name and options.location respectively
+   * and call the options callback function
+   *
+   * @param createFrom the string or sound to create this sound from
+   * @param options the options object
    */
-  public constructor(name: string, howlObj: Howl, looped: boolean, start_time?: number, end_time?: number) {
-    this.name = name;
-    this.howl_object = howlObj;
+  public constructor(createFrom: (Sound|string), options: SoundOptions) {
+    super(new JQW('<div class="file">' + (options.name !== undefined ? options.name : (<Sound> createFrom).name) + '</div>'));
 
-    this.asSprite = false;
+    this.id = Sound.assignID();
 
-    if (start_time !== undefined && end_time !== undefined) {
-      this.howl_object.sprite({sprite: [start_time, end_time - start_time]});
-      this.asSprite = true;
-      this.start_time = start_time;
-      this.end_time = end_time;
-      console.log('sprite');
+    if (createFrom instanceof Sound) {
+      // copy parameters from other
+      let copyFrom = <Sound> createFrom;
+
+      this.howl_object = copyFrom.howl_object;
+      this.name = copyFrom.name;
+      this.location = copyFrom.location;
+
+      // if defined, use options, else copy from createFrom
+      if (options.start_time !== undefined && options.end_time !== undefined && options.looped !== undefined) {
+        this.setSprite(options.start_time, options.end_time, options.looped);
+      } else {
+        let copySprite = copyFrom.getSprite();
+        this.setSprite(copySprite[0], copySprite[1], copySprite[2]);
+      }
+    } else if (typeof createFrom === 'string') {
+      // load howl object
+      this.howl_object = new Howl({
+        src: [<string> createFrom],
+        onload: () => {
+          delete this.howl_object._sprite['__default'];
+
+          // initlize to default sprite
+          this.setSprite(0, this.howl_object.duration() * 1000, false);
+
+          this.name = options.name;
+          this.location = options.location;
+
+          options.callback(this);
+        },
+        onloaderror: () => {
+          collectErrorMessage('Error loading file', {name: options.name});
+        }
+      });
+    } else {
+      collectErrorMessage('Incorrect sound create from type');
     }
+  }
+
+  public getLoc(): string {
+    return this.location;
   }
 
   /**
    * @return the array representation of this audio object in the format: [location, start time, end time]
    */
   public toArr(): (string|number)[] {
-    if (this.start_time) {
-      return [this.name, this.start_time, this.end_time];
-    } else {
-      return [this.name];
-    }
+    let arr = this.getSprite();
+    return [this.location, arr[0], arr[0] + arr[1]];
   }
 
   /**
    * expose the howl object play method
    */
   public play(): void {
-    if (this.asSprite) {
-      this.howl_object.play('sprite');
+    this.playID = this.howl_object.play(this.id.toString());
+  }
+
+  /**
+   * expose the howl object pause method
+   */
+  public pause(): void {
+    this.howl_object.pause(this.playID);
+  }
+
+  /**
+   * expose the howl object seek method
+   */
+  public seek(seekTo?: number): (number|void) {
+    if (seekTo === undefined) {
+      // return the position of this sounds id
+      return this.howl_object.seek(this.playID);
     } else {
-      this.howl_object.play();
+      this.howl_object.seek(seekTo, this.playID);
     }
   }
 
@@ -63,7 +118,39 @@ class Sound {
    * expose the howl object stop method
    */
   public stop(): void {
-    this.howl_object.stop();
+    this.howl_object.stop(this.playID);
   }
 
+  // Howl Sprite Wrapper
+  private getSprite(): [number, number, boolean] {
+    return this.howl_object._sprite[this.id.toString()];
+  }
+
+  private setLoop(loop: boolean) {
+    let curSprite = this.getSprite();
+    this.howl_object._sprite[this.id.toString()] = [curSprite[0], curSprite[1], loop];
+  }
+
+  private editSprite(st: number, et: number) {
+    let curSprite = this.getSprite();
+    this.howl_object._sprite[this.id.toString()] = [st, et - st, curSprite[2]];
+  }
+
+  private setSprite(st: number, et: number, loop: boolean) {
+    this.howl_object._sprite[this.id.toString()] = [st, et - st, loop];
+  }
+
+  public getSrc(): string {
+    return this.howl_object._src;
+  }
+
+}
+
+interface SoundOptions {
+  name?: string;
+  location?: string;
+  looped?: boolean;
+  start_time?: number;
+  end_time?: number;
+  callback?: (sound: Sound) => void;
 }

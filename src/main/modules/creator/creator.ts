@@ -71,13 +71,9 @@ class Creator extends DomElement implements InputReciever {
     let pack = SongManager.getCurrentPack();
     if (pack) {
       let containers = pack.getContainers();
-      for (let container of containers) {
-        let gridLoc = KeyboardUtils.linearToGrid(container[0], this.mapTo.getKeyboard().getNumCols());
-        let loc = <string> container[1][0][0];
-        let baseDir = loc.substring(0, loc.indexOf('/'));
-        let fileLocation = loc.substring(loc.indexOf('/') + 1, loc.length);
-        let sound = FileManager.getInstance().getSound(baseDir, fileLocation);
-        KeyPayloadManager.getInstance().addKey(this.mapTo.getKeyboard().getID(), container[0], sound);
+      for (let location in containers) {
+        KeyPayloadManager.getInstance().addKey(this.mapTo.getKeyboard().getID(), parseInt(location), containers[location]);
+        let gridLoc = KeyboardUtils.linearToGrid(parseInt(location), this.mapTo.getKeyboard().getNumCols());
         this.mapTo.showSoundActive(gridLoc[0], gridLoc[1]);
       }
     }

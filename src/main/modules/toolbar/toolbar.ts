@@ -69,6 +69,17 @@ class Toolbar extends DomElement {
       console.log(JSON.stringify(song));
     });
 
+    let loadZipButton = new JQW('<button>Load Zip</button>');
+
+    songElement.append(loadZipButton);
+    loadZipButton.click(() => {
+      // load eq.zip into the file manager\
+      // TODO expand to file chooser
+      ZipHandler.loadZip('eq.zip', () => {
+        console.log('loaded eq.zip');
+      });
+    });
+
     let fileTools = new JQW('<div id="file-tools" class="horizontal-column"></div>');
     this.asElement().append(fileTools);
 
@@ -204,21 +215,31 @@ class Toolbar extends DomElement {
     throw 'Unsuported operation';
   }
 
+  public inspectSound(sound: Sound, inOutControls: boolean) {
+    console.log('inspect sound');
+    console.log(sound);
+  }
+
+  public inspectContainer(soundContainer: SoundContainer) {
+    console.log('inspect container');
+    console.log(soundContainer);
+  }
+
   /**
    * inspect the given sound file with the given name=
    * @param sound the sound file
    */
-  public inspectFile(sound: SoundFile) {
-    // set the name
-    this.nameElement.html(sound.name);
-
-    // set the current sound
-    this.currentSound = sound.sound;
-
-    this.showSoundContext(false);
-
-    this.displayAudioData();
-  }
+  // public inspectFile(sound: SoundFile) {
+  //   // set the name
+  //   this.nameElement.html(sound.name);
+  //
+  //   // set the current sound
+  //   this.currentSound = sound.sound;
+  //
+  //   this.showSoundContext(false);
+  //
+  //   this.displayAudioData();
+  // }
 
   /**
    * display the current audio data from the current sound
@@ -227,6 +248,8 @@ class Toolbar extends DomElement {
     // cut out the base64 metadata
     let begin = 'data:audio/mp3;base64,';
     let raw = this.currentSound._src;
+    console.log(this.currentSound);
+    console.log(raw);
     raw = raw.substring(begin.length, raw.length);
 
     // convert the base64 data to a byte array

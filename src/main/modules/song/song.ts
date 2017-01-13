@@ -51,7 +51,7 @@ class Song {
   private getContainerSettings(): [number, (string|number)[][], boolean][][] {
     let ret = <[number, (string|number)[][], boolean][][]>[];
     for (let i = 0; i < this.soundPacks.length; i++) {
-      ret.push(this.soundPacks[i].getContainers());
+      ret.push(this.soundPacks[i].getContainersStruct());
     }
     return ret;
   }
@@ -87,7 +87,7 @@ class Song {
    * add the given sound to the given pack at the given location.
    * Will create a container if none exists at the given location in the given pack
    */
-  public addSound(pack: number, location: number, file: SoundFile) {
+  public addSound(pack: number, location: number, file: Sound) {
     // verify pack correctness
     if (pack >= 0 && pack < this.soundPacks.length) {
       // if the container does not yet exist, create it
@@ -100,7 +100,7 @@ class Song {
       container.addPitch(file);
 
       // get root file
-      let rootFile = FileManager.getInstance().getRootLocation(file.location.substring(0, file.location.indexOf('/')));
+      let rootFile = FileManager.getInstance().getRootLocation(file.getLoc().substring(0, file.getLoc().indexOf('/')));
 
       // add the root file to the song files array if it is not already in it
       if (this.files.length === 0) {

@@ -2,7 +2,7 @@
  * A directory class with files and recursive subdirectories
  */
 class Directory extends Payload {
-  private files: {[name: string]: SoundFile};
+  private files: {[name: string]: Sound};
   private subdirectories: {[name: string]: Directory};
 
   private subDirElement: JQW;
@@ -64,7 +64,7 @@ class Directory extends Payload {
    * @param data the file data
    * @param fullname the full location of the file
    */
-  public addFile(location: string, data: string, fullname: string) {
+  public addFile(location: string, data: string, fullname: string, callback: () => void) {
     // if this is still a subdirectory
     if (location.indexOf('/') !== -1) {
       // get the name of the subdirectory
@@ -76,23 +76,19 @@ class Directory extends Payload {
       }
 
       // continue recursion with new relative file location
-      this.subdirectories[dir].addFile(location.substring(location.indexOf('/') + 1, location.length), data, fullname);
+      this.subdirectories[dir].addFile(location.substring(location.indexOf('/') + 1, location.length), data, fullname, callback);
     } else {
       if (this.files[location] === undefined) {
-        // only add the file to the file manager when it has been loaded
-        let _this_ = this;
-        // create a new howl object and pass it the load file constructor
-        new Howl({
-          src: [data],
+        let options = {
+          name: location,
+          location: fullname,
+          callback: (sound: Sound) => {
+            this.loadedFile(location, sound, fullname);
 
-          onload: function() {
-            // this refers to the howl object
-            _this_.loadedFile(location, this, fullname);
-          },
-          onloaderror: function() {
-            collectErrorMessage('Error loading file', {name: fullname, d: data});
+            callback();
           }
-        });
+        };
+        new Sound(data, options);
       } else {
         collectWarningMessage('Warning: File already exists. Will not overwrite: ' + fullname);
       }
@@ -100,15 +96,14 @@ class Directory extends Payload {
   }
 
   // called when a file is loaded to add it to the file data structure and gui
-  private loadedFile(name: string, sound: Howl, fullname: string) {
-    let new_sound = new SoundFile(name, sound, fullname);
-    this.files[name] = new_sound;
+  private loadedFile(name: string, sound: Sound, fullname: string) {
+    this.files[name] = sound;
     this.fileSize++;
 
-    this.subDirElement.append(new_sound.asElement());
+    this.subDirElement.append(sound.asElement());
 
-    new_sound.asElement().click(function() {
-      Toolbar.getInstance().inspectFile(new_sound);
+    sound.asElement().click(function() {
+      Toolbar.getInstance().inspectSound(sound, false);
     });
   }
 
@@ -116,7 +111,7 @@ class Directory extends Payload {
    * recursively get the given file
    * @param location the relative file path to this directory
    */
-  public getFile(location: string): SoundFile {
+  public getFile(location: string): Sound {
     if (location.indexOf('/') !== -1) {
       let dir = location.substring(0, location.indexOf('/'));
       if (this.subdirectories[dir] === undefined) {

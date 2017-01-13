@@ -2,11 +2,11 @@
 /// <reference path="./modules/keyboard/keyboard-layout.ts"/>
 /// <reference path="./modules/files/file-manager.ts"/>
 /// <reference path="./modules/files/file-gui.ts"/>
-/// <reference path="./modules/toolbar.ts"/>
+/// <reference path="./modules/toolbar/toolbar.ts"/>
 /// <reference path="./modules/input-propegator.ts"/>
 /// <reference path="./modules/song/song-manager.ts"/>
 /// <reference path="./modules/mode-handler.ts"/>
-/// <reference path="./modules/creator/creator-layout.ts"/>
+/// <reference path="./modules/creator/creator.ts"/>
 /// <reference path="./modules/zip.ts"/>
 /// <reference path="./modules/error-collector.ts"/>
 /// <reference path="./modules/jquery_wrapper/jquery-wrapper.ts"/>
@@ -34,9 +34,4 @@ function ModuleLoader(main_element: JQW) {
 
   // intialize the file manager data object
   let manager = FileManager.getInstance();
-
-  // load eq.zip into the file manager
-  ZipHandler.loadZip('eq.zip', () => {
-    console.log('loaded eq.zip');
-  });
 };

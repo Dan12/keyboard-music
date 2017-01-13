@@ -38,9 +38,9 @@ class ZipHandler {
             zipEntry.async('base64').then(function(data) {
               data = 'data:audio/mp3;base64,' + data;
 
-              FileManager.getInstance().addFile(baseName, zipEntry.name, data);
-
-              ZipHandler.checkCallback(callback);
+              FileManager.getInstance().addFile(baseName, zipEntry.name, data, () => {
+                ZipHandler.checkCallback(callback);
+              });
             });
           } else {
             ZipHandler.checkCallback(callback);

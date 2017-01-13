@@ -7,6 +7,8 @@ class SquareKeyboard {
   private container: JQW;
 
   constructor() {
+    // TODO do correct processing of payload files
+
     // the hook for the keyboard, process the directory payload and update multiple files
     let squarePayloadFunc = (type: PayloadHookRequest, payload?: Payload, objData?: number): boolean => {
       if (type === PayloadHookRequest.RECEIVED) {
@@ -23,15 +25,15 @@ class SquareKeyboard {
     // the hook for the keyboard keys, receives a sound file
     let keyHook = (type: PayloadHookRequest, payload?: Payload, objData?: KeyboardKey): boolean => {
       if (type === PayloadHookRequest.RECEIVED) {
-        if (payload instanceof SoundFile)
+        if (payload instanceof Sound)
           this.addSquareSound(objData.getRow(), objData.getCol(), payload);
         else if (payload instanceof KeyboardKey) {
-          let sound = KeyPayloadManager.getInstance().getSoundFromKey(<KeyboardKey> payload);
-          this.addSquareSound(objData.getRow(), objData.getCol(), sound);
+          let container = KeyPayloadManager.getInstance().getSoundFromKey(<KeyboardKey> payload);
+          this.setSquareContainer(objData.getRow(), objData.getCol(), container);
         } else
           collectErrorMessage('Payload type does not match soundfile type in keyboard', payload);
       } else if (type === PayloadHookRequest.CAN_RECEIVE) {
-        return payload instanceof SoundFile || payload instanceof KeyboardKey;
+        return payload instanceof Sound || payload instanceof KeyboardKey;
       } else if (type === PayloadHookRequest.IS_PAYLOAD) {
         return this.getPayload(objData.getRow(), objData.getCol()) !== undefined;
       }
@@ -47,9 +49,9 @@ class SquareKeyboard {
     // turn square green when active
     this.square.getKeyboard().getColorManager().setRoutine(ColorManager.standardColorRoutine(100, 255, 100));
     this.square.getKeyboard().setPressKeyListener((key: KeyboardKey) => {
-      let sound = this.getPayload(key.getRow(), key.getCol());
-      if (sound)
-        Toolbar.getInstance().inspectFile(sound);
+      let container = this.getPayload(key.getRow(), key.getCol());
+      if (container)
+        Toolbar.getInstance().inspectContainer(container);
     });
 
     this.container = new JQW('<div class="horizontal-column"></div>');
@@ -63,7 +65,7 @@ class SquareKeyboard {
   /**
    * get the payload for this keyboard at the specified location
    */
-  private getPayload(r: number, c: number): SoundFile {
+  private getPayload(r: number, c: number): SoundContainer {
     return KeyPayloadManager.getInstance().getKey(
       this.square.getKeyboard().getID(),
       KeyboardUtils.gridToLinear(r, c, this.square.getKeyboard().getNumCols())
@@ -101,17 +103,34 @@ class SquareKeyboard {
   }
 
   /**
-   * add the sound to the payload manager and set the gui
+   * add the sound to a container in the payload manager and set the gui
    */
-  private addSquareSound(r: number, c: number, sound: SoundFile) {
+  private addSquareSound(r: number, c: number, sound: Sound) {
     // Set the color
     this.square.getKeyboard().getColorManager().pressedKey(r, c);
     this.square.getKeyboard().getKey(r, c).setPreviousColor();
 
-    // add the soundfile to the keyboard pool
+    let container = new SoundContainer();
+    container.addPitch(sound);
+
+    // add the container to the keyboard pool
     KeyPayloadManager.getInstance().addKey(
       this.square.getKeyboard().getID(),
-      KeyboardUtils.gridToLinear(r, c, this.square.getKeyboard().getNumCols()), sound
+      KeyboardUtils.gridToLinear(r, c, this.square.getKeyboard().getNumCols()),
+      container
+    );
+  }
+
+  private setSquareContainer(r: number, c: number, container: SoundContainer) {
+    // Set the color
+    this.square.getKeyboard().getColorManager().pressedKey(r, c);
+    this.square.getKeyboard().getKey(r, c).setPreviousColor();
+
+    // set the container in the keyboard pool
+    KeyPayloadManager.getInstance().addKey(
+      this.square.getKeyboard().getID(),
+      KeyboardUtils.gridToLinear(r, c, this.square.getKeyboard().getNumCols()),
+      container
     );
   }
 }

@@ -15,7 +15,7 @@ declare class HowlerGlobal {
 declare var Howler: HowlerGlobal;
 
 interface IHowlSoundSpriteDefinition {
-    [name: string]: number[];
+    [name: string]: (number|boolean)[];
 }
 
 interface IHowlProperties {
@@ -45,7 +45,7 @@ interface Howl {
     onpause: Function;
     onplay: Function;
     load(): Howl;
-    play(sprite?: string, callback?: (soundId: number) => void): Howl;
+    play(sprite?: string, callback?: (soundId: number) => void): number;
     play(callback?: (soundId: number) => void): Howl;
     pause(soundId?: number): Howl;
     stop(soundId?: number): Howl;
@@ -64,9 +64,11 @@ interface Howl {
     on(event: string, listener?: Function): Howl;
     off(event: string, listener?: Function): Howl;
     unload(): void;
+    duration(soundId?: number): number;
 
     // technically a private var
     _src: string;
+    _sprite: {[id: string]: [number, number, boolean]};
 }
 
 interface HowlStatic {

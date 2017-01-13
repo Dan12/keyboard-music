@@ -1,4 +1,3 @@
-/// <reference path="./sound-file.ts"/>
 /// <reference path="./directory.ts"/>
 
 /**
@@ -59,7 +58,7 @@ class FileManager {
    * @param {String} name the file name
    * @param {String} data the file data
    */
-  public addFile(baseLocation: string, name: string, data: string) {
+  public addFile(baseLocation: string, name: string, data: string, callback: () => void) {
     if (this.validFile(name)) {
       let fileName = this.trimName(name);
 
@@ -67,7 +66,7 @@ class FileManager {
         collectErrorMessage('Error: Never initliaized Base Directory');
       } else {
         // add the file to the base directory
-        this.files[baseLocation].addFile(fileName, data, baseLocation + '/' + fileName);
+        this.files[baseLocation].addFile(fileName, data, baseLocation + '/' + fileName, callback);
       }
     } else {
       collectErrorMessage('Add file error, invalid name', name);
@@ -86,9 +85,9 @@ class FileManager {
    * find the file with at the given location.
    * Returns undefined if the file does not exist
    * @method getSound
-   * @return {SoundFile} the file
+   * @return the file
    */
-  public getSound(basedir: string, location: string): SoundFile {
+  public getSound(basedir: string, location: string): Sound {
     return this.files[basedir].getFile(location);
   }
 
