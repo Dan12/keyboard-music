@@ -22,7 +22,7 @@ class InputEventPropegator {
           Creator.getInstance().keyDown(event.keyCode);
 
           if (event.keyCode === 32) {
-            Toolbar.getInstance().pressSpace();
+            Toolbar.getInstance().getSoundTools().pressSpace();
             return false;
           }
           break;

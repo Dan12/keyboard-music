@@ -65,6 +65,7 @@ interface Howl {
     off(event: string, listener?: Function): Howl;
     unload(): void;
     duration(soundId?: number): number;
+    playing(soundId?: number): boolean;
 
     // technically a private var
     _src: string;

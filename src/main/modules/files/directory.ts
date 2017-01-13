@@ -91,6 +91,7 @@ class Directory extends Payload {
         new Sound(data, options);
       } else {
         collectWarningMessage('Warning: File already exists. Will not overwrite: ' + fullname);
+        callback();
       }
     }
   }
@@ -103,7 +104,7 @@ class Directory extends Payload {
     this.subDirElement.append(sound.asElement());
 
     sound.asElement().click(function() {
-      Toolbar.getInstance().inspectSound(sound, false);
+      Toolbar.getInstance().getSoundTools().inspectSound(sound, false);
     });
   }
 

@@ -105,13 +105,15 @@ class Sound extends Payload {
   /**
    * expose the howl object seek method
    */
-  public seek(seekTo?: number): (number|void) {
+  public seek(seekTo?: number): number {
     if (seekTo === undefined) {
       // return the position of this sounds id
       return this.howl_object.seek(this.playID);
     } else {
       this.howl_object.seek(seekTo, this.playID);
     }
+
+    return 0;
   }
 
   /**
@@ -121,17 +123,31 @@ class Sound extends Payload {
     this.howl_object.stop(this.playID);
   }
 
+  public getSrc(): string {
+    return this.howl_object._src;
+  }
+
+  public playing(): boolean {
+    return this.howl_object.playing(this.playID);
+  }
+
   // Howl Sprite Wrapper
   private getSprite(): [number, number, boolean] {
     return this.howl_object._sprite[this.id.toString()];
   }
 
-  private setLoop(loop: boolean) {
+  /**
+   * edit the sound loop flag
+   */
+  public setLoop(loop: boolean) {
     let curSprite = this.getSprite();
     this.howl_object._sprite[this.id.toString()] = [curSprite[0], curSprite[1], loop];
   }
 
-  private editSprite(st: number, et: number) {
+  /**
+   * edit the sound in and out points. IMPORTANT: st and et mush be in milliseconds
+   */
+  public editSprite(st: number, et: number) {
     let curSprite = this.getSprite();
     this.howl_object._sprite[this.id.toString()] = [st, et - st, curSprite[2]];
   }
@@ -139,11 +155,6 @@ class Sound extends Payload {
   private setSprite(st: number, et: number, loop: boolean) {
     this.howl_object._sprite[this.id.toString()] = [st, et - st, loop];
   }
-
-  public getSrc(): string {
-    return this.howl_object._src;
-  }
-
 }
 
 interface SoundOptions {
