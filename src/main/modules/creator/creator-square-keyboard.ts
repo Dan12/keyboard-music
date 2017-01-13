@@ -51,7 +51,7 @@ class SquareKeyboard {
     this.square.getKeyboard().setPressKeyListener((key: KeyboardKey) => {
       let container = this.getPayload(key.getRow(), key.getCol());
       if (container)
-        Toolbar.getInstance().inspectContainer(container);
+        Toolbar.getInstance().getContainerTools().inspectContainer(container);
     });
 
     this.container = new JQW('<div class="horizontal-column"></div>');

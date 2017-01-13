@@ -7,13 +7,33 @@ class ZipHandler {
   private static numToLoad = 0;
   private static numLoaded = 0;
 
+  // use a queue because the callback operation only allows for 1 file to be processed at a time
+  private static queue = <{name: string; callback: () => void; }[]>[];
+
   /**
-   * load the contents of the zip file at the given location into the file manager.
+   * request to load the contents of the zip file at the given location into the file manager.
    * Only loads .mp3 files and the location has to be a valid zip file
    * @param name the file name/location
    * @param callback optional callback that is called when done loading
    */
-  public static loadZip(name: string, callback?: () => void) {
+  public static requestZipLoad(name: string, callback?: () => void) {
+    ZipHandler.queue.push({name, callback});
+
+    if (ZipHandler.queue.length === 1) {
+      ZipHandler.popQueue();
+    }
+  }
+
+  private static popQueue() {
+    let top = ZipHandler.queue.pop();
+
+    ZipHandler.loadZip(top.name, top.callback);
+  }
+
+  /**
+   * start loading the file
+   */
+  private static loadZip(name: string, callback?: () => void) {
 
     let zip = new JSZip();
 
@@ -60,6 +80,10 @@ class ZipHandler {
     if (ZipHandler.numLoaded >= ZipHandler.numToLoad) {
       if (callback) {
         callback();
+      }
+
+      if (ZipHandler.queue.length > 0) {
+        ZipHandler.popQueue();
       }
     }
   }

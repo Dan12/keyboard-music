@@ -87,6 +87,11 @@ class SoundTools extends DomElement {
     this.setPoints.hide();
   }
 
+  /**
+   * inspect the given sound
+   * @param sound the sound file
+   * @param inOutControls flag to show the in and out controls
+   */
   public inspectSound(sound: Sound, inOutControls: boolean) {
     this.currentSound = sound;
 

@@ -24,9 +24,9 @@ class SongTools extends DomElement {
 
     this.asElement().append(loadZipButton);
     loadZipButton.click(() => {
-      // load eq.zip into the file manager\
+      // load eq.zip into the file manager
       // TODO expand to file chooser
-      ZipHandler.loadZip('eq.zip', () => {
+      ZipHandler.requestZipLoad('eq.zip', () => {
         console.log('loaded eq.zip');
       });
     });

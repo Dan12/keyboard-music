@@ -1,5 +1,4 @@
 /// <reference path="./soundpack.ts"/>
-/// <reference path="./sound-loader.ts"/>
 
 /**
  * a class that represents a song
@@ -125,11 +124,30 @@ class Song {
    */
   public loadFromSource(location: string, callback: () => void) {
     $.getJSON(location, (data) => {
-      loadSounds(data.files, () => {
+      this.loadSounds(data.files, () => {
         this.loadData(data);
         callback();
       });
     });
+  }
+
+  /**
+   * load all of the sounds from the given list of urls. Call the callback when done loading the sounds
+   */
+  private loadSounds(urls: string[], callback: () => void) {
+      let i = 0;
+
+      let nextUrl = () => {
+        i++;
+        if (i >= urls.length) {
+          console.log('Finished loading sounds');
+          callback();
+          return;
+        }
+        ZipHandler.requestZipLoad(urls[i], nextUrl);
+      };
+
+      ZipHandler.requestZipLoad(urls[i], nextUrl);
   }
 
   /**

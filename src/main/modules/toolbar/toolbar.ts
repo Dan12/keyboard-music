@@ -41,24 +41,7 @@ class Toolbar extends DomElement {
     return this.soundTools;
   }
 
-  public inspectContainer(soundContainer: SoundContainer) {
-    console.log('inspect container');
-    console.log(soundContainer);
+  public getContainerTools(): ContainerTools {
+    return this.containerTools;
   }
-
-  /**
-   * inspect the given sound file with the given name=
-   * @param sound the sound file
-   */
-  // public inspectFile(sound: SoundFile) {
-  //   // set the name
-  //   this.nameElement.html(sound.name);
-  //
-  //   // set the current sound
-  //   this.currentSound = sound.sound;
-  //
-  //   this.showSoundContext(false);
-  //
-  //   this.displayAudioData();
-  // }
 }
