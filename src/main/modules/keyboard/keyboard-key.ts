@@ -1,4 +1,3 @@
-/// <reference path="../../interfaces/element.ts"/>
 /// <reference path="../song/sound-container.ts"/>
 
 /**

@@ -7,7 +7,7 @@
  * the class to parent the creator gui for creating songs
  * @static
  */
-class Creator extends DomElement implements InputReciever {
+class Creator extends DomElement {
 
   private static instance: Creator;
 

@@ -1,3 +1,4 @@
+/// <reference path="./modules/element.ts"/>
 /// <reference path="./modules/payload/mouse-payload.ts"/>
 /// <reference path="./modules/keyboard/keyboard-layout.ts"/>
 /// <reference path="./modules/files/file-manager.ts"/>

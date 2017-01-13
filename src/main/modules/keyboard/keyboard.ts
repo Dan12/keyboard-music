@@ -1,13 +1,11 @@
-/// <reference path="../../interfaces/element.ts"/>
 /// <reference path="./keyboard-key.ts"/>
-/// <reference path="../../interfaces/input-reciever.ts"/>
 /// <reference path="./color-manager.ts"/>
 /// <reference path="./keyboard-utils.ts"/>
 
 /**
  * The keyboard module to represent an html keyboard.
  */
-class Keyboard extends DomElement implements InputReciever {
+class Keyboard extends DomElement {
 
   private rows: KeyboardKey[][];
   private numRows = 4;

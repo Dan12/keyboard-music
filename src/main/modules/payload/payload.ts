@@ -1,5 +1,3 @@
-/// <reference path="../../interfaces/element.ts"/>
-
 /**
  * an extension to the element class that represents a payload
  */
