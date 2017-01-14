@@ -18,8 +18,8 @@ abstract class PayloadReceiver<T> extends DomElement {
       let payload = MousePayload.peekPayload();
       // only consume the payload if you can recieve it
       if (payload !== undefined && this.canReceive(payload)) {
-        this.receivePayload(MousePayload.popPayload());
         this.restorePreviousColor();
+        this.receivePayload(MousePayload.popPayload());
       }
     });
 
@@ -56,7 +56,7 @@ abstract class PayloadReceiver<T> extends DomElement {
    * This check is performed through the payload hook using the CAN_RECEIVE request type.
    */
   private canReceive(payload: Payload): boolean {
-    return this.payloadHook !== undefined && this.payloadHook(PayloadHookRequest.CAN_RECEIVE, payload);
+    return this.payloadHook !== undefined && this.payloadHook(PayloadHookRequest.CAN_RECEIVE, payload, this.getObjectData());
   }
 
   /**

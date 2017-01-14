@@ -8,6 +8,10 @@ class KeyboardKey extends HybridPayload<KeyboardKey> {
   private col: number;
   private keyboard: Keyboard;
   private defaultColor: string;
+  private isHighlighted: boolean;
+
+  private static HIGHLIGH_COLOR = 'rgb(255,255,100)';
+  private static DEFAULT_COLOR = 'white';
 
   constructor(symbol: string, transition: boolean, k: Keyboard, r: number, c: number, hook?: PayloadHookFunc<KeyboardKey>) {
     super(new JQW(`<div class="keyboard_key ${(transition ? 'transition' : '')}">${symbol}</div>`), hook);
@@ -15,7 +19,8 @@ class KeyboardKey extends HybridPayload<KeyboardKey> {
     this.keyboard = k;
     this.row = r;
     this.col = c;
-    this.defaultColor = 'white';
+    this.defaultColor = KeyboardKey.DEFAULT_COLOR;
+    this.isHighlighted = false;
     this.resetColor();
   }
 
@@ -33,8 +38,22 @@ class KeyboardKey extends HybridPayload<KeyboardKey> {
     return ret;
   }
 
-  public setDefaultColor(r: number, g: number, b: number) {
-    this.defaultColor = `rgb(${r}, ${g}, ${b})`;
+  public setDefaultColor(r?: number, g?: number, b?: number) {
+    if (r !== undefined && g !== undefined && b !== undefined) {
+      this.defaultColor = `rgb(${r}, ${g}, ${b})`;
+    } else {
+      this.defaultColor = KeyboardKey.DEFAULT_COLOR;
+    }
+    this.resetColor();
+  }
+
+  public highlight() {
+    this.isHighlighted = true;
+    this.resetColor();
+  }
+
+  public unHighlight() {
+    this.isHighlighted = false;
     this.resetColor();
   }
 
@@ -42,7 +61,7 @@ class KeyboardKey extends HybridPayload<KeyboardKey> {
    * remove coloring css
    */
   public resetColor() {
-    this.asElement().css('background-color', this.defaultColor);
+    this.asElement().css('background-color', this.isHighlighted ? KeyboardKey.HIGHLIGH_COLOR : this.defaultColor);
   }
 
   public setCSS(css: {}) {

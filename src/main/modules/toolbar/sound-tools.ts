@@ -90,6 +90,11 @@ class SoundTools extends DomElement {
    * @param inOutControls flag to show the in and out controls
    */
   public inspectSound(sound: Sound, inOutControls: boolean) {
+    this.asElement().show();
+
+    if (this.refreshInterval)
+      clearInterval(this.refreshInterval);
+
     this.currentSound = sound;
 
     this.nameElement.html(this.currentSound.getLoc());
@@ -97,6 +102,18 @@ class SoundTools extends DomElement {
     this.showSoundContext(inOutControls);
 
     this.displayAudioData();
+  }
+
+  public clearData() {
+    if (this.refreshInterval)
+      clearInterval(this.refreshInterval);
+
+    this.ch1 = undefined;
+    this.ch2 = undefined;
+
+    this.currentSound = undefined;
+
+    this.asElement().hide();
   }
 
   /**
@@ -185,15 +202,16 @@ class SoundTools extends DomElement {
       this.ch2 = buffer.getChannelData(1);
       this.sampleRate = buffer.sampleRate;
       this.nextPos = 0;
-      this.inTime = 0;
-      this.outTime = buffer.duration;
-      this.scale = this.canvas.width / this.ch1.length;
-
-      // this.setSprite();
-
-      if (this.refreshInterval) {
-        clearInterval(this.refreshInterval);
+      let arr = this.currentSound.toArr();
+      if (arr.length > 1) {
+        this.inTime = <number> arr[1] / 1000;
+        this.outTime = <number> arr[2] / 1000;
+      } else {
+        this.inTime = 0;
+        this.outTime = buffer.duration;
       }
+
+      this.scale = this.canvas.width / this.ch1.length;
 
       this.refreshInterval = setInterval(() => {
         this.refreshCanvas();
@@ -258,10 +276,8 @@ class SoundTools extends DomElement {
       }
       this.ctx.stroke();
 
-      console.log();
-
       // seconds * samples per second * pixels per sample
-      this.cursorAt = (this.currentSound.playing() ? this.currentSound.seek() : this.nextPos) + this.inTime;
+      this.cursorAt = (this.currentSound.playing() ? this.currentSound.seek() : this.nextPos + this.inTime);
 
       this.drawCursorAtTime(this.cursorAt);
       this.ctx.fillStyle =  'blue';

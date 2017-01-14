@@ -50,7 +50,7 @@ class Sound extends Payload {
         this.setSprite(options.start_time, options.end_time, options.looped);
       } else {
         let copySprite = copyFrom.getSprite();
-        this.setSprite(copySprite[0], copySprite[1], copySprite[2]);
+        this.setSprite(copySprite[0], copySprite[0] + copySprite[1], copySprite[2]);
       }
     } else if (typeof createFrom === 'string') {
       // load howl object

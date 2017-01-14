@@ -47,7 +47,7 @@ class PayloadAlias {
   public addSquareKey(key: KeyboardKey, sound: Sound) {
     if (key.getKeyboard().getID() === this.squareId) {
       let location = KeyboardUtils.gridToLinear(key.getRow(), key.getCol(), key.getKeyboard().getNumCols());
-      this.keys[location] = sound;
+      this.keys[location] = new Sound(sound, {});
     } else {
       collectErrorMessage('Error: key is not in square keyboard');
     }

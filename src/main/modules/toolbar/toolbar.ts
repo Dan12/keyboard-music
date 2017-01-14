@@ -13,6 +13,8 @@ class Toolbar extends DomElement {
   private soundTools: SoundTools;
   private containerTools: ContainerTools;
 
+  private prevHighlight: DomElement[];
+
   /**
    * @return the singleton instance of this class
    */
@@ -35,13 +37,69 @@ class Toolbar extends DomElement {
 
     this.soundTools = new SoundTools();
     this.asElement().append(this.soundTools.asElement());
+
+    this.soundTools.asElement().hide();
+    this.containerTools.asElement().hide();
+
+    this.prevHighlight = [];
   }
 
-  public getSoundTools(): SoundTools {
-    return this.soundTools;
+  public keyPress(keyCode: number): boolean {
+    if (keyCode === 32) {
+      this.soundTools.pressSpace();
+      return false;
+    } else if (keyCode === 8) {
+      if (this.containerTools.deleteKey()) {
+        this.soundTools.clearData();
+        this.controlHighlight(undefined, false);
+      }
+    }
+
+    return true;
   }
 
-  public getContainerTools(): ContainerTools {
-    return this.containerTools;
+  public inspectSound(sound: Sound, element: DomElement, inOutControls: boolean, fromContainerTools?: boolean) {
+    if (fromContainerTools === undefined || !fromContainerTools) {
+      this.containerTools.clearData();
+      this.controlHighlight(element, false);
+    } else {
+      this.controlHighlight(element, true);
+    }
+
+    this.soundTools.inspectSound(sound, inOutControls);
+  }
+
+  public inspectContainer(key: KeyboardKey) {
+    let loc = KeyboardUtils.gridToLinear(key.getRow(), key.getCol(), key.getKeyboard().getNumCols());
+
+    this.controlHighlight(key, false);
+
+    this.soundTools.clearData();
+
+    this.containerTools.inspectContainer(loc);
+  }
+
+  private controlHighlight(newHighlight: DomElement, keepOld: boolean) {
+    // remove old
+    if (this.prevHighlight.length > 0 && !keepOld) {
+      for (let elem of this.prevHighlight) {
+        if (elem instanceof KeyboardKey) {
+          elem.unHighlight();
+        } else {
+          elem.asElement().removeClass('highlight');
+        }
+      }
+
+      this.prevHighlight = [];
+    }
+
+    if (newHighlight !== undefined) {
+      if (newHighlight instanceof KeyboardKey) {
+          newHighlight.highlight();
+      } else {
+        newHighlight.asElement().addClass('highlight');
+      }
+      this.prevHighlight.push(newHighlight);
+    }
   }
 }

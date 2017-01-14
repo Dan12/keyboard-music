@@ -38,7 +38,9 @@ class SquareKeyboard {
       } else if (type === PayloadHookRequest.CAN_RECEIVE) {
         // can only recieve from this
         return payload instanceof Sound || (
-          payload instanceof KeyboardKey && payload.getKeyboard().getID() === this.square.getKeyboard().getID()
+          payload instanceof KeyboardKey &&
+          payload !== objData &&
+          payload.getKeyboard().getID() === this.square.getKeyboard().getID()
         );
       } else if (type === PayloadHookRequest.IS_PAYLOAD) {
         return PayloadAlias.getInstance().getSquareKey(objData) !== undefined;
@@ -50,12 +52,13 @@ class SquareKeyboard {
     this.square = new PayloadKeyboard(KeyBoardType.SQUARE, squarePayloadFunc, keyHook);
     this.square.getKeyboard().resize(0.6);
     this.square.centerVertical();
+    this.square.getKeyboard().setShowKeys(false);
     // add some spacing to the square
     this.square.asElement().css({'margin-right': '30px'});
     this.square.getKeyboard().setPressKeyListener((key: KeyboardKey) => {
       let sound = PayloadAlias.getInstance().getSquareKey(key);
       if (sound) {
-        Toolbar.getInstance().getSoundTools().inspectSound(sound, true);
+        Toolbar.getInstance().inspectSound(sound, key, true);
       }
     });
 
@@ -105,6 +108,6 @@ class SquareKeyboard {
 
   private activateKey(key: KeyboardKey) {
     key.setDefaultColor(100, 255, 100);
-    this.square.getKeyboard().getKey(key.getRow(), key.getCol()).setPreviousColor();
+    // this.square.getKeyboard().getKey(key.getRow(), key.getCol()).setPreviousColor();
   }
 }

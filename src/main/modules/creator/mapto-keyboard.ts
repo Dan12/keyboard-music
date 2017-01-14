@@ -24,6 +24,8 @@ class MapToKeyboard {
         if (payload instanceof Sound) {
           PayloadAlias.getInstance().addSongKey(objData, payload);
           this.showSoundActive(objData);
+
+          Toolbar.getInstance().inspectContainer(objData);
         } else if (payload instanceof KeyboardKey) {
           let sound = PayloadAlias.getInstance().getSquareKey(payload);
           if (sound) {
@@ -33,6 +35,8 @@ class MapToKeyboard {
             PayloadAlias.getInstance().setSongContainer(objData, container);
           }
           this.showSoundActive(objData);
+
+          Toolbar.getInstance().inspectContainer(objData);
         }
         else
           collectErrorMessage('Payload type does not match soundfile or keyboard key in map to', payload);
@@ -64,11 +68,7 @@ class MapToKeyboard {
     this.mapTo.getKeyboard().setPressKeyListener((key: KeyboardKey) => {
       let container = PayloadAlias.getInstance().getSongKey(key);
       if (container)
-        Toolbar.getInstance().getContainerTools().inspectContainer(
-          this.getKeyboard().getID(),
-          KeyboardUtils.gridToLinear(key.getRow(), key.getCol(), this.mapTo.getKeyboard().getNumCols()),
-          container
-        );
+        Toolbar.getInstance().inspectContainer(key);
     });
 
     this.container = new JQW('<div class="horizontal-column"></div>');
@@ -83,7 +83,6 @@ class MapToKeyboard {
   public showSoundActive(key: KeyboardKey) {
     key.setDefaultColor(100, 255, 100);
     // use to deal with the hover over edge case
-    this.mapTo.getKeyboard().getKey(key.getRow(), key.getCol()).setPreviousColor();
   }
 
   /**

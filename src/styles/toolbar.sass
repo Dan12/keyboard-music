@@ -11,6 +11,9 @@
   #song-tools
     width: 15%
 
+    button
+      margin: 4px
+
   #container-tools
     width: 45%
 
@@ -24,10 +27,20 @@
       color: $text-light
       margin-bottom: 6px
       padding: 2px 4px
+      display: inline-block
+      margin-left: 4px
 
       &.true
         color: $text-color
         background-color: $color-2-highlight
+
+    #areas_container
+      margin-top: 4px
+
+      #linked_areas
+        border: 1px solid black
+        margin: 0 2px
+        display: inline-block
 
     #pitches
       width: 40%
@@ -44,7 +57,7 @@
         overflow-x: hidden
         overflow-y: scroll
 
-        .file
+        .pitch
           cursor: pointer
           padding: 3px
 

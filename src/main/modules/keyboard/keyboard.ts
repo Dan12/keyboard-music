@@ -122,6 +122,11 @@ class Keyboard extends DomElement {
     return this.colorManager;
   }
 
+  public setShowKeys(value: boolean) {
+    this.showKeys = value;
+    this.setVisible();
+  }
+
   /**
    * set the visibility of the key symbols based on the showKey flag
    */

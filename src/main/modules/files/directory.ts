@@ -104,7 +104,7 @@ class Directory extends Payload {
     this.subDirElement.append(sound.asElement());
 
     sound.asElement().click(function() {
-      Toolbar.getInstance().getSoundTools().inspectSound(sound, false);
+      Toolbar.getInstance().inspectSound(sound, sound, false);
     });
   }
 

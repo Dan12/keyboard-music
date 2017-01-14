@@ -47,8 +47,8 @@ class Song {
   }
 
   // get the container settings for the song json
-  private getContainerSettings(): [number, (string|number)[][], boolean][][] {
-    let ret = <[number, (string|number)[][], boolean][][]>[];
+  private getContainerSettings(): [number, (string|number)[][], boolean, number, boolean][][] {
+    let ret = <[number, (string|number)[][], boolean, number, boolean][][]>[];
     for (let i = 0; i < this.soundPacks.length; i++) {
       ret.push(this.soundPacks[i].getContainersStruct());
     }
@@ -169,7 +169,7 @@ class Song {
         let data = songData['container_settings'][i][j];
 
         // format: location, pitches, hold to play, quaternize, loop
-        let container = new SoundContainer(data[2], <number> data[3], <boolean> data[4]);
+        let container = new SoundContainer(data[2], data[3], data[4]);
 
         // pitches format: [location, start time, end time]
         let pitches = data[1];

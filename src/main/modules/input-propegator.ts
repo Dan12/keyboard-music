@@ -14,18 +14,18 @@ class InputEventPropegator {
    */
   private static initKeyMaps() {
     (new JQW('body')).keydown((event: JQueryKeyEventObject) => {
-      switch (ModeHandler.getMode()) {
-        case Mode.KEYBOARD:
-          KeyboardLayout.getInstance().getKeyboard().keyDown(event.keyCode);
-          break;
-        case Mode.CREATOR:
-          Creator.getInstance().keyDown(event.keyCode);
-
-          if (event.keyCode === 32) {
-            Toolbar.getInstance().getSoundTools().pressSpace();
+      if (!event.metaKey && !event.ctrlKey) {
+        switch (ModeHandler.getMode()) {
+          case Mode.KEYBOARD:
+            KeyboardLayout.getInstance().getKeyboard().keyDown(event.keyCode);
             return false;
-          }
-          break;
+          case Mode.CREATOR:
+            Creator.getInstance().keyDown(event.keyCode);
+
+            Toolbar.getInstance().keyPress(event.keyCode);
+
+            return false;
+        }
       }
     });
 
@@ -33,10 +33,10 @@ class InputEventPropegator {
       switch (ModeHandler.getMode()) {
         case Mode.KEYBOARD:
           KeyboardLayout.getInstance().getKeyboard().keyUp(event.keyCode);
-          break;
+          return false;
         case Mode.CREATOR:
           Creator.getInstance().keyUp(event.keyCode);
-          break;
+          return false;
       }
     });
   }
