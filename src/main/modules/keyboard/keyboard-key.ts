@@ -7,13 +7,16 @@ class KeyboardKey extends HybridPayload<KeyboardKey> {
   private row: number;
   private col: number;
   private keyboard: Keyboard;
+  private defaultColor: string;
 
   constructor(symbol: string, transition: boolean, k: Keyboard, r: number, c: number, hook?: PayloadHookFunc<KeyboardKey>) {
-    super(new JQW(`<div class="keyboard_key primary_color ${(transition ? 'transition' : '')}">${symbol}</div>`), hook);
+    super(new JQW(`<div class="keyboard_key ${(transition ? 'transition' : '')}">${symbol}</div>`), hook);
 
     this.keyboard = k;
     this.row = r;
     this.col = c;
+    this.defaultColor = 'white';
+    this.resetColor();
   }
 
   /**
@@ -30,11 +33,16 @@ class KeyboardKey extends HybridPayload<KeyboardKey> {
     return ret;
   }
 
+  public setDefaultColor(r: number, g: number, b: number) {
+    this.defaultColor = `rgb(${r}, ${g}, ${b})`;
+    this.resetColor();
+  }
+
   /**
    * remove coloring css
    */
   public resetColor() {
-    this.asElement().css('background-color', '');
+    this.asElement().css('background-color', this.defaultColor);
   }
 
   public setCSS(css: {}) {

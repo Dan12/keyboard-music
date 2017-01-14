@@ -21,11 +21,18 @@ class MapToKeyboard {
     let keyHook = (type: PayloadHookRequest, payload?: Payload, objData?: KeyboardKey): boolean => {
       if (type === PayloadHookRequest.RECEIVED) {
         // process the payload and add the sound file represented by the payload to the current song
-        if (payload instanceof Sound)
-          this.addSound(objData.getRow(), objData.getCol(), payload);
-        else if (payload instanceof KeyboardKey) {
-          let container = KeyPayloadManager.getInstance().getSoundFromKey(<KeyboardKey> payload);
-          this.setContainer(objData.getRow(), objData.getCol(), container);
+        if (payload instanceof Sound) {
+          PayloadAlias.getInstance().addSongKey(objData, payload);
+          this.showSoundActive(objData);
+        } else if (payload instanceof KeyboardKey) {
+          let sound = PayloadAlias.getInstance().getSquareKey(payload);
+          if (sound) {
+            PayloadAlias.getInstance().addSongKey(objData, sound);
+          } else {
+            let container = PayloadAlias.getInstance().getSongKey(payload);
+            PayloadAlias.getInstance().setSongContainer(objData, container);
+          }
+          this.showSoundActive(objData);
         }
         else
           collectErrorMessage('Payload type does not match soundfile or keyboard key in map to', payload);
@@ -33,7 +40,7 @@ class MapToKeyboard {
         return payload instanceof Sound || payload instanceof KeyboardKey;
       } else if (type === PayloadHookRequest.IS_PAYLOAD) {
         // key can only be used as a payload if it has a sound applied to it
-        return this.getPayload(objData.getRow(), objData.getCol()) !== undefined;
+        return PayloadAlias.getInstance().getSongKey(objData) !== undefined;
       }
 
       return false;
@@ -43,21 +50,25 @@ class MapToKeyboard {
     this.mapTo.getKeyboard().resize(0.6);
     this.mapTo.centerVertical();
 
+    PayloadAlias.getInstance().registerSongId(this.mapTo.getKeyboard().getID());
+
     // turn square green when there is a sound assigned to it on key up and mimic the usual keypress
     this.mapTo.getKeyboard().getColorManager().setRoutine(
       (r: number, c: number, p: boolean) => {
-        let hasElement = this.getPayload(r, c) !== undefined;
-
         if (!p)
           rippleElement(this.mapTo.getKeyboard().getKey(r, c).asElement());
 
-        return [{row: r, col: c, r: p ? 255 : hasElement ? 100 : -1, g: p ? 160 : hasElement ? 255 : -1, b: p ? 0 : hasElement ? 100 : -1}];
+        return [{row: r, col: c, r: p ? 255 : -1, g: p ? 160 : -1, b: p ? 0 : -1}];
       }
     );
     this.mapTo.getKeyboard().setPressKeyListener((key: KeyboardKey) => {
-      let container = this.getPayload(key.getRow(), key.getCol());
+      let container = PayloadAlias.getInstance().getSongKey(key);
       if (container)
-        Toolbar.getInstance().getContainerTools().inspectContainer(container);
+        Toolbar.getInstance().getContainerTools().inspectContainer(
+          this.getKeyboard().getID(),
+          KeyboardUtils.gridToLinear(key.getRow(), key.getCol(), this.mapTo.getKeyboard().getNumCols()),
+          container
+        );
     });
 
     this.container = new JQW('<div class="horizontal-column"></div>');
@@ -65,54 +76,14 @@ class MapToKeyboard {
   }
 
   /**
-   * get the sound file from the key payload manager for a key on this keyboard at r,c
-   */
-  private getPayload(r: number, c: number): SoundContainer {
-    return KeyPayloadManager.getInstance().getKey(
-      this.mapTo.getKeyboard().getID(),
-      KeyboardUtils.gridToLinear(r, c, this.mapTo.getKeyboard().getNumCols())
-    );
-  }
-
-  /**
-   * add the given sound to the song
-   */
-  private addSound(r: number, c: number, sound: Sound) {
-    let location = KeyboardUtils.gridToLinear(r, c, KeyboardUtils.keyboardTypeToSize(KeyBoardType.STANDARD).cols);
-    // add the sound to the song
-    SongManager.getSong().addSound(0, location, sound);
-
-    // add the container to the key payload manager if it doesn't exist
-    if (KeyPayloadManager.getInstance().getKey(this.getKeyboard().getID(), location) === undefined) {
-      let container = SongManager.getCurrentPack().getContainer(location);
-      KeyPayloadManager.getInstance().addKey(this.getKeyboard().getID(), location, container);
-
-      this.showSoundActive(r, c);
-    }
-  }
-
-  private setContainer(r: number, c: number, container: SoundContainer) {
-    let location = KeyboardUtils.gridToLinear(r, c, KeyboardUtils.keyboardTypeToSize(KeyBoardType.STANDARD).cols);
-    SongManager.getCurrentPack().addContainer(container, location);
-
-    // add the container to the key payload manager if it doesn't exist
-    if (KeyPayloadManager.getInstance().getKey(this.getKeyboard().getID(), location) === undefined) {
-      let container = SongManager.getCurrentPack().getContainer(location);
-      KeyPayloadManager.getInstance().addKey(this.getKeyboard().getID(), location, container);
-
-      this.showSoundActive(r, c);
-    }
-  }
-
-  /**
    * set the color of the key at the given row and column to the active color
    * @param r the key row
    * @param c the key col
    */
-  public showSoundActive(r: number, c: number) {
-    this.mapTo.getKeyboard().getColorManager().releasedKey(r, c);
+  public showSoundActive(key: KeyboardKey) {
+    key.setDefaultColor(100, 255, 100);
     // use to deal with the hover over edge case
-    this.mapTo.getKeyboard().getKey(r, c).setPreviousColor();
+    this.mapTo.getKeyboard().getKey(key.getRow(), key.getCol()).setPreviousColor();
   }
 
   /**

@@ -19,21 +19,21 @@ abstract class PayloadReceiver<T> extends DomElement {
       // only consume the payload if you can recieve it
       if (payload !== undefined && this.canReceive(payload)) {
         this.receivePayload(MousePayload.popPayload());
-        this.asElement().css('background-color', this.previousColor);
+        this.restorePreviousColor();
       }
     });
 
     // highlight on mouseover
     this.asElement().mouseenter(() => {
-      this.setPreviousColor();
       let payload = MousePayload.peekPayload();
       if (payload !== undefined && this.canReceive(payload)) {
+        this.setPreviousColor();
         this.asElement().css('background-color', 'rgb(150,230,230)');
       }
     });
 
     this.asElement().mouseleave(() => {
-      this.asElement().css('background-color', this.previousColor);
+      this.restorePreviousColor();
     });
   }
 
@@ -42,6 +42,13 @@ abstract class PayloadReceiver<T> extends DomElement {
    */
   public setPreviousColor() {
     this.previousColor = this.asElement().css('background-color');
+  }
+
+  private restorePreviousColor() {
+    if (this.previousColor !== '') {
+      this.asElement().css('background-color', this.previousColor);
+      this.previousColor = '';
+    }
   }
 
   /**

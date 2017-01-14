@@ -85,7 +85,11 @@ class Sound extends Payload {
    */
   public toArr(): (string|number)[] {
     let arr = this.getSprite();
-    return [this.location, arr[0], arr[0] + arr[1]];
+    if (arr[0] === 0 && arr[1] === this.howl_object.duration() * 1000) {
+      return [this.location];
+    } else {
+      return [this.location, arr[0], arr[0] + arr[1]];
+    }
   }
 
   /**

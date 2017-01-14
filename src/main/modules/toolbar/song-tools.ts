@@ -8,7 +8,7 @@ class SongTools extends DomElement {
     loadButton.click(() => {
       SongManager.getInstance().loadSong('songs/equinox.json', () => {
         Creator.getInstance().loadedSong();
-        console.log(SongManager.getSong());
+        // console.log(SongManager.getSong());
       });
     });
 
@@ -30,5 +30,7 @@ class SongTools extends DomElement {
         console.log('loaded eq.zip');
       });
     });
+
+    // TODO choose keyboard type
   }
 }

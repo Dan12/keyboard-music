@@ -4,16 +4,24 @@
  * a container class for a single key's sound. Can contain multiple sounds in the form of pitches.
  */
 class SoundContainer {
-  public pitches: Sound[];
-  public looped: boolean;
-  public quaternized: number;
-  public holdToPlay: boolean;
+  private pitches: Sound[];
+  private looped: boolean;
+  private quaternized: number;
+  private holdToPlay: boolean;
+
+  private currentPitch: number;
 
   constructor(hold_to_play?: boolean, quaternized?: number, looped?: boolean) {
     this.pitches = [];
     this.looped = looped === undefined ? false : looped;
     this.quaternized = quaternized === undefined ? 0 : quaternized;
     this.holdToPlay = hold_to_play === undefined ? false : hold_to_play;
+
+    this.currentPitch = 0;
+  }
+
+  public getPitches(): Sound[] {
+    return this.pitches;
   }
 
   /**
@@ -37,12 +45,16 @@ class SoundContainer {
   }
 
   public pressed() {
-    if (this.pitches.length > 0)
-      this.pitches[0].play();
+    if (this.pitches.length > 0) {
+      this.pitches[this.currentPitch].play();
+    }
   }
 
   public released() {
-    if (this.pitches.length > 0)
-      this.pitches[0].stop();
+    if (this.pitches.length > 0) {
+      this.pitches[this.currentPitch].stop();
+      this.currentPitch++;
+      this.currentPitch = this.currentPitch % this.pitches.length;
+    }
   }
 }

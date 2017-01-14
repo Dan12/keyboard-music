@@ -54,6 +54,10 @@ class JQW {
     return this.jqObject.remove(selector);
   }
 
+  public empty() {
+    this.jqObject.empty();
+  }
+
   public toggle(time?: number) {
     this.jqObject.toggle(time);
   }

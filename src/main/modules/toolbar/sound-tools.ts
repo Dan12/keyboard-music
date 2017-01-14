@@ -5,7 +5,8 @@ class SoundTools extends DomElement {
 
   private nameElement: JQW;
   private waveformContainer: JQW;
-  private setPoints: JQW;
+  private setIn: JQW;
+  private setOut: JQW;
   private canvas: HTMLElement;
   private ctx: CanvasRenderingContext2D;
 
@@ -34,31 +35,32 @@ class SoundTools extends DomElement {
   constructor() {
     super(new JQW('<div id="sound-tools" class="horizontal-column"></div>'));
 
-    // create the name and waveform elements
-    this.nameElement = new JQW('<div id="file-name">File Name</div>');
+    this.nameElement = new JQW('<div id="file_name">File Name</div>');
     this.asElement().append(this.nameElement);
+
+    // create the name and waveform elements
     this.waveformContainer = new JQW('<div id="waveform"></div>');
     this.asElement().append(this.waveformContainer);
-    this.waveformContainer.append(`<canvas id="waveform-canvas" width="200" height="100">
+    this.waveformContainer.append(`<canvas id="waveform-canvas" width="10" height="10">
                                     Your Browser Does Not Support The Canvas Element
                                    </canvas>`
                                  );
 
     // create the set points buttons and listeners
-    this.setPoints = new JQW('<div></div>');
-    this.asElement().append(this.setPoints);
+    let setPoints = new JQW('<div style="display: inline-block;"></div>');
+    this.asElement().append(setPoints);
 
-    let setIn = new JQW('<button>Set in point</button>');
-    let setOut = new JQW('<button>Set out point</button>');
-    this.setPoints.append(setIn);
-    this.setPoints.append(setOut);
-    setIn.click(() => {
+    this.setIn = new JQW('<button disabled="disabled">Set in point</button>');
+    this.setOut = new JQW('<button disabled="disabled">Set out point</button>');
+    setPoints.append(this.setIn);
+    setPoints.append(this.setOut);
+    this.setIn.click(() => {
       if (this.currentSound && this.cursorAt < this.outTime) {
         this.inTime = this.cursorAt;
         this.setSprite();
       }
     });
-    setOut.click(() => {
+    this.setOut.click(() => {
       if (this.currentSound && this.cursorAt > this.inTime) {
         this.outTime = this.cursorAt;
         this.setSprite();
@@ -80,11 +82,6 @@ class SoundTools extends DomElement {
     this.waveformContainer.mouseleave((e: JQueryMouseEventObject) => {
       this.mousedown = false;
     });
-
-    // initially hide the elements
-    this.nameElement.hide();
-    this.waveformContainer.hide();
-    this.setPoints.hide();
   }
 
   /**
@@ -107,11 +104,20 @@ class SoundTools extends DomElement {
    * @param setPoints if true, show the set in and out points for the
    */
   private showSoundContext(setPoints: boolean) {
+    if (setPoints) {
+      this.setIn.getJQ().prop('disabled', false);
+      this.setOut.getJQ().prop('disabled', false);
+    }
+    else {
+      this.setIn.getJQ().prop('disabled', true);
+      this.setOut.getJQ().prop('disabled', true);
+    }
+
     if (this.canvas === undefined) {
       this.canvas = document.getElementById('waveform-canvas');
-      this.ctx = this.canvas.getContext('2d');
-      this.canvas.width = this.waveformContainer.width();
+      this.canvas.width = Math.floor(this.waveformContainer.width());
       this.canvas.height = this.waveformContainer.height();
+      this.ctx = this.canvas.getContext('2d');
 
       // set scale and scroll listeners
       this.canvas.addEventListener('wheel', (e: WheelEvent) => {
@@ -129,13 +135,6 @@ class SoundTools extends DomElement {
         return false;
       });
     }
-
-    this.nameElement.show();
-    this.waveformContainer.show();
-    if (setPoints)
-      this.setPoints.show();
-    else
-      this.setPoints.hide();
   }
 
   /**
@@ -237,10 +236,10 @@ class SoundTools extends DomElement {
     let start = Math.floor(-this.offset / (this.scale));
     let end = Math.ceil((this.canvas.width - this.offset) / this.scale);
 
-    let constance = 3;
+    let constance = 5;
 
     let interval = Math.ceil((end - start) / (1000 * constance)) * constance;
-    start = Math.floor(start / constance) * constance;
+    start = Math.floor(start / interval) * interval;
 
     if (this.ch1) {
       // draw first channel

@@ -1,7 +1,7 @@
 /// <reference path="./payload-keyboard.ts"/>
 /// <reference path="./square-keyboard.ts"/>
 /// <reference path="./mapto-keyboard.ts"/>
-/// <reference path="./key-payload-manager.ts"/>
+/// <reference path="./payload-alias.ts"/>
 
 /**
  * the class to parent the creator gui for creating songs
@@ -67,14 +67,14 @@ class Creator extends DomElement {
    * this should be called when a song is loaded to update the creator gui
    */
   public loadedSong() {
-    KeyPayloadManager.getInstance().clearKeyboard(this.mapTo.getKeyboard().getID());
+    PayloadAlias.getInstance().clear();
     let pack = SongManager.getCurrentPack();
     if (pack) {
       let containers = pack.getContainers();
       for (let location in containers) {
-        KeyPayloadManager.getInstance().addKey(this.mapTo.getKeyboard().getID(), parseInt(location), containers[location]);
         let gridLoc = KeyboardUtils.linearToGrid(parseInt(location), this.mapTo.getKeyboard().getNumCols());
-        this.mapTo.showSoundActive(gridLoc[0], gridLoc[1]);
+        this.mapTo.showSoundActive(this.mapTo.getKeyboard().getKey(gridLoc[0], gridLoc[1]));
+        this.mapTo.getKeyboard().getColorManager().releasedKey(gridLoc[0], gridLoc[1]);
       }
     }
   }
