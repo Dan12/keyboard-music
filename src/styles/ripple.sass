@@ -1,0 +1,23 @@
+.ink
+  display: block
+  position: absolute
+  background: rgba(255, 160, 0, 1)
+  border-radius: 0
+  transform: scale(1)
+  opacity: 0
+  z-index: 200
+
+.animate
+  animation: ripple 0.3s linear
+
+@keyframes ripple
+  0%
+    opacity: 1
+  /*scale the element to 250% to safely cover the entire link and fade it out*/
+  100%
+    opacity: 0
+    transform: scale(2)
+    border-radius: 25%
+
+.keyboard_key
+  position: relative

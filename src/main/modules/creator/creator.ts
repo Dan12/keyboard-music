@@ -1,6 +1,6 @@
 /// <reference path="./payload-keyboard.ts"/>
-/// <reference path="./creator-square-keyboard.ts"/>
-/// <reference path="./creator-mapto-keyboard.ts"/>
+/// <reference path="./square-keyboard.ts"/>
+/// <reference path="./mapto-keyboard.ts"/>
 /// <reference path="./key-payload-manager.ts"/>
 
 /**

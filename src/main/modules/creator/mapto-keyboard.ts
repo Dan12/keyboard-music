@@ -1,3 +1,5 @@
+/// <reference path="./ripple.ts"/>
+
 /**
  * handles the logic and hooks for the map to keyboard
  */
@@ -45,6 +47,9 @@ class MapToKeyboard {
     this.mapTo.getKeyboard().getColorManager().setRoutine(
       (r: number, c: number, p: boolean) => {
         let hasElement = this.getPayload(r, c) !== undefined;
+
+        if (!p)
+          rippleElement(this.mapTo.getKeyboard().getKey(r, c).asElement());
 
         return [{row: r, col: c, r: p ? 255 : hasElement ? 100 : -1, g: p ? 160 : hasElement ? 255 : -1, b: p ? 0 : hasElement ? 100 : -1}];
       }
