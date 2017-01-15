@@ -71,6 +71,7 @@ class ContainerTools extends DomElement {
     this.holdToPlay.removeClass('true');
     this.quaternize.html('Quaternize:');
     this.linkedAreas.empty();
+    this.pitches = [];
 
     this.asElement().hide();
   }
@@ -78,10 +79,11 @@ class ContainerTools extends DomElement {
   public deleteKey(): boolean {
     if (this.currentSound !== undefined) {
       this.pitches[this.currentSound].asElement().remove();
-      this.pitches.splice(this.currentSound);
+      this.pitches.splice(this.currentSound, 1);
       this.currentContaier.removePitch(this.currentSound);
-      if (this.currentContaier.getPitches.length === 0) {
+      if (this.currentContaier.getPitches().length === 0) {
         SongManager.getCurrentPack().removeContainer(this.containerLocation);
+        Creator.getInstance().removedKey(this.containerLocation);
         this.clearData();
         return true;
       }
@@ -97,16 +99,20 @@ class ContainerTools extends DomElement {
     this.currentContaier = SongManager.getCurrentPack().getContainer(this.containerLocation);
 
     this.pitchContainer.empty();
+    this.pitches = [];
 
-    let pitches = this.currentContaier.getPitches();
-
-    for (let i = 0; i < pitches.length; i++) {
-      let pitchElement = new PitchElement(i, pitches[i].getLoc());
+    for (let i = 0; i < this.currentContaier.getPitches().length; i++) {
+      let pitchElement = new PitchElement(i, this.currentContaier.getPitches()[i].getLoc());
       this.pitches.push(pitchElement);
       pitchElement.asElement().click(() => {
         this.currentSound = pitchElement.getInd();
         Toolbar.getInstance().inspectSound(this.currentContaier.getPitches()[pitchElement.getInd()], pitchElement, true, true);
       });
+
+      if (i === 0) {
+        pitchElement.asElement().click();
+      }
+
       this.pitchContainer.append(pitchElement.asElement());
     }
 

@@ -28,11 +28,15 @@ class SquareKeyboard {
         if (payload instanceof Sound) {
           PayloadAlias.getInstance().addSquareKey(objData, payload);
           this.activateKey(objData);
+
+          objData.asElement().click();
         }
         else if (payload instanceof KeyboardKey) {
           let sound = PayloadAlias.getInstance().getSquareKey(payload);
           PayloadAlias.getInstance().addSquareKey(objData, sound);
           this.activateKey(objData);
+
+          objData.asElement().click();
         } else
           collectErrorMessage('Payload type does not match soundfile type in keyboard', payload);
       } else if (type === PayloadHookRequest.CAN_RECEIVE) {

@@ -25,7 +25,7 @@ class MapToKeyboard {
           PayloadAlias.getInstance().addSongKey(objData, payload);
           this.showSoundActive(objData);
 
-          Toolbar.getInstance().inspectContainer(objData);
+          objData.asElement().click();
         } else if (payload instanceof KeyboardKey) {
           let sound = PayloadAlias.getInstance().getSquareKey(payload);
           if (sound) {
@@ -36,7 +36,7 @@ class MapToKeyboard {
           }
           this.showSoundActive(objData);
 
-          Toolbar.getInstance().inspectContainer(objData);
+          objData.asElement().click();
         }
         else
           collectErrorMessage('Payload type does not match soundfile or keyboard key in map to', payload);
@@ -94,5 +94,10 @@ class MapToKeyboard {
 
   public getKeyboard(): Keyboard {
     return this.mapTo.getKeyboard();
+  }
+
+  public removeKey(loc: number) {
+    let gridLoc = KeyboardUtils.linearToGrid(loc, this.mapTo.getKeyboard().getNumCols());
+    this.mapTo.getKeyboard().getKey(gridLoc[0], gridLoc[1]).setDefaultColor();
   }
 }

@@ -78,8 +78,12 @@ class JQW {
     this.jqObject.show(time);
   }
 
-  public click(callback: (e: any) => any) {
-    this.jqObject.click(callback);
+  public click(callback?: (e: any) => any) {
+    if (callback === undefined) {
+      this.jqObject.click();
+    } else {
+      this.jqObject.click(callback);
+    }
   }
 
   public mouseover(callback: (e: any) => any) {

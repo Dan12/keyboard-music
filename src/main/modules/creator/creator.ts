@@ -99,4 +99,8 @@ class Creator extends DomElement {
   public keyUp(key: number) {
     this.mapTo.getKeyboard().keyUp(key);
   }
+
+  public removedKey(loc: number) {
+    this.mapTo.removeKey(loc);
+  }
 }
