@@ -8,7 +8,7 @@ class PayloadKeyboard extends PayloadReceiver<number> {
   constructor(type: KeyBoardType, hook: PayloadHookFunc<number>, keyHook: PayloadHookFunc<KeyboardKey>) {
     super(new JQW('<div style="display: inline-block;"></div>'), hook);
 
-    // false because the payload needs 0 transition time for background color
+    // allow transition = false because the payload needs 0 transition time for background color
     this.keyboard = new Keyboard(type, false, keyHook);
 
     this.asElement().append(this.keyboard.asElement());

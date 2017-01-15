@@ -1,3 +1,7 @@
+/**
+ * a ripple function for a JQW.
+ * TODO add functions to jquery wrapper 
+ */
 function rippleElement(element: JQW) {
   let parent = element.getJQ();
   if (parent.find('.ink').length === 0) {

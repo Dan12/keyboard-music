@@ -1,10 +1,13 @@
 /**
- * storage to connect keys in a keyboard to a sound file outside of the song.
- * primarily separated because the creator has 2 keyboards, with only one linked to the sounds
+ * acts as a alias for the sounds and sound containers linked to the keyboard keys.
+ * provides storage for the temporary square keyboard sounds
+ * and provides an interface into the song's containers for the map to keyboard
  */
 class PayloadAlias {
-  /** map from the keyboard id to a map from key locations to sound files */
+  /** map from key locations to sound files */
   private keys: {[location: number]: Sound};
+
+  // the keyboard ids to verify a keyboard key on the method
   private squareId: number;
   private songId: number;
 
@@ -108,6 +111,7 @@ class PayloadAlias {
     }
   }
 
+  // get a key's location on its keyboard
   private getKeyLocation(key: KeyboardKey): number {
     return KeyboardUtils.gridToLinear(key.getRow(), key.getCol(), key.getKeyboard().getNumCols());
   }

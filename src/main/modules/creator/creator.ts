@@ -100,6 +100,10 @@ class Creator extends DomElement {
     this.mapTo.getKeyboard().keyUp(key);
   }
 
+  /**
+   * should be called when a key is removed from the sound container.
+   * Should probably be improved to an event driven model by the song manager
+   */
   public removedKey(loc: number) {
     this.mapTo.removeKey(loc);
   }

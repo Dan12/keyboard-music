@@ -4,7 +4,7 @@
 class SquareKeyboard {
 
   private square: PayloadKeyboard;
-  private container: JQW;
+  private element: JQW;
 
   constructor() {
     // TODO do correct processing of payload files
@@ -44,7 +44,7 @@ class SquareKeyboard {
         return payload instanceof Sound || (
           payload instanceof KeyboardKey &&
           payload !== objData &&
-          payload.getKeyboard().getID() === this.square.getKeyboard().getID()
+          payload.getKeyboard().getID() === this.getKeyboard().getID()
         );
       } else if (type === PayloadHookRequest.IS_PAYLOAD) {
         return PayloadAlias.getInstance().getSquareKey(objData) !== undefined;
@@ -54,26 +54,22 @@ class SquareKeyboard {
     };
 
     this.square = new PayloadKeyboard(KeyBoardType.SQUARE, squarePayloadFunc, keyHook);
-    this.square.getKeyboard().resize(0.6);
+    this.getKeyboard().resize(0.6);
     this.square.centerVertical();
-    this.square.getKeyboard().setShowKeys(false);
+    this.getKeyboard().setShowKeys(false);
     // add some spacing to the square
     this.square.asElement().css({'margin-right': '30px'});
-    this.square.getKeyboard().setPressKeyListener((key: KeyboardKey) => {
+    this.getKeyboard().setPressKeyListener((key: KeyboardKey) => {
       let sound = PayloadAlias.getInstance().getSquareKey(key);
       if (sound) {
         Toolbar.getInstance().inspectSound(sound, key, true);
       }
     });
 
-    PayloadAlias.getInstance().registerSquareKeyboard(this.square.getKeyboard().getID());
+    PayloadAlias.getInstance().registerSquareKeyboard(this.getKeyboard().getID());
 
-    this.container = new JQW('<div class="horizontal-column"></div>');
-    this.container.append(this.square.asElement());
-  }
-
-  public getElement(): JQW {
-    return this.container;
+    this.element = new JQW('<div class="horizontal-column"></div>');
+    this.element.append(this.square.asElement());
   }
 
   /**
@@ -96,12 +92,15 @@ class SquareKeyboard {
           let r = Math.floor(sLetter / 2) * 4 + Math.floor(sNum / 4);
           let c = (sLetter % 2) * 4 + (sNum % 4);
 
+          // get the sound file based on the name
           let soundFile = lowestDir.getFile(sound);
 
-          let key = this.square.getKeyboard().getKey(r, c);
+          let key = this.getKeyboard().getKey(r, c);
 
+          // add the key to the payload alias
           PayloadAlias.getInstance().addSquareKey(key, soundFile);
 
+          // activate the key so that the gui reflects the Payload Alias
           this.activateKey(key);
         }
       }
@@ -110,8 +109,16 @@ class SquareKeyboard {
     }
   }
 
+  private getKeyboard(): Keyboard {
+    return this.square.getKeyboard();
+  }
+
+  public getElement(): JQW {
+    return this.element;
+  }
+
+  /** set the key's background color to indicate it has a sound assigned to it */
   private activateKey(key: KeyboardKey) {
     key.setDefaultColor(100, 255, 100);
-    // this.square.getKeyboard().getKey(key.getRow(), key.getCol()).setPreviousColor();
   }
 }

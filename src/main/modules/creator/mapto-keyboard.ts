@@ -6,11 +6,9 @@
 class MapToKeyboard {
 
   private mapTo: PayloadKeyboard;
-  private container: JQW;
+  private element: JQW;
 
   constructor() {
-    // TODO do correct processing of payload files
-
     // the hook for treating the keyboard as a payload receiver.
     // always returns false, so map to keyboard cannot receive payloads
     let maptoPayloadFunc = (type: PayloadHookRequest, payload?: Payload, objData?: number): boolean => {
@@ -71,8 +69,8 @@ class MapToKeyboard {
         Toolbar.getInstance().inspectContainer(key);
     });
 
-    this.container = new JQW('<div class="horizontal-column"></div>');
-    this.container.append(this.mapTo.asElement());
+    this.element = new JQW('<div class="horizontal-column"></div>');
+    this.element.append(this.mapTo.asElement());
   }
 
   /**
@@ -82,20 +80,22 @@ class MapToKeyboard {
    */
   public showSoundActive(key: KeyboardKey) {
     key.setDefaultColor(100, 255, 100);
-    // use to deal with the hover over edge case
   }
 
   /**
    * @return the map to keyboard element
    */
   public getElement(): JQW {
-    return this.container;
+    return this.element;
   }
 
   public getKeyboard(): Keyboard {
     return this.mapTo.getKeyboard();
   }
 
+  /**
+   * called when a container in the song is removed. Updates the GUI to reflect the change
+   */
   public removeKey(loc: number) {
     let gridLoc = KeyboardUtils.linearToGrid(loc, this.mapTo.getKeyboard().getNumCols());
     this.mapTo.getKeyboard().getKey(gridLoc[0], gridLoc[1]).setDefaultColor();

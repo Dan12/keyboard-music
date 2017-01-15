@@ -27,6 +27,9 @@ class KeyboardUtils {
 
   // TODO custom keypairs
 
+  /**
+   * @return the KeyBoardType associated with the given string. Defaults to STANDARD
+   */
   public static keyboardStringToType(type: string): KeyBoardType {
     switch (type) {
       case 'SQUARE':
@@ -38,10 +41,16 @@ class KeyboardUtils {
     }
   }
 
+  /**
+   * @return the KeyboardSize associated with the given type string
+   */
   public static keyboardStringToSize(type: string): KeyBoardSize {
     return KeyboardUtils.keyboardTypeToSize(KeyboardUtils.keyboardStringToType(type));
   }
 
+  /**
+   * @return the string associated with the given keyboard type. Defaults to 'STANDARD'
+   */
   public static keyboardTypeToString(type: KeyBoardType): string {
     switch (type) {
       case KeyBoardType.SQUARE:
@@ -53,6 +62,9 @@ class KeyboardUtils {
     }
   }
 
+  /**
+   * @return the keyboard size associated with the given Keybord Type. Defaults to 4x12
+   */
   public static keyboardTypeToSize(type: KeyBoardType): KeyBoardSize {
     switch (type) {
       case KeyBoardType.SQUARE:
@@ -64,11 +76,18 @@ class KeyboardUtils {
     }
   }
 
-  // returns in [row, col] order
+  /**
+   * convert the linear location to a 2D grid location
+   * @return the grid location in [row, col] order
+   */
   public static linearToGrid(i: number, cols: number): number[] {
     return [Math.floor(i / cols), i % cols];
   }
 
+  /**
+   * convert the grid location to a 1D linear location
+   * @return the linear location
+   */
   public static gridToLinear(r: number, c: number, cols: number): number {
     return r * cols + c;
   }

@@ -10,7 +10,10 @@ class KeyboardKey extends HybridPayload<KeyboardKey> {
   private defaultColor: string;
   private isHighlighted: boolean;
 
+  // the highlighed color for a keyboard key
   private static HIGHLIGH_COLOR = 'rgb(255,255,100)';
+
+  // the default background color for a keyboard key
   private static DEFAULT_COLOR = 'white';
 
   constructor(symbol: string, transition: boolean, k: Keyboard, r: number, c: number, hook?: PayloadHookFunc<KeyboardKey>) {
@@ -38,6 +41,10 @@ class KeyboardKey extends HybridPayload<KeyboardKey> {
     return ret;
   }
 
+  /**
+   * set the default background color for this key.
+   * If no values are supplied, set the default background color to a keyboard key's default color
+   */
   public setDefaultColor(r?: number, g?: number, b?: number) {
     if (r !== undefined && g !== undefined && b !== undefined) {
       this.defaultColor = `rgb(${r}, ${g}, ${b})`;
@@ -47,11 +54,17 @@ class KeyboardKey extends HybridPayload<KeyboardKey> {
     this.resetColor();
   }
 
+  /**
+   * highlight this key
+   */
   public highlight() {
     this.isHighlighted = true;
     this.resetColor();
   }
 
+  /**
+   * unhighlight this key
+   */
   public unHighlight() {
     this.isHighlighted = false;
     this.resetColor();
@@ -64,6 +77,9 @@ class KeyboardKey extends HybridPayload<KeyboardKey> {
     this.asElement().css('background-color', this.isHighlighted ? KeyboardKey.HIGHLIGH_COLOR : this.defaultColor);
   }
 
+  /**
+   * set this key's css to the given values
+   */
   public setCSS(css: {}) {
     this.asElement().css(css);
   }
@@ -75,6 +91,9 @@ class KeyboardKey extends HybridPayload<KeyboardKey> {
     this.asElement().css('background-color', `rgb(${r}, ${g}, ${b})`);
   }
 
+  /**
+   * required by the payload receiver class, return this so that the hook can know which key was receiving
+   */
   public getObjectData(): KeyboardKey {
     return this;
   }

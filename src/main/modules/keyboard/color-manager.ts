@@ -17,14 +17,23 @@ class ColorManager {
     this.routine = ColorManager.standardColorRoutine(255, 160, 0);
   }
 
+  /**
+   * set this color manager's routine
+   */
   public setRoutine(routine: (r: number, c: number, p: boolean) => RoutineResult[]) {
     this.routine = routine;
   }
 
+  /**
+   * called when the color manager is supposed to reflect that the given row and colum have been pressed
+   */
   public pressedKey(r: number, c: number) {
     this.runRoutine(r, c, true);
   }
 
+  /**
+   * called when the color manager is supposed to reflect that the given row and colum have been released
+   */
   public releasedKey(r: number, c: number) {
     this.runRoutine(r, c, false);
   }
@@ -36,7 +45,8 @@ class ColorManager {
     let results = this.routine(r, c, p);
     for (let i = 0; i < results.length; i++) {
       let result = results[i];
-      if (result.r < 0 || result.g < 0 || result.b < 0) {
+      // if the results are not within a valid range, reset the colors
+      if (result.r < 0 || result.r > 255 || result.g < 0 || result.g > 255 || result.b < 0 || result.b > 255) {
         this.keys[result.row][result.col].resetColor();
       } else {
         this.keys[result.row][result.col].setColor(result.r, result.g, result.b);

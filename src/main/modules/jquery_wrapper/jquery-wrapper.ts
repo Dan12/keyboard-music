@@ -1,3 +1,7 @@
+/**
+ * provide a jQuery wrapper.
+ * TODO replace jquery functions with dom manipulation
+ */
 class JQW {
 
   private jqObject: JQuery;
