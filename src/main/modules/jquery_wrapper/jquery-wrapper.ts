@@ -74,6 +74,10 @@ class JQW {
     this.jqObject.removeClass(name);
   }
 
+  public hasClass(name: string): boolean {
+    return this.jqObject.hasClass(name);
+  }
+
   public hide(time?: number) {
     this.jqObject.hide(time);
   }

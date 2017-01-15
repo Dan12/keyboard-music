@@ -12,6 +12,8 @@ class ContainerTools extends DomElement {
   private containerLocation: number;
   private pitches: PitchElement[];
 
+  private static LINKED_AREA_KEY_HIGHLIGHT = 'rgb(100,220,220)';
+
   constructor() {
     super(new JQW('<div id="container-tools" class="horizontal-column"></div>'));
 
@@ -66,6 +68,13 @@ class ContainerTools extends DomElement {
     this.linkedAreas.hide();
     let areasButton = new JQW('<button>New Area</button>');
     areasContainer.append(areasButton);
+    areasButton.click(() => {
+      if (this.currentContaier !== undefined) {
+        let newInd = SongManager.getCurrentPack().addLinkedArea();
+        this.addLinkedArea(newInd);
+        this.linkedAreas.show();
+      }
+    });
   }
 
   /** clear add the data and hide this element */
@@ -124,6 +133,21 @@ class ContainerTools extends DomElement {
       this.pitchContainer.append(pitchElement.asElement());
     }
 
+    let lnkdAreas = SongManager.getCurrentPack().getLinkedAreas();
+    this.linkedAreas.empty();
+    this.linkedAreas.hide();
+    if (lnkdAreas.length > 0) {
+      this.linkedAreas.show();
+    }
+    for (let i = 0; i < lnkdAreas.length; i++) {
+      let area = this.addLinkedArea(i);
+      for (let j = 0; j < lnkdAreas[i].length; j++) {
+        if (lnkdAreas[i][j] === this.containerLocation) {
+          area.addClass('in_area');
+        }
+      }
+    }
+
     if (this.currentContaier.getLoop())
       this.loop.addClass('true');
 
@@ -131,6 +155,39 @@ class ContainerTools extends DomElement {
       this.holdToPlay.addClass('true');
 
     this.quaternize.html('Quaternize: ' + this.currentContaier.getQuaternize());
+  }
+
+  private addLinkedArea(ind: number): JQW {
+    let area = new JQW('<span>' + ind + '</span>');
+    this.linkedAreas.append(area);
+
+    area.mouseenter(() => {
+      for (let i = 0; i < SongManager.getCurrentPack().getLinkedAreas()[ind].length; i++) {
+        Creator.getInstance().getKey(
+          SongManager.getCurrentPack().getLinkedAreas()[ind][i]
+        ).setCSS({'color': ContainerTools.LINKED_AREA_KEY_HIGHLIGHT});
+      }
+    });
+
+    area.mouseleave(() => {
+      for (let i = 0; i < SongManager.getCurrentPack().getLinkedAreas()[ind].length; i++) {
+        Creator.getInstance().getKey(SongManager.getCurrentPack().getLinkedAreas()[ind][i]).setCSS({'color': ''});
+      }
+    });
+
+    area.click(() => {
+      if (area.hasClass('in_area')) {
+        area.removeClass('in_area');
+        SongManager.getCurrentPack().removeFromLinkedArea(ind, this.containerLocation);
+        Creator.getInstance().getKey(this.containerLocation).setCSS({'color': ''});
+      } else {
+        area.addClass('in_area');
+        SongManager.getCurrentPack().addToLinkedArea(ind, this.containerLocation);
+        Creator.getInstance().getKey(this.containerLocation).setCSS({'color': ContainerTools.LINKED_AREA_KEY_HIGHLIGHT});
+      }
+    });
+
+    return area;
   }
 }
 

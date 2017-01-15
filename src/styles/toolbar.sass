@@ -39,8 +39,20 @@
 
       #linked_areas
         border: 1px solid black
-        margin: 0 2px
+        margin: 0 6px
         display: inline-block
+
+        span
+          padding: 0 4px 1px
+          cursor: pointer
+          color: $text-light
+
+          &.in_area
+            color: $text-color
+            background-color: $color-2-highlight
+
+          &:hover
+            color: $text-color
 
     #pitches
       width: 40%

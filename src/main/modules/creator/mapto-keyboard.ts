@@ -39,7 +39,7 @@ class MapToKeyboard {
         else
           collectErrorMessage('Payload type does not match soundfile or keyboard key in map to', payload);
       } else if (type === PayloadHookRequest.CAN_RECEIVE) {
-        return payload instanceof Sound || payload instanceof KeyboardKey;
+        return payload instanceof Sound || (payload instanceof KeyboardKey && payload !== objData);
       } else if (type === PayloadHookRequest.IS_PAYLOAD) {
         // key can only be used as a payload if it has a sound applied to it
         return PayloadAlias.getInstance().getSongKey(objData) !== undefined;

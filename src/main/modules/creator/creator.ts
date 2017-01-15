@@ -107,4 +107,9 @@ class Creator extends DomElement {
   public removedKey(loc: number) {
     this.mapTo.removeKey(loc);
   }
+
+  public getKey(loc: number): KeyboardKey {
+    let gridLoc = KeyboardUtils.linearToGrid(loc, this.mapTo.getKeyboard().getNumCols());
+    return this.mapTo.getKeyboard().getKey(gridLoc[0], gridLoc[1]);
+  }
 }

@@ -50,6 +50,26 @@ class SoundPack {
     if (container) {
       container.pressed();
     }
+
+    // loop through all of the linked areas
+    for (let i = 0; i < this.linkedAreas.length; i++) {
+      for (let j = 0; j < this.linkedAreas[i].length; j++) {
+        // if the i'th linked area contains the pressed location
+        if (this.linkedAreas[i][j] === loc) {
+          // loop over the i'th linked area and stop all other tracks
+          for (j = 0; j < this.linkedAreas[i].length; j++) {
+            if (this.linkedAreas[i][j] !== loc) {
+              let stopContainer = this.sounds[this.linkedAreas[i][j]];
+              if (stopContainer) {
+                stopContainer.stop();
+              }
+            }
+          }
+
+          break;
+        }
+      }
+    }
   }
 
   /** called when this soundpack receives a release event at the given location */
@@ -74,6 +94,18 @@ class SoundPack {
    */
   public addToLinkedArea(area: number, location: number) {
     this.linkedAreas[area].push(location);
+  }
+
+  /**
+   * remove the given location from the given linked area
+   */
+  public removeFromLinkedArea(area: number, location: number) {
+    for (let i = 0; i < this.linkedAreas[area].length; i++) {
+      if (this.linkedAreas[area][i] === location) {
+        this.linkedAreas[area].splice(i, 1);
+        break;
+      }
+    }
   }
 
   /**

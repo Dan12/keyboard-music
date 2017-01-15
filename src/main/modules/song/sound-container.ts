@@ -87,14 +87,17 @@ class SoundContainer {
   /** called when this container receives a press event */
   public pressed() {
     if (this.pitches.length > 0) {
+      // if looping, toggle play and pause on the first pitch
       if (this.looped) {
         this.currentPitch = 0;
+        this.previousPitch = 0;
         if (this.pitches[this.currentPitch].playing()) {
           this.pitches[this.currentPitch].stop();
         } else {
           this.pitches[this.currentPitch].play();
         }
       } else {
+        // else stop the previousPitch and play the next one
         this.pitches[this.previousPitch].stop();
         this.pitches[this.currentPitch].play();
 
@@ -105,10 +108,17 @@ class SoundContainer {
     }
   }
 
-  /** called when this container receives a release event */
+  /** called when this container receives a release event. Only stops the previous pitch if holdToPlay is on */
   public released() {
     if (this.pitches.length > 0 && this.holdToPlay) {
-      this.pitches[this.currentPitch].stop();
+      this.pitches[this.previousPitch].stop();
+    }
+  }
+
+  /** stops the previous pitch no matter what */
+  public stop() {
+    if (this.pitches.length > 0) {
+      this.pitches[this.previousPitch].stop();
     }
   }
 }
