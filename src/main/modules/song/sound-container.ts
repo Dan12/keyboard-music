@@ -22,6 +22,14 @@ class SoundContainer {
     this.previousPitch = 0;
   }
 
+  public copy(): SoundContainer {
+    let ret = new SoundContainer(this.holdToPlay, this.quaternized, this.looped);
+    for (let i  = 0; i < this.pitches.length; i++) {
+      ret.addPitch(this.pitches[i]);
+    }
+    return ret;
+  }
+
   /** @return the value of hold to play for this container */
   public getHoldToPlay(): boolean {
     return this.holdToPlay;

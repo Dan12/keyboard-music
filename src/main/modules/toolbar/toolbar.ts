@@ -103,6 +103,8 @@ class Toolbar extends DomElement {
       }
 
       this.prevHighlight = [];
+    } else if (this.prevHighlight.length === 2) {
+      this.prevHighlight.pop().asElement().removeClass('highlight');
     }
 
     // add the new highlight element to the queue

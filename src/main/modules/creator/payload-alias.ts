@@ -93,7 +93,7 @@ class PayloadAlias {
    */
   public setSongContainer(key: KeyboardKey, container: SoundContainer) {
     if (key.getKeyboard().getID() === this.songId) {
-      SongManager.getCurrentPack().addContainer(container, this.getKeyLocation(key));
+      SongManager.getCurrentPack().addContainer(container.copy(), this.getKeyLocation(key));
     } else {
       collectErrorMessage('Error: key is not in map to keyboard');
     }

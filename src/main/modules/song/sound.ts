@@ -138,6 +138,11 @@ class Sound extends Payload {
     return this.howl_object.playing(this.playID);
   }
 
+  /** @return the duration in seconds of this sound */
+  public duration(): number {
+    return this.howl_object.duration();
+  }
+
   /**
    * ===================
    * Howl Sprite Wrapper

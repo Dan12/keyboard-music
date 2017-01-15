@@ -83,6 +83,8 @@ class SoundTools extends DomElement {
     this.waveformContainer.mouseleave((e: JQueryMouseEventObject) => {
       this.mousedown = false;
     });
+
+    this.offset = this.padding;
   }
 
   /**
@@ -149,8 +151,8 @@ class SoundTools extends DomElement {
         }
 
         // clamp scale and offset, offset depends on scale
-        this.scale = Math.min(Math.max(this.scale, this.canvas.width / this.ch1.length), 0.33);
-        this.offset = Math.min(Math.max(this.offset, - this.ch1.length * this.scale + this.canvas.width), 0);
+        this.scale = Math.min(Math.max(this.scale, (this.canvas.width - this.padding * 2) / this.ch1.length), 0.33);
+        this.offset = Math.min(Math.max(this.offset, - this.ch1.length * this.scale + this.canvas.width - this.padding), this.padding);
 
         e.preventDefault();
         return false;
@@ -168,12 +170,11 @@ class SoundTools extends DomElement {
       // if the sound is playing
       if (this.currentSound.playing()) {
         this.currentSound.pause();
-        this.nextPos = this.currentSound.seek();
+        this.nextPos = this.currentSound.seek() - this.inTime;
       } else {
-        // this.currentSound.play('sample');
         this.currentSound.play();
 
-        this.currentSound.seek(this.nextPos);
+        this.currentSound.seek(this.nextPos + this.inTime);
 
         this.nextPos = 0;
       }
@@ -215,7 +216,7 @@ class SoundTools extends DomElement {
         this.outTime = buffer.duration;
       }
 
-      this.scale = this.canvas.width / this.ch1.length;
+      this.scale = (this.canvas.width - this.padding * 2) / this.ch1.length;
 
       this.refreshInterval = setInterval(() => {
         this.refreshCanvas();
@@ -267,26 +268,36 @@ class SoundTools extends DomElement {
       // draw first channel
       this.ctx.beginPath();
       this.ctx.moveTo(0, yScale);
+      if (this.offset > 0)
+        this.ctx.lineTo(this.offset, yScale);
       for (let i = start; i < end; i += interval) {
         this.ctx.lineTo(this.offset + i * this.scale, (this.ch1[i] + 1) * yScale);
       }
+      if (this.offset + this.ch1.length * this.scale - this.canvas.width < 0)
+        this.ctx.lineTo(this.offset + this.ch1.length * this.scale, yScale);
+      this.ctx.lineTo(this.canvas.width, yScale);
       this.ctx.stroke();
 
       // draw second channel
       this.ctx.beginPath();
       this.ctx.moveTo(0, yScale * 3);
+      if (this.offset > 0)
+        this.ctx.lineTo(this.offset, yScale * 3);
       for (let i = start; i < end; i += interval) {
         this.ctx.lineTo(this.offset + i * this.scale, (this.ch2[i] + 3) * yScale);
       }
+      if (this.offset + this.ch1.length * this.scale - this.canvas.width < 0)
+        this.ctx.lineTo(this.offset + this.ch1.length * this.scale, yScale * 3);
+      this.ctx.lineTo(this.canvas.width, yScale * 3);
       this.ctx.stroke();
 
       // seconds * samples per second * pixels per sample
       this.cursorAt = (this.currentSound.playing() ? this.currentSound.seek() : this.nextPos + this.inTime);
 
-      this.drawCursorAtTime(this.cursorAt);
+      this.drawCursorAtTime(this.cursorAt, 0);
       this.ctx.fillStyle =  'blue';
-      this.drawCursorAtTime(this.inTime);
-      this.drawCursorAtTime(this.outTime);
+      this.drawCursorAtTime(this.inTime, 6);
+      this.drawCursorAtTime(this.outTime, 6);
     }
   }
 
@@ -296,13 +307,20 @@ class SoundTools extends DomElement {
   private setNextPos(mouseX: number) {
     if (this.currentSound)
       this.currentSound.pause();
-    this.nextPos = (mouseX + this.offset - this.waveformContainer.offset().left) / this.scale / this.sampleRate - this.inTime;
+    this.nextPos = (mouseX - this.offset - this.waveformContainer.offset().left) / this.scale / this.sampleRate;
+
+    if (this.nextPos < 0)
+      this.nextPos = 0;
+    if (this.nextPos > this.currentSound.duration())
+      this.nextPos = this.currentSound.duration();
+
+    this.nextPos -= this.inTime;
   }
 
   /**
    * draw a cursor at the given time. Will scale x to pixels
    */
-  private drawCursorAtTime(x: number) {
-    this.ctx.fillRect((x * this.sampleRate * this.scale) + this.offset - 1, 0, 2, this.canvas.height);
+  private drawCursorAtTime(x: number, padding: number) {
+    this.ctx.fillRect((x * this.sampleRate * this.scale) + this.offset - 1, padding, 2, this.canvas.height - padding * 2);
   }
 }
