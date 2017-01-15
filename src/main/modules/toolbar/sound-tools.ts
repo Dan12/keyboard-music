@@ -117,6 +117,8 @@ class SoundTools extends DomElement {
     this.ch1 = undefined;
     this.ch2 = undefined;
 
+    if (this.currentSound !== undefined)
+      this.currentSound.stop();
     this.currentSound = undefined;
 
     this.asElement().hide();

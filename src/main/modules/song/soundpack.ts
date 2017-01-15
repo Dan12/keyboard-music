@@ -109,9 +109,9 @@ class SoundPack {
   }
 
   /**
-   * add the given sound container to the soundpack at the given location
+   * set the map from the given location to the given sound container
    */
-  public addContainer(container: SoundContainer, loc: number) {
+  public setContainer(container: SoundContainer, loc: number) {
     this.sounds[loc] = container;
   }
 

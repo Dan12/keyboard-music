@@ -150,9 +150,13 @@ class ContainerTools extends DomElement {
 
     if (this.currentContaier.getLoop())
       this.loop.addClass('true');
+    else
+      this.loop.removeClass('true');
 
     if (this.currentContaier.getHoldToPlay())
       this.holdToPlay.addClass('true');
+    else
+      this.holdToPlay.removeClass('true');
 
     this.quaternize.html('Quaternize: ' + this.currentContaier.getQuaternize());
   }

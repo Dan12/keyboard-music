@@ -67,7 +67,7 @@ class Creator extends DomElement {
    * this should be called when a song is loaded to update the creator gui
    */
   public loadedSong() {
-    PayloadAlias.getInstance().clear();
+    // PayloadAlias.getInstance().clear();
     let pack = SongManager.getCurrentPack();
     if (pack) {
       let containers = pack.getContainers();

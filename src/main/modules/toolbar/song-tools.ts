@@ -6,7 +6,7 @@ class SongTools extends DomElement {
     let loadButton = new JQW('<button>Load Song</button>');
     this.asElement().append(loadButton);
     loadButton.click(() => {
-      SongManager.getInstance().loadSong('songs/equinox.json', () => {
+      SongManager.getInstance().loadSong('songs/eq.min.json', () => {
         Creator.getInstance().loadedSong();
       });
     });

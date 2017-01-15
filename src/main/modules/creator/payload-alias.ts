@@ -75,13 +75,7 @@ class PayloadAlias {
   public addSongKey(key: KeyboardKey, sound: Sound) {
     if (key.getKeyboard().getID() === this.songId) {
       let location = this.getKeyLocation(key);
-      let container = SongManager.getCurrentPack().getContainer(location);
-      if (container === undefined) {
-        container = new SoundContainer();
-        SongManager.getCurrentPack().addContainer(container, location);
-      }
-
-      container.addPitch(sound);
+      SongManager.getSong().addSound(SongManager.getInstance().getCurrentSoundPack(), location, sound);
     } else {
       collectErrorMessage('Error: key is not in map to keyboard');
     }
@@ -93,7 +87,7 @@ class PayloadAlias {
    */
   public setSongContainer(key: KeyboardKey, container: SoundContainer) {
     if (key.getKeyboard().getID() === this.songId) {
-      SongManager.getCurrentPack().addContainer(container.copy(), this.getKeyLocation(key));
+      SongManager.getSong().setContainer(SongManager.getInstance().getCurrentSoundPack(), this.getKeyLocation(key), container.copy());
     } else {
       collectErrorMessage('Error: key is not in map to keyboard');
     }

@@ -83,6 +83,13 @@ class Song {
     return this.soundPacks[pack];
   }
 
+  /** set the sound container in the given pack at the given location */
+  public setContainer(pack: number, location: number, container: SoundContainer) {
+    if (pack >= 0 && pack < this.soundPacks.length) {
+      this.soundPacks[pack].setContainer(container, location);
+    }
+  }
+
   /**
    * add the given sound to the given pack at the given location.
    * Will create a container if none exists at the given location in the given pack
@@ -94,7 +101,7 @@ class Song {
       let container = this.soundPacks[pack].getContainer(location);
       if (container === undefined) {
         container = new SoundContainer();
-        this.soundPacks[pack].addContainer(container, location);
+        this.soundPacks[pack].setContainer(container, location);
       }
 
       container.addPitch(file);
@@ -181,7 +188,7 @@ class Song {
           let fileLocation = loc.substring(loc.indexOf('/') + 1, loc.length);
           container.addPitch(FileManager.getInstance().getSound(baseDir, fileLocation), <number> pitches[i][1], <number> pitches[i][2]);
         }
-        this.soundPacks[i].addContainer(container, data[0]);
+        this.soundPacks[i].setContainer(container, data[0]);
       }
 
       // add the linked areas for this sound pack
