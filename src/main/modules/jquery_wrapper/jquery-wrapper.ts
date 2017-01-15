@@ -10,10 +10,15 @@ class JQW {
 
   constructor(obj: string) {
     this.jqObject = $(obj);
+    this.domObject = this.jqObject[0];
   }
 
   public getJQ(): JQuery {
     return this.jqObject;
+  }
+
+  public getDomObj(): HTMLElement {
+    return this.domObject;
   }
 
   public append(other: JQW | string) {
@@ -36,6 +41,17 @@ class JQW {
     let ret = new JQW('');
     ret.jqObject = this.jqObject.clone();
     return ret;
+  }
+
+  public focus(callback: () => void) {
+    this.jqObject.focus(callback);
+  }
+
+  public blur(callback?: () => void) {
+    if (callback === undefined)
+      this.jqObject.blur();
+    else
+      this.jqObject.blur(callback);
   }
 
   public html(text: string) {

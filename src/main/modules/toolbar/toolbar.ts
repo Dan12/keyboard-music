@@ -44,6 +44,10 @@ class Toolbar extends DomElement {
     this.prevHighlight = [];
   }
 
+  public updateSong() {
+    this.songTools.updateSong();
+  }
+
   /** determine the key press action based on the keycode */
   public keyPress(keyCode: number) {
     if (keyCode === 32) {
@@ -53,6 +57,12 @@ class Toolbar extends DomElement {
         this.soundTools.clearData();
         this.controlHighlight(undefined, false);
       }
+    }
+  }
+
+  public focusedKeyPress(keyCode: number) {
+    if (keyCode === 13) {
+      this.songTools.enterPress();
     }
   }
 

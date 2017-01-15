@@ -64,6 +64,22 @@ class Song {
     return ret;
   }
 
+  public getName(): string {
+    return this.name;
+  }
+
+  public setName(value: string) {
+    this.name = value;
+  }
+
+  public getBPM(): number {
+    return this.bpms[0][0];
+  }
+
+  public setBPM(value: number) {
+    this.bpms[0][0] = value;
+  }
+
   /**
    * add a sound pack to this song at the end of the sound pack array
    */

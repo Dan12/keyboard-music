@@ -9,6 +9,7 @@ interface HTMLElement {
     getContext?: any;
     width?: any;
     height?: any;
+    value?: any;
 }
 
 interface DOMException {
