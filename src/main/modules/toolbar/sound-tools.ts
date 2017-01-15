@@ -50,6 +50,7 @@ class SoundTools extends DomElement {
     let setPoints = new JQW('<div style="display: inline-block;"></div>');
     this.asElement().append(setPoints);
 
+    // set up the setIn and setOut buttons
     this.setIn = new JQW('<button disabled="disabled">Set in point</button>');
     this.setOut = new JQW('<button disabled="disabled">Set out point</button>');
     setPoints.append(this.setIn);
@@ -85,7 +86,7 @@ class SoundTools extends DomElement {
   }
 
   /**
-   * inspect the given sound
+   * inspect the given sound and show this element
    * @param sound the sound file
    * @param inOutControls flag to show the in and out controls
    */
@@ -104,6 +105,9 @@ class SoundTools extends DomElement {
     this.displayAudioData();
   }
 
+  /**
+   * clear the data in this object and hide this element
+   */
   public clearData() {
     if (this.refreshInterval)
       clearInterval(this.refreshInterval);

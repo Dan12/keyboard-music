@@ -44,20 +44,26 @@ class Toolbar extends DomElement {
     this.prevHighlight = [];
   }
 
-  public keyPress(keyCode: number): boolean {
+  /** determine the key press action based on the keycode */
+  public keyPress(keyCode: number) {
     if (keyCode === 32) {
       this.soundTools.pressSpace();
-      return false;
     } else if (keyCode === 8) {
       if (this.containerTools.deleteKey()) {
         this.soundTools.clearData();
         this.controlHighlight(undefined, false);
       }
     }
-
-    return true;
   }
 
+  /**
+   * inspect the given sound and highlight the given element
+   * @param sound the sound to inspect
+   * @param element the DomElement to highlight indicating that it is being inspected
+   * @param inOutControls if true, disable the set in and set out controls
+   * @param fromContainerTools an internal flag that should only be set to true
+   *        if this inspect request is coming from the container tools class
+   */
   public inspectSound(sound: Sound, element: DomElement, inOutControls: boolean, fromContainerTools?: boolean) {
     if (fromContainerTools === undefined || !fromContainerTools) {
       this.containerTools.clearData();
@@ -69,6 +75,7 @@ class Toolbar extends DomElement {
     this.soundTools.inspectSound(sound, inOutControls);
   }
 
+  /** inspect the given container */
   public inspectContainer(key: KeyboardKey) {
     let loc = KeyboardUtils.gridToLinear(key.getRow(), key.getCol(), key.getKeyboard().getNumCols());
 
@@ -79,8 +86,13 @@ class Toolbar extends DomElement {
     this.containerTools.inspectContainer(loc);
   }
 
+  /**
+   * control the highlighting effect.
+   * @param newHighlight the new element to highlight; if undefined, clear highlighting
+   * @param keepOld if true, don't clear the old highlighted element
+   */
   private controlHighlight(newHighlight: DomElement, keepOld: boolean) {
-    // remove old
+    // unhighlight old element if allowed
     if (this.prevHighlight.length > 0 && !keepOld) {
       for (let elem of this.prevHighlight) {
         if (elem instanceof KeyboardKey) {
@@ -93,6 +105,7 @@ class Toolbar extends DomElement {
       this.prevHighlight = [];
     }
 
+    // add the new highlight element to the queue
     if (newHighlight !== undefined) {
       if (newHighlight instanceof KeyboardKey) {
           newHighlight.highlight();

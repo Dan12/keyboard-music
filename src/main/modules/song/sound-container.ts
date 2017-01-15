@@ -22,6 +22,7 @@ class SoundContainer {
     this.previousPitch = 0;
   }
 
+  /** @return the value of hold to play for this container */
   public getHoldToPlay(): boolean {
     return this.holdToPlay;
   }
@@ -30,6 +31,7 @@ class SoundContainer {
     this.holdToPlay = value;
   }
 
+  /** @return the value of loop for this container */
   public getLoop(): boolean {
     return this.looped;
   }
@@ -41,10 +43,12 @@ class SoundContainer {
     }
   }
 
+  /** @return the pitches in this container */
   public getPitches(): Sound[] {
     return this.pitches;
   }
 
+  /** @return the quaternize value for this container */
   public getQuaternize() {
     return this.quaternized;
   }
@@ -60,6 +64,12 @@ class SoundContainer {
     return ret;
   }
 
+  /**
+   * add the given sound as a pitch to this container
+   * @param sound the sound to add
+   * @param start_time the optional start time to initlize with
+   * @param end_time the optional end time to initlize this sound with
+   */
   public addPitch(sound: Sound, start_time?: number, end_time?: number) {
     let options = {
       start_time: start_time,
@@ -69,10 +79,12 @@ class SoundContainer {
     this.pitches.push(new Sound(sound, options));
   }
 
+  /** remove the pitch at the given index from this container */
   public removePitch(ind: number) {
     this.pitches.splice(ind, 1);
   }
 
+  /** called when this container receives a press event */
   public pressed() {
     if (this.pitches.length > 0) {
       if (this.looped) {
@@ -93,6 +105,7 @@ class SoundContainer {
     }
   }
 
+  /** called when this container receives a release event */
   public released() {
     if (this.pitches.length > 0 && this.holdToPlay) {
       this.pitches[this.currentPitch].stop();

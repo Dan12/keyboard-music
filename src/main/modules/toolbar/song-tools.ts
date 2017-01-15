@@ -8,7 +8,6 @@ class SongTools extends DomElement {
     loadButton.click(() => {
       SongManager.getInstance().loadSong('songs/equinox.json', () => {
         Creator.getInstance().loadedSong();
-        // console.log(SongManager.getSong());
       });
     });
 

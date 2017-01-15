@@ -8,8 +8,10 @@ class SongManager {
 
   private static instance: SongManager;
 
+  // the current song. only 1 at any point in time
   private song: Song;
 
+  // the current soundpack, defaults to 0
   private currentSoundPack: number;
 
   /**
@@ -54,18 +56,25 @@ class SongManager {
     this.song.loadFromSource(location, callback);
   }
 
+  /** @return the current song */
   public static getSong(): Song {
     return SongManager.getInstance().song;
   }
 
+  /** @return the current soundpack */
   public static getCurrentPack(): SoundPack {
     return SongManager.getInstance().song.getPack(SongManager.getInstance().currentSoundPack);
   }
 
+  /**
+   * set the current soundpack
+   * @param pack the pack index to set as the current sound pack
+   */
   public setSoundPack(pack: number) {
     this.currentSoundPack = pack;
   }
 
+  /** @return the current sound pack index */
   public getCurrentSoundPack(): number {
     return this.currentSoundPack;
   }
@@ -77,10 +86,7 @@ class SongManager {
     if (this.song) {
       let pack = this.song.getPack(this.currentSoundPack);
       if (pack) {
-        let container = pack.getContainer(location);
-        if (container) {
-          container.pressed();
-        }
+        pack.pressed(location);
       }
     }
   }
@@ -92,10 +98,7 @@ class SongManager {
     if (this.song) {
       let pack = this.song.getPack(this.currentSoundPack);
       if (pack) {
-        let container = pack.getContainer(location);
-        if (container) {
-          container.released();
-        }
+        pack.released(location);
       }
     }
   }

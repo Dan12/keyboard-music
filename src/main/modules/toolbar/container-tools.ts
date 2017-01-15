@@ -17,6 +17,7 @@ class ContainerTools extends DomElement {
 
     this.pitches = [];
 
+    // add the pitches container
     let pitches = new JQW('<div id="pitches" class="horizontal-column"><h3>Pitches</h3></div>');
     this.asElement().append(pitches);
     this.pitchContainer = new JQW('<div id="pitch-container"></div>');
@@ -25,6 +26,7 @@ class ContainerTools extends DomElement {
     let controls = new JQW('<div id="controls" class="horizontal-column"></div>');
     this.asElement().append(controls);
 
+    // add the loop switch
     this.loop = new JQW('<div id="loop" class="container-button">Loop</div>');
     controls.append(this.loop);
     this.loop.click(() => {
@@ -38,6 +40,7 @@ class ContainerTools extends DomElement {
       }
     });
 
+    // add the hold to play switch
     this.holdToPlay = new JQW('<div id="hold-to-play" class="container-button">Hold To Play</div>');
     controls.append(this.holdToPlay);
     this.holdToPlay.click(() => {
@@ -51,9 +54,11 @@ class ContainerTools extends DomElement {
       }
     });
 
+    // add the quaternize label
     this.quaternize = new JQW('<div id="quaternize">Quaternize:</div>');
     controls.append(this.quaternize);
 
+    // add the linked areas container
     let areasContainer = new JQW('<div id="areas_container">Linked Areas:</div>');
     controls.append(areasContainer);
     this.linkedAreas = new JQW('<div id="linked_areas"></div>');
@@ -63,6 +68,7 @@ class ContainerTools extends DomElement {
     areasContainer.append(areasButton);
   }
 
+  /** clear add the data and hide this element */
   public clearData() {
     this.currentContaier = undefined;
 
@@ -76,6 +82,7 @@ class ContainerTools extends DomElement {
     this.asElement().hide();
   }
 
+  /** called when the delete key is pressed. If possible, delete the selected pitch in the selected container */
   public deleteKey(): boolean {
     if (this.currentSound !== undefined) {
       this.pitches[this.currentSound].asElement().remove();
@@ -91,6 +98,7 @@ class ContainerTools extends DomElement {
     return false;
   }
 
+  /** inspect the given container and show this element */
   public inspectContainer(loc: number) {
     this.asElement().show();
 
@@ -126,6 +134,9 @@ class ContainerTools extends DomElement {
   }
 }
 
+/**
+ * a simple element that is an alias for the pitches in the pitch container
+ */
 class PitchElement extends DomElement {
   private ind: number;
 

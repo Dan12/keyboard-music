@@ -44,6 +44,7 @@ abstract class PayloadReceiver<T> extends DomElement {
     this.previousColor = this.asElement().css('background-color');
   }
 
+  /** restore the previous background color of the receiving element */
   private restorePreviousColor() {
     if (this.previousColor !== '') {
       this.asElement().css('background-color', this.previousColor);

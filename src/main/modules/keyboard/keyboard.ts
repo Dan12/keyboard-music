@@ -95,10 +95,16 @@ class Keyboard extends DomElement {
     return this.numCols;
   }
 
+  /**
+   * @return this keyboard's id
+   */
   public getID(): number {
     return this.keyboardID;
   }
 
+  /**
+   * @return the keyboard key at the given row and column
+   */
   public getKey(r: number, c: number): KeyboardKey {
     return this.rows[r][c];
   }
@@ -122,6 +128,10 @@ class Keyboard extends DomElement {
     return this.colorManager;
   }
 
+  /**
+   * set the visibility to the key text to the given value
+   * @param value the visibility value
+   */
   public setShowKeys(value: boolean) {
     this.showKeys = value;
     this.setVisible();
@@ -159,6 +169,9 @@ class Keyboard extends DomElement {
     this.asElement().addClass('vertical-align');
   }
 
+  /**
+   * called when a key is pressed. performs logic to determine which key in the song to press
+   */
   public keyDown(key: number) {
     if (!this.pressed[key]) {
       if (this.modifierActive !== undefined && key === this.modifierKeyCode) {
@@ -181,6 +194,9 @@ class Keyboard extends DomElement {
     }
   }
 
+  /**
+   * 
+   */
   public keyUp(key: number) {
     if (this.pressed[key]) {
       // only set to false if the modifier key is down and we have to hold to trigger

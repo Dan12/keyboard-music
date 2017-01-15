@@ -7,12 +7,16 @@
  * Maintain the current payload of the mouse
  */
 class MousePayload {
-
+  // the element to listen for mouse events on
   private static listen_element: JQW;
 
+  // the current payload object, undefined if no current payload
   private static payload: Payload;
 
+  // the current payload element to bind to the mouse position, undefined if no current payload
   private static payloadElement: JQW;
+
+  // keep track of the payload x and y offsets from the mouse to provide seemless animation
   private static xOffset: number;
   private static yOffset: number;
 

@@ -76,6 +76,7 @@ class Sound extends Payload {
     }
   }
 
+  /** @return the absolute file location of this sound */
   public getLoc(): string {
     return this.location;
   }
@@ -127,15 +128,23 @@ class Sound extends Payload {
     this.howl_object.stop(this.playID);
   }
 
+  /** @return the base-64 source string for this sound */
   public getSrc(): string {
     return this.howl_object._src;
   }
 
+  /** @return true if this sound is playing */
   public playing(): boolean {
     return this.howl_object.playing(this.playID);
   }
 
-  // Howl Sprite Wrapper
+  /**
+   * ===================
+   * Howl Sprite Wrapper
+   * ===================
+   */
+
+  /** @return the howl sprite object in the format [start time, duration, loop], where the times are in milliseconds */
   private getSprite(): [number, number, boolean] {
     return this.howl_object._sprite[this.id.toString()];
   }
@@ -156,11 +165,13 @@ class Sound extends Payload {
     this.howl_object._sprite[this.id.toString()] = [st, et - st, curSprite[2]];
   }
 
+  /** set this sounds sprite to the given values */
   private setSprite(st: number, et: number, loop: boolean) {
     this.howl_object._sprite[this.id.toString()] = [st, et - st, loop];
   }
 }
 
+/** the options for the sound constructor */
 interface SoundOptions {
   name?: string;
   location?: string;

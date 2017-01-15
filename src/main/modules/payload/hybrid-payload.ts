@@ -1,5 +1,5 @@
 /**
- * an item that is a payload as well as a payload receiver.
+ * an object that is a payload as well as a payload receiver.
  */
 abstract class HybridPayload<T> extends PayloadReceiver<T> {
   constructor(element: JQW, hook: PayloadHookFunc<T>) {
@@ -11,6 +11,7 @@ abstract class HybridPayload<T> extends PayloadReceiver<T> {
     });
   }
 
+  /** call the payload hook function to determine if this object can be a payload */
   private canBePayload(): boolean {
     return this.payloadHook !== undefined && this.payloadHook(PayloadHookRequest.IS_PAYLOAD, undefined, this.getObjectData());
   }

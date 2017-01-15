@@ -71,6 +71,7 @@ class Song {
     this.soundPacks.push(new SoundPack());
   }
 
+  /** @return the number of sound packs in the song */
   public getNumPacks(): number {
     return this.soundPacks.length;
   }

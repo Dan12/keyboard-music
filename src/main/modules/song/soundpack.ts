@@ -33,20 +33,31 @@ class SoundPack {
     return containers;
   }
 
+  /** @return the location-container map for this sound pack */
   public getContainers(): {[loc: number]: SoundContainer} {
     return this.sounds;
   }
 
+  /** @return the linked areas for this soundpack */
   public getLinkedAreas(): number[][] {
     return this.linkedAreas;
   }
 
+  /** called when this soundpack receives a press event at the given location */
+  // TODO added linked area logic
   public pressed(loc: number) {
-    this.sounds[loc].pressed();
+    let container = this.sounds[loc];
+    if (container) {
+      container.pressed();
+    }
   }
 
+  /** called when this soundpack receives a release event at the given location */
   public released(loc: number) {
-    this.sounds[loc].released();
+    let container = this.sounds[loc];
+    if (container) {
+      container.released();
+    }
   }
 
   /**
@@ -79,6 +90,7 @@ class SoundPack {
     return this.sounds[loc];
   }
 
+  /** removes the container at the given location */
   public removeContainer(loc: number) {
     delete this.sounds[loc];
   }
