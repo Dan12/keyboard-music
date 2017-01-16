@@ -1,3 +1,4 @@
+/** a class to help drag a group of sounds from the square keyboard to the map to keyboard */
 class DragMultiPayload extends MultiPayload {
 
   private keys: KeyboardKey[];
@@ -16,7 +17,10 @@ class DragMultiPayload extends MultiPayload {
   private nextIndex: number;
   private mouseOffsets: {x: number, y: number}[];
 
-  constructor(keys: KeyboardKey[]) {
+  // flag if the mutli payload is on the square keyboard
+  private square: boolean;
+
+  constructor(keys: KeyboardKey[], square: boolean) {
     super(new JQW('<div></div>'));
 
     this.keys = keys;
@@ -28,6 +32,8 @@ class DragMultiPayload extends MultiPayload {
     this.nextIndex = -1;
 
     this.mouseOffsets = [];
+
+    this.square = square;
   }
 
   public firstPop(): boolean {
@@ -42,9 +48,8 @@ class DragMultiPayload extends MultiPayload {
   public setPayload(payload: Payload, e: JQueryMouseEventObject, append_to_element: JQW): boolean {
     for (let i = 0; i < this.keys.length; i++) {
       if (this.keys[i] === payload) {
-        this.setCSS();
         this.firstKey = <KeyboardKey> payload;
-        // MAYBE?
+        this.setCSS();
         this.keys.splice(i, 1);
         this.setupPayloadMotion(e, append_to_element);
         return true;
@@ -71,9 +76,33 @@ class DragMultiPayload extends MultiPayload {
 
     for (let i = 0; i < this.keys.length; i++) {
       let clone = this.keys[i].asElement().clone();
-      clone.css({'opacity': '0.5', 'pointer-events': 'none'});
+      if (this.keys[i] === this.firstKey)
+        clone.css({'opacity': '0.5', 'pointer-events': 'none'});
+      else
+        clone.css({'opacity': this.checkKeyMapping(this.keys[i]) ? '0.5' : '0', 'pointer-events': 'none'});
       this.asElement().append(clone);
+      this.keys[i].unHighlight();
     }
+  }
+
+  public checkKeyMapping(key: KeyboardKey): boolean {
+    if (this.square) {
+      return PayloadAlias.getInstance().getSquareKey(key) !== undefined;
+    } else {
+      return PayloadAlias.getInstance().getSongKey(key) !== undefined;
+    }
+  }
+
+  public deletePressed(): boolean {
+    if (!this.square && !this.startedMotion) {
+      for (let i = 0; i < this.keys.length; i++) {
+        SongManager.getCurrentPack().removeContainer(KeyboardUtils.getKeyLocation(this.keys[i]));
+        this.keys[i].unHighlight();
+        this.keys[i].setDefaultColor();
+      }
+      return true;
+    }
+    return false;
   }
 
   public isPayload(): boolean {
@@ -98,10 +127,18 @@ class DragMultiPayload extends MultiPayload {
 
     this.offsetX = this.asElement().offset().left - e.pageX;
     this.offsetY = this.asElement().offset().top - e.pageY;
+    this.lastX = e.pageX;
+    this.lastY = e.pageY;
+
+    let firstKeyDim = this.firstKey.asElement().getDomObj().getBoundingClientRect();
 
     for (let i = 0; i < this.keys.length; i++) {
-      let keyDim = this.keys[i].asElement().getDomObj().getBoundingClientRect();
-      this.mouseOffsets.push({x: ((keyDim.left + keyDim.right) / 2 - e.pageX), y: ((keyDim.top + keyDim.bottom) / 2 - e.pageY)});
+      if (this.checkKeyMapping(this.keys[i])) {
+        let keyDim = this.keys[i].asElement().getDomObj().getBoundingClientRect();
+        this.mouseOffsets.push({x: (keyDim.left - firstKeyDim.left), y: (keyDim.top - firstKeyDim.top)});
+      } else {
+        this.mouseOffsets.push(undefined);
+      }
     }
   }
 
@@ -110,20 +147,25 @@ class DragMultiPayload extends MultiPayload {
   }
 
   public popNextPayload(): Payload {
-    if (this.nextIndex === -1) {
-      this.fireNextPopEvent();
-      return this.firstKey;
+    if (this.startedMotion) {
+      if (this.nextIndex === -1) {
+        this.fireNextPopEvent();
+        return this.firstKey;
+      } else {
+        let ind = this.nextIndex;
+        this.fireNextPopEvent();
+        return this.keys[ind];
+      }
     } else {
-      let ind = this.nextIndex;
-      this.fireNextPopEvent();
-      return this.keys[ind];
+      return null;
     }
   }
 
   private fireNextPopEvent() {
     // go to the next valid index
     this.nextIndex++;
-    while (this.nextIndex < this.keys.length && PayloadAlias.getInstance().getSquareKey(this.keys[this.nextIndex]) === undefined) {
+    // check if the next index has a sound assigned to it
+    while (this.nextIndex < this.keys.length && !this.checkKeyMapping(this.keys[this.nextIndex])) {
       this.nextIndex++;
     }
     // if the next index is in range, fire an event for that index
@@ -132,19 +174,23 @@ class DragMultiPayload extends MultiPayload {
       event.pageX = this.lastX + this.mouseOffsets[this.nextIndex].x;
       event.pageY = this.lastY + this.mouseOffsets[this.nextIndex].y;
       $(document.elementFromPoint(event.pageX, event.pageY)).trigger(event);
+    } else {
+      console.log(this);
+      console.log(SongManager.getCurrentPack());
     }
   }
 
   public mouseMove(e: JQueryMouseEventObject) {
     if (this.startedMotion) {
 
-      // console.log(this.mouseOffsets);
       for (let i = 0; i < this.mouseOffsets.length; i++) {
-        let event = $.Event('mouseenter');
-        event.pageX = e.pageX + this.mouseOffsets[i].x;
-        event.pageY = e.pageY + this.mouseOffsets[i].y;
-        // console.log($(document.elementFromPoint(event.pageX, event.pageY)));
-        // $(document.elementFromPoint(event.pageX, event.pageY)).trigger(event);
+        if (this.mouseOffsets[i] !== undefined) {
+          let event = $.Event('mouseenter');
+          event.pageX = e.pageX + this.mouseOffsets[i].x;
+          event.pageY = e.pageY + this.mouseOffsets[i].y;
+          // console.log($(document.elementFromPoint(event.pageX, event.pageY)));
+          // $(document.elementFromPoint(event.pageX, event.pageY)).trigger(event);
+        }
       }
 
       this.lastX = e.pageX;

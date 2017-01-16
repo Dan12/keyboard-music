@@ -140,6 +140,11 @@ class Creator extends DomElement {
 
   public keyDown(key: number) {
     this.mapTo.getKeyboard().keyDown(key);
+
+    if (MousePayload.hasPayload()) {
+      DragSelector.getInstance().pressedKey(key);
+    } else
+      Toolbar.getInstance().keyPress(key);
   }
 
   public keyUp(key: number) {
@@ -162,5 +167,9 @@ class Creator extends DomElement {
 
   public getSquareKeyboard(): Keyboard {
     return this.square.getKeyboard();
+  }
+
+  public getMapToKeyboard(): Keyboard {
+    return this.mapTo.getKeyboard();
   }
 }

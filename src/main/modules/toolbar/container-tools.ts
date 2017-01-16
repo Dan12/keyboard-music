@@ -80,6 +80,8 @@ class ContainerTools extends DomElement {
   /** clear add the data and hide this element */
   public clearData() {
     this.currentContaier = undefined;
+    this.currentSound = undefined;
+    this.containerLocation = undefined;
 
     this.pitchContainer.empty();
     this.loop.removeClass('true');

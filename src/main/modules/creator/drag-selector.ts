@@ -1,5 +1,6 @@
 /// <reference path="./drag-multi-payload.ts"/>
 
+/** a drag selecting element to select keys on the square keyboard */
 class DragSelector extends DomElement {
 
   private static instance: DragSelector;
@@ -36,7 +37,7 @@ class DragSelector extends DomElement {
   }
 
   private constructor() {
-    super(new JQW('<div id="drag_selector"></div>'));
+    super(new JQW('<div id="drag_selector" style="z-index: 100;"></div>'));
 
     this.inX = 0;
     this.inY = 0;
@@ -57,7 +58,7 @@ class DragSelector extends DomElement {
 
     this.setDims();
 
-    this.setSelection();
+    this.clearPayload();
   }
 
   public updateEndPoint(x: number, y: number) {
@@ -70,7 +71,19 @@ class DragSelector extends DomElement {
   }
 
   private setSelection() {
-    let keyboard = Creator.getInstance().getSquareKeyboard();
+    // if the selection on the square keyboard got nothing, try the map to keyboard
+    if (!this.testSelection(true)) {
+      this.testSelection(false);
+    }
+  }
+
+  private testSelection(square: boolean): boolean {
+    let keyboard: Keyboard;
+    if (square)
+      keyboard = Creator.getInstance().getSquareKeyboard();
+    else
+      keyboard = Creator.getInstance().getMapToKeyboard();
+
     let boardDim = keyboard.asElement().getDomObj().getBoundingClientRect();
     let singleKey = keyboard.getKey(0, 0).asElement();
     let keyMargin = parseInt(singleKey.css('margin'));
@@ -90,31 +103,50 @@ class DragSelector extends DomElement {
     if (rowEnd >= keyboard.getNumRows())
       rowEnd = keyboard.getNumRows() - 1;
 
-    if (this.multiPayload === undefined || !this.multiPayload.isPayload()) {
-      keyboard.unhighlight();
-      MousePayload.clearMultiPayload();
-      this.multiPayload = undefined;
-    }
-
-    if (colStart < colEnd && rowStart < rowEnd) {
-      if (colEnd - colStart >= DragSelector.MAX_COLS)
-        colEnd = colStart + DragSelector.MAX_COLS - 1;
-      if (rowEnd - rowStart >= DragSelector.MAX_ROWS)
-        rowEnd = rowStart + DragSelector.MAX_ROWS - 1;
+    if (colStart <= colEnd && rowStart <= rowEnd) {
+      let maxRows = square ? DragSelector.MAX_ROWS : keyboard.getNumRows();
+      let maxCols = square ? DragSelector.MAX_COLS : keyboard.getNumCols();
+      if (colEnd - colStart >= maxCols)
+        colEnd = colStart + maxCols - 1;
+      if (rowEnd - rowStart >= maxRows)
+        rowEnd = rowStart + maxRows - 1;
 
       let keys = <KeyboardKey[]>[];
+
+      this.clearPayload();
 
       for (let r = rowStart; r <= rowEnd; r++) {
         for (let c = colStart; c <= colEnd; c++) {
           let key = keyboard.getKey(r, c);
           keys.push(key);
-          if (PayloadAlias.getInstance().getSquareKey(key) !== undefined) {
+          if (
+            (square && PayloadAlias.getInstance().getSquareKey(key) !== undefined) ||
+            (!square && PayloadAlias.getInstance().getSongKey(key) !== undefined)
+          ) {
             key.highlight();
           }
         }
       }
 
-      this.multiPayload = new DragMultiPayload(keys);
+      this.multiPayload = new DragMultiPayload(keys, square);
+
+      return true;
+    } else {
+      this.clearPayload();
+    }
+
+    return false;
+  }
+
+  private clearPayload(keyboard?: Keyboard) {
+    if (this.multiPayload !== undefined && !this.multiPayload.isPayload()) {
+      if (keyboard === undefined) {
+        Creator.getInstance().getSquareKeyboard().unhighlight();
+        Creator.getInstance().getMapToKeyboard().unhighlight();
+      } else
+        keyboard.unhighlight();
+      MousePayload.clearMultiPayload();
+      this.multiPayload = undefined;
     }
   }
 
@@ -140,6 +172,14 @@ class DragSelector extends DomElement {
       'height': this.height + 'px',
       'width': this.width + 'px'
     });
+  }
+
+  public pressedKey(key: number) {
+    if (key === 8 && this.multiPayload !== undefined) {
+      if (this.multiPayload.deletePressed()) {
+        this.multiPayload = undefined;
+      }
+    }
   }
 
   public setEndPoints() {

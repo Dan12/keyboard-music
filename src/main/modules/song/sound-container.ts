@@ -22,6 +22,7 @@ class SoundContainer {
     this.previousPitch = 0;
   }
 
+  /** @return a copy of this sound container */
   public copy(): SoundContainer {
     let ret = new SoundContainer(this.holdToPlay, this.quaternized, this.looped);
     for (let i  = 0; i < this.pitches.length; i++) {

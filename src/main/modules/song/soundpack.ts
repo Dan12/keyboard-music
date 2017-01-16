@@ -122,8 +122,26 @@ class SoundPack {
     return this.sounds[loc];
   }
 
+  private getLocationLinkedAreas(loc: number): number[] {
+    let ret = <number[]>[];
+    for (let i = 0; i < this.linkedAreas.length; i++) {
+      for (let j = 0; j < this.linkedAreas[i].length; j++) {
+        if (this.linkedAreas[i][j] === loc) {
+          ret.push(i);
+        }
+      }
+    }
+    return ret;
+  }
+
   /** removes the container at the given location */
-  public removeContainer(loc: number) {
+  public removeContainer(loc: number): number[] {
     delete this.sounds[loc];
+    // remove the linked areas
+    let areas = this.getLocationLinkedAreas(loc);
+    for (let i = 0; i < areas.length; i++) {
+      SongManager.getCurrentPack().removeFromLinkedArea(areas[i], loc);
+    }
+    return areas;
   }
 }

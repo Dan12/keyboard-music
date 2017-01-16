@@ -71,7 +71,7 @@ class KeyboardKey extends HybridPayload<KeyboardKey> {
   }
 
   /**
-   * remove coloring css
+   * reset background color to the default of highlighted color
    */
   public resetColor() {
     this.asElement().css('background-color', this.isHighlighted ? KeyboardKey.HIGHLIGH_COLOR : this.defaultColor);

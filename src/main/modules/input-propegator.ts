@@ -51,8 +51,6 @@ class InputEventPropegator {
           case Mode.CREATOR:
             Creator.getInstance().keyDown(event.keyCode);
 
-            Toolbar.getInstance().keyPress(event.keyCode);
-
             return false;
         }
       } else if (InputEventPropegator.pulledFocus) {

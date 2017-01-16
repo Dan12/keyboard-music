@@ -91,6 +91,11 @@ class KeyboardUtils {
   public static gridToLinear(r: number, c: number, cols: number): number {
     return r * cols + c;
   }
+
+  // get a key's location on its keyboard
+  public static getKeyLocation(key: KeyboardKey): number {
+    return KeyboardUtils.gridToLinear(key.getRow(), key.getCol(), key.getKeyboard().getNumCols());
+  }
 }
 
 /**
