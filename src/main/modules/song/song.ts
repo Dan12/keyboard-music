@@ -55,6 +55,11 @@ class Song {
     return ret;
   }
 
+  /** @return the keyboard type of this song */
+  public getBoardType(): KeyBoardType {
+    return this.keyboardType;
+  }
+
   // get the lined areas for the song json
   private getLinkedAreas(): number[][][] {
     let ret = <number[][][]> [];

@@ -1,6 +1,7 @@
 /// <reference path="./keyboard-key.ts"/>
 /// <reference path="./color-manager.ts"/>
 /// <reference path="./keyboard-utils.ts"/>
+/// <reference path="./soundpack-switcher.ts"/>
 
 /**
  * The keyboard module to represent an html keyboard.
@@ -28,6 +29,8 @@ class Keyboard extends DomElement {
   private keyMap = {};
 
   private static nextID = 1;
+
+  private soundPackSwitcher: SoundPackSwitcher;
 
   private static assignNextID(): number {
     return Keyboard.nextID++;
@@ -87,6 +90,15 @@ class Keyboard extends DomElement {
     this.colorManager = new ColorManager(this.rows);
   }
 
+  public setSoundPackSwitcher(type: SoundPackSwitcherType) {
+    if (this.soundPackSwitcher !== undefined) {
+      this.soundPackSwitcher.asElement().remove();
+    }
+    this.soundPackSwitcher = new SoundPackSwitcher(type);
+
+    this.asElement().append(this.soundPackSwitcher.asElement());
+  }
+
   public getNumRows(): number {
     return this.numRows;
   }
@@ -112,7 +124,7 @@ class Keyboard extends DomElement {
   /**
    * set a click listener for all of the keys
    */
-  public setPressKeyListener(callback: (key: KeyboardKey) => void) {
+  public setClickKeyListener(callback: (key: KeyboardKey) => void) {
     for (let r = 0; r < this.numRows; r++) {
       for (let c = 0; c < this.numCols; c++) {
         let key = this.rows[r][c];
@@ -137,6 +149,15 @@ class Keyboard extends DomElement {
     this.setVisible();
   }
 
+  /** reset all keys to their default colors */
+  public resetKeys() {
+    for (let r = 0; r < this.numRows; r++) {
+      for (let c = 0; c < this.numCols; c++) {
+        this.rows[r][c].setDefaultColor();
+      }
+    }
+  }
+
   /**
    * set the visibility of the key symbols based on the showKey flag
    */
@@ -159,6 +180,10 @@ class Keyboard extends DomElement {
       for (let c = 0; c < this.numCols; c++) {
         this.rows[r][c].setCSS(css);
       }
+    }
+
+    if (this.soundPackSwitcher !== undefined) {
+      this.soundPackSwitcher.setScale(scale);
     }
   }
 
@@ -188,14 +213,15 @@ class Keyboard extends DomElement {
       let keyIdx = this.keyMap[key];
       if (keyIdx) {
         this.pressedKey(keyIdx[0] + 4 * (this.modifierActive ? 1 : 0), keyIdx[1]);
+        this.pressed[key] = true;
+      } else if (this.soundPackSwitcher !== undefined) {
+        this.soundPackSwitcher.keyPressed(key);
       }
-
-      this.pressed[key] = true;
     }
   }
 
   /**
-   * 
+   *
    */
   public keyUp(key: number) {
     if (this.pressed[key]) {

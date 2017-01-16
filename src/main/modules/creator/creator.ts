@@ -37,14 +37,14 @@ class Creator extends DomElement {
   private constructor() {
     super(new JQW('<div id="creator"></div>'));
 
-    // initialize the keyboards
-    this.square = new SquareKeyboard();
-    this.mapTo = new MapToKeyboard();
-
     // initialize the song manager for the song creation
     SongManager.getInstance().newSong(KeyBoardType.STANDARD);
     SongManager.getSong().addPack();
     SongManager.getInstance().setSoundPack(0);
+
+    // initialize the keyboards
+    this.square = new SquareKeyboard();
+    this.mapTo = new MapToKeyboard(KeyBoardType.STANDARD);
 
     // add the file gui
     this.asElement().append(FileGUI.getInstance().asElement());
@@ -63,18 +63,28 @@ class Creator extends DomElement {
     this.layoutElements();
   }
 
-  /**
-   * this should be called when a song is loaded to update the creator gui
-   */
+  /** should be called when a song is loaded */
   public loadedSong() {
-    // PayloadAlias.getInstance().clear();
+    this.mapTo.getElement().remove();
+    this.mapTo = new MapToKeyboard(SongManager.getSong().getBoardType());
+    this.main_content.append(this.mapTo.getElement());
+
+    this.updateMapToGUI(true);
+  }
+
+  /**
+   * this should be called when a song/pack is loaded to update the creator gui
+   */
+  public updateMapToGUI(flash: boolean) {
+    this.mapTo.resetGUI();
     let pack = SongManager.getCurrentPack();
     if (pack) {
       let containers = pack.getContainers();
       for (let location in containers) {
         let gridLoc = KeyboardUtils.linearToGrid(parseInt(location), this.mapTo.getKeyboard().getNumCols());
         this.mapTo.showSoundActive(this.mapTo.getKeyboard().getKey(gridLoc[0], gridLoc[1]));
-        this.mapTo.getKeyboard().getColorManager().releasedKey(gridLoc[0], gridLoc[1]);
+        if (flash)
+          this.mapTo.getKeyboard().getColorManager().releasedKey(gridLoc[0], gridLoc[1]);
       }
     }
   }

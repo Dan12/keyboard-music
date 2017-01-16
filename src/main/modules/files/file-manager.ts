@@ -1,6 +1,7 @@
 /// <reference path="./directory.ts"/>
 
 // TODO add support for local upload, probably not in here
+// TODO sort files and sub directories by name
 
 /**
  * A file manager for managing all of the sounds.

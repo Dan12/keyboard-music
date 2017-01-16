@@ -48,6 +48,13 @@ class Toolbar extends DomElement {
     this.songTools.updateSong();
   }
 
+  public switchedSoundPack() {
+    this.containerTools.clearData();
+    if (this.prevHighlight.length > 1)
+      this.soundTools.clearData();
+    this.controlHighlight(undefined, false);
+  }
+
   /** determine the key press action based on the keycode */
   public keyPress(keyCode: number) {
     if (keyCode === 32) {

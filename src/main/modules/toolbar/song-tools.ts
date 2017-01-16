@@ -35,6 +35,15 @@ class SongTools extends DomElement {
       });
     });
 
+    let ddForm = new JQW('<div><label>Keyboard Type:</label></div>');
+    this.asElement().append(ddForm);
+    this.songTypeSelect = new JQW(`<select>
+                                    <option value="STANDARD">Standard</option>
+                                    <option value="SQUARE">Square</option>
+                                    <option value="DOUBLE">Double</option>
+                                   </select>`);
+    ddForm.append(this.songTypeSelect);
+
     let nameForm = new JQW('<div><label>Name:</label></div>');
     this.asElement().append(nameForm);
     this.songName = new JQW('<input>');
@@ -61,14 +70,6 @@ class SongTools extends DomElement {
         SongManager.getSong().setBPM(parseInt(this.songBPMS.getDomObj().value));
     });
 
-    let ddForm = new JQW('<div><label>Keyboard Type:</label></div>');
-    this.asElement().append(ddForm);
-    this.songTypeSelect = new JQW(`<select>
-                                    <option value="STANDARD">Standard</option>
-                                    <option value="SQUARE">Square</option>
-                                    <option value="DOUBLE">Double</option>
-                                   </select>`);
-    ddForm.append(this.songTypeSelect);
     // TODO choose keyboard type
   }
 

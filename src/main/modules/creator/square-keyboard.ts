@@ -59,7 +59,7 @@ class SquareKeyboard {
     this.getKeyboard().setShowKeys(false);
     // add some spacing to the square
     this.square.asElement().css({'margin-right': '30px'});
-    this.getKeyboard().setPressKeyListener((key: KeyboardKey) => {
+    this.getKeyboard().setClickKeyListener((key: KeyboardKey) => {
       let sound = PayloadAlias.getInstance().getSquareKey(key);
       if (sound) {
         Toolbar.getInstance().inspectSound(sound, key, true);
@@ -76,6 +76,9 @@ class SquareKeyboard {
    * called when a directory payload is recieved
    */
   private processPayload(payload: Payload) {
+    PayloadAlias.getInstance().clear();
+    this.resetGUI();
+
     if (payload instanceof Directory) {
       // find the lowest directory with a file, stop if no subdirectory
       let lowestDir = <Directory> payload;
@@ -115,6 +118,11 @@ class SquareKeyboard {
 
   public getElement(): JQW {
     return this.element;
+  }
+
+  /** reset this keyboard gui */
+  public resetGUI() {
+    this.getKeyboard().resetKeys();
   }
 
   /** set the key's background color to indicate it has a sound assigned to it */

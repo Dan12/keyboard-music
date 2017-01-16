@@ -8,7 +8,7 @@ class MapToKeyboard {
   private mapTo: PayloadKeyboard;
   private element: JQW;
 
-  constructor() {
+  constructor(type: KeyBoardType) {
     // the hook for treating the keyboard as a payload receiver.
     // always returns false, so map to keyboard cannot receive payloads
     let maptoPayloadFunc = (type: PayloadHookRequest, payload?: Payload, objData?: number): boolean => {
@@ -48,9 +48,10 @@ class MapToKeyboard {
       return false;
     };
 
-    this.mapTo = new PayloadKeyboard(KeyBoardType.STANDARD, maptoPayloadFunc, keyHook);
-    this.mapTo.getKeyboard().resize(0.6);
+    this.mapTo = new PayloadKeyboard(type, maptoPayloadFunc, keyHook);
+    this.mapTo.getKeyboard().setSoundPackSwitcher(SoundPackSwitcherType.ARROWS);
     this.mapTo.centerVertical();
+    this.mapTo.getKeyboard().resize(0.6);
 
     PayloadAlias.getInstance().registerSongId(this.mapTo.getKeyboard().getID());
 
@@ -63,7 +64,7 @@ class MapToKeyboard {
         return [{row: r, col: c, r: p ? 255 : -1, g: p ? 160 : -1, b: p ? 0 : -1}];
       }
     );
-    this.mapTo.getKeyboard().setPressKeyListener((key: KeyboardKey) => {
+    this.mapTo.getKeyboard().setClickKeyListener((key: KeyboardKey) => {
       let container = PayloadAlias.getInstance().getSongKey(key);
       if (container)
         Toolbar.getInstance().inspectContainer(key);
@@ -91,6 +92,11 @@ class MapToKeyboard {
 
   public getKeyboard(): Keyboard {
     return this.mapTo.getKeyboard();
+  }
+
+  /** reset this keyboard gui */
+  public resetGUI() {
+    this.getKeyboard().resetKeys();
   }
 
   /**

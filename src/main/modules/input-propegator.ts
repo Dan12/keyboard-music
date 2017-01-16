@@ -25,6 +25,19 @@ class InputEventPropegator {
     return !event.metaKey && !event.ctrlKey && !InputEventPropegator.pulledFocus;
   }
 
+  // TODO
+  public static switchedSoundPack() {
+    switch (ModeHandler.getMode()) {
+      case Mode.KEYBOARD:
+
+        break;
+      case Mode.CREATOR:
+        Creator.getInstance().updateMapToGUI(false);
+        Toolbar.getInstance().switchedSoundPack();
+        break;
+    }
+  }
+
   /**
    * initialize the key event listeners and mode callback events
    */

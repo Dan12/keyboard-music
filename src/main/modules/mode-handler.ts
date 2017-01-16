@@ -28,20 +28,20 @@ class ModeHandler {
       if (ModeHandler.mode !== undefined) {
         switch (ModeHandler.mode) {
           case Mode.KEYBOARD:
-            KeyboardLayout.getInstance().asElement().hide(1000);
+            KeyboardLayout.getInstance().asElement().hide();
             break;
           case Mode.CREATOR:
-            Creator.getInstance().asElement().hide(1000);
+            Creator.getInstance().asElement().hide();
             break;
         }
       }
 
       switch (mode) {
         case Mode.KEYBOARD:
-          KeyboardLayout.getInstance().asElement().show(1000);
+          KeyboardLayout.getInstance().asElement().show();
           break;
         case Mode.CREATOR:
-          Creator.getInstance().asElement().show(1000);
+          Creator.getInstance().asElement().show();
           break;
       }
 

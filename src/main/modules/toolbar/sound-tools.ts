@@ -15,7 +15,7 @@ class SoundTools extends DomElement {
   // pixels per sample
   private scale = 0.08;
   private offset = 0;
-  private padding = 30;
+  private padding = 20;
   // samples per second
   private sampleRate: number;
 
@@ -114,6 +114,9 @@ class SoundTools extends DomElement {
     if (this.refreshInterval)
       clearInterval(this.refreshInterval);
 
+    if (this.canvas !== undefined)
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
     this.ch1 = undefined;
     this.ch2 = undefined;
 
@@ -181,14 +184,6 @@ class SoundTools extends DomElement {
         this.nextPos = 0;
       }
     }
-  }
-
-  /**
-   * clear the inspector
-   */
-  public clear() {
-    this.currentSound = undefined;
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
   /**
