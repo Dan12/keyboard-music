@@ -15,26 +15,34 @@ abstract class PayloadReceiver<T> extends DomElement {
     this.previousColor = '';
 
     this.asElement().mouseup(() => {
-      let payload = MousePayload.peekPayload();
-      // only consume the payload if you can recieve it
-      if (payload !== undefined && this.canReceive(payload)) {
-        this.restorePreviousColor();
-        this.receivePayload(MousePayload.popPayload());
-      }
+      this.receivePayloadFromMouse(MousePayload.peekPayload());
     });
 
     // highlight on mouseover
     this.asElement().mouseenter(() => {
-      let payload = MousePayload.peekPayload();
-      if (payload !== undefined && this.canReceive(payload)) {
-        this.setPreviousColor();
-        this.asElement().css('background-color', 'rgb(150,230,230)');
-      }
+      this.checkPayloadFromMouse(MousePayload.peekPayload());
     });
 
     this.asElement().mouseleave(() => {
       this.restorePreviousColor();
     });
+  }
+
+  /** called when this element should check a possible mouse payload */
+  public checkPayloadFromMouse(payload: Payload) {
+    if (payload !== undefined && this.canReceive(payload)) {
+      this.setPreviousColor();
+      this.asElement().css('background-color', 'rgb(150,230,230)');
+    }
+  }
+
+  /** called when this element receives a payload from the mouse */
+  public receivePayloadFromMouse(payload: Payload) {
+    // only consume the payload if you can recieve it
+    if (payload !== undefined && this.canReceive(payload)) {
+      this.restorePreviousColor();
+      this.receivePayload(MousePayload.popPayload());
+    }
   }
 
   /**

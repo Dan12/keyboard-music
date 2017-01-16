@@ -2,6 +2,7 @@
 /// <reference path="./payload-receiver.ts"/>
 /// <reference path="./hybrid-payload.ts"/>
 /// <reference path="./payload-utils.ts"/>
+/// <reference path="./multi-payload.ts"/>
 
 /**
  * Maintain the current payload of the mouse
@@ -19,6 +20,8 @@ class MousePayload {
   // keep track of the payload x and y offsets from the mouse to provide seemless animation
   private static xOffset: number;
   private static yOffset: number;
+
+  private static multiPayload: MultiPayload;
 
   /**
    * initialize the mouse payload object
@@ -39,6 +42,8 @@ class MousePayload {
         MousePayload.payloadElement.css(
           {'left': (e.pageX + MousePayload.xOffset) + 'px', 'top': (e.pageY + MousePayload.yOffset) + 'px'}
         );
+      } else if (MousePayload.multiPayload !== undefined) {
+        MousePayload.multiPayload.mouseMove(e);
       }
 
       // prevent highlight/selecting on dragging
@@ -47,43 +52,77 @@ class MousePayload {
     });
 
     MousePayload.listen_element.mouseup((e: JQueryMouseEventObject) => {
-      MousePayload.popPayload();
+      // if the multi payoad has not yet had it's first pop
+      if (!(MousePayload.multiPayload !== undefined && MousePayload.multiPayload.firstPop()))
+        MousePayload.popPayload();
     });
+  }
+
+  /** set the potential multi payload */
+  public static setMultiPayload(mutli: MultiPayload) {
+    MousePayload.multiPayload = mutli;
+  }
+
+  public static clearMultiPayload() {
+    if (MousePayload.multiPayload !== undefined)
+      MousePayload.multiPayload.clearPayload();
+    MousePayload.multiPayload = undefined;
+  }
+
+  /** @return true if there is a mouse payload */
+  public static hasPayload(): boolean {
+    return MousePayload.payload !== undefined || MousePayload.multiPayload !== undefined;
   }
 
   /**
    * set the payload of the mouse and define some offsets
    */
   public static setPayload(payload: Payload, e: JQueryMouseEventObject) {
-    MousePayload.payload = payload;
-    let offset = MousePayload.payload.asElement().offset();
-    MousePayload.xOffset = offset.left - e.pageX;
-    MousePayload.yOffset = offset.top - e.pageY;
+    if (!(MousePayload.multiPayload !== undefined && MousePayload.multiPayload.setPayload(payload, e, MousePayload.listen_element))) {
+      // if the payload was not part of the multi payload, remove the multi payload
+      MousePayload.clearMultiPayload();
+
+      MousePayload.payload = payload;
+      let offset = MousePayload.payload.asElement().offset();
+      MousePayload.xOffset = offset.left - e.pageX;
+      MousePayload.yOffset = offset.top - e.pageY;
+    }
   }
 
   /**
    * get the payload without popping it
    */
   public static peekPayload(): Payload {
-    return MousePayload.payload;
+    // TODO, return multi payload and handle can receive in map to keyboard
+    if (MousePayload.multiPayload !== undefined)
+      return MousePayload.multiPayload.peekPayload();
+    else
+      return MousePayload.payload;
   }
 
   /**
    * return the payload and clear the payload from the mouse
    */
   public static popPayload(): Payload {
-    let ret = MousePayload.payload;
-
-    // clear the payload
-    MousePayload.payload = undefined;
-    if (MousePayload.payloadElement !== undefined) {
-      MousePayload.payloadElement.remove();
+    if (MousePayload.multiPayload !== undefined) {
+      let ret = MousePayload.multiPayload.popNextPayload();
+      MousePayload.clearMultiPayload();
+      return ret;
     }
-    MousePayload.payloadElement = undefined;
-    MousePayload.xOffset = undefined;
-    MousePayload.yOffset = undefined;
+    else {
+      let ret = MousePayload.payload;
 
-    return ret;
+      // clear the payload
+      MousePayload.payload = undefined;
+      if (MousePayload.payloadElement !== undefined) {
+        MousePayload.payloadElement.remove();
+      }
+      MousePayload.payloadElement = undefined;
+      MousePayload.xOffset = undefined;
+      MousePayload.yOffset = undefined;
+
+      return ret;
+    }
   }
 
 }

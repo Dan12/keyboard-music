@@ -2,6 +2,7 @@
 /// <reference path="./square-keyboard.ts"/>
 /// <reference path="./mapto-keyboard.ts"/>
 /// <reference path="./payload-alias.ts"/>
+/// <reference path="./drag-selector.ts"/>
 
 /**
  * the class to parent the creator gui for creating songs
@@ -22,6 +23,8 @@ class Creator extends DomElement {
 
   private mapTo: MapToKeyboard;
   private square: SquareKeyboard;
+
+  private mouseDown: boolean;
 
   /**
    * @return the singleton instance of this class
@@ -61,6 +64,39 @@ class Creator extends DomElement {
 
     // layout the elements
     this.layoutElements();
+
+    // mouse listeners
+    this.mouseDown = false;
+    this.main_content.mousedown((event: JQueryMouseEventObject) => {
+      this.mouseDown = true;
+      DragSelector.getInstance().setStartPoint(
+        event.pageX - this.main_content.offset().left,
+        event.pageY - this.main_content.offset().top
+      );
+    });
+    this.main_content.mousemove((event: JQueryMouseEventObject) => {
+      if (this.mouseDown) {
+        if (MousePayload.hasPayload()) {
+          this.mouseDown = false;
+          DragSelector.getInstance().setEndPoints();
+        } else {
+          DragSelector.getInstance().updateEndPoint(
+            event.pageX - this.main_content.offset().left,
+            event.pageY - this.main_content.offset().top
+          );
+        }
+      }
+    });
+    this.main_content.mouseup(() => {
+      this.mouseDown = false;
+      DragSelector.getInstance().setEndPoints();
+    });
+    this.main_content.mouseleave(() => {
+      this.mouseDown = false;
+      DragSelector.getInstance().setEndPoints();
+    });
+    DragSelector.getInstance().setParentOffsets(0, this.fileWidth + this.padding);
+    this.main_content.append(DragSelector.getInstance().asElement());
   }
 
   /** should be called when a song is loaded */
@@ -118,8 +154,13 @@ class Creator extends DomElement {
     this.mapTo.removeKey(loc);
   }
 
+  /** @return the map to keyboard key at the given location */
   public getKey(loc: number): KeyboardKey {
     let gridLoc = KeyboardUtils.linearToGrid(loc, this.mapTo.getKeyboard().getNumCols());
     return this.mapTo.getKeyboard().getKey(gridLoc[0], gridLoc[1]);
+  }
+
+  public getSquareKeyboard(): Keyboard {
+    return this.square.getKeyboard();
   }
 }

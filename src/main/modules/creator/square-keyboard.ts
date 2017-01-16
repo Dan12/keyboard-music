@@ -112,7 +112,7 @@ class SquareKeyboard {
     }
   }
 
-  private getKeyboard(): Keyboard {
+  public getKeyboard(): Keyboard {
     return this.square.getKeyboard();
   }
 

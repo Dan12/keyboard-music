@@ -158,6 +158,15 @@ class Keyboard extends DomElement {
     }
   }
 
+  /** unhighlight all keys */
+  public unhighlight() {
+    for (let r = 0; r < this.numRows; r++) {
+      for (let c = 0; c < this.numCols; c++) {
+        this.rows[r][c].unHighlight();
+      }
+    }
+  }
+
   /**
    * set the visibility of the key symbols based on the showKey flag
    */
