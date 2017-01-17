@@ -33,6 +33,9 @@ class ModeHandler {
           case Mode.CREATOR:
             Creator.getInstance().asElement().hide();
             break;
+          case Mode.SPLITTER:
+            Creator.getInstance().asElement().hide();
+            break;
         }
       }
 
@@ -56,5 +59,6 @@ class ModeHandler {
 const enum Mode {
   KEYBOARD,
   EDITOR,
-  CREATOR
+  CREATOR,
+  SPLITTER
 }

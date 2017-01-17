@@ -11,6 +11,7 @@
 /// <reference path="./modules/zip.ts"/>
 /// <reference path="./modules/error-collector.ts"/>
 /// <reference path="./modules/jquery_wrapper/jquery-wrapper.ts"/>
+/// <reference path="./modules/splitter/splitter.ts"/>
 
 /**
  * Loads certain modules onto the main element
@@ -23,9 +24,12 @@ function ModuleLoader(main_element: JQW) {
   // add the creator
   main_element.append(Creator.getInstance().asElement());
 
+  // add the creator
+  main_element.append(Splitter.getInstance().asElement());
+
   // initialize the mode handler
   ModeHandler.init();
-  ModeHandler.setMode(Mode.CREATOR);
+  ModeHandler.setMode(Mode.SPLITTER);
 
   // initialize the mouse payload listener on the main element
   MousePayload.initialize(main_element);
