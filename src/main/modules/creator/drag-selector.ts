@@ -26,6 +26,8 @@ class DragSelector extends DomElement {
   private offsetTop: number;
   private offsetLeft: number;
 
+  private keys: KeyboardKey[];
+
   // private multiPayload: DragMultiPayload;
 
   public static getInstance(): DragSelector {
@@ -43,6 +45,8 @@ class DragSelector extends DomElement {
     this.inY = 0;
     this.outX = 0;
     this.outY = 0;
+
+    this.keys = [];
   }
 
   public setParentOffsets(t: number, l: number) {
@@ -111,24 +115,20 @@ class DragSelector extends DomElement {
       if (rowEnd - rowStart >= maxRows)
         rowEnd = rowStart + maxRows - 1;
 
-      let keys = <KeyboardKey[]>[];
-
       this.clearPayload();
 
       for (let r = rowStart; r <= rowEnd; r++) {
         for (let c = colStart; c <= colEnd; c++) {
           let key = keyboard.getKey(r, c);
-          keys.push(key);
           if (
             (square && PayloadAlias.getInstance().getSquareKey(key) !== undefined) ||
             (!square && PayloadAlias.getInstance().getSongKey(key) !== undefined)
           ) {
+            this.keys.push(key);
             key.highlight();
           }
         }
       }
-
-      // this.multiPayload = new DragMultiPayload(keys, square);
 
       return true;
     } else {
@@ -138,16 +138,10 @@ class DragSelector extends DomElement {
     return false;
   }
 
-  private clearPayload(keyboard?: Keyboard) {
-    // if (this.multiPayload !== undefined && !this.multiPayload.isPayload()) {
-    //   if (keyboard === undefined) {
-    //     Creator.getInstance().getSquareKeyboard().unhighlight();
-    //     Creator.getInstance().getMapToKeyboard().unhighlight();
-    //   } else
-    //     keyboard.unhighlight();
-    //   MousePayload.clearMultiPayload();
-    //   this.multiPayload = undefined;
-    // }
+  private clearPayload() {
+    for (let i = 0; i < this.keys.length; i++)
+      this.keys[i].removeHighlight();
+    this.keys = [];
   }
 
   private setDims() {
@@ -175,11 +169,10 @@ class DragSelector extends DomElement {
   }
 
   public pressedKey(key: number) {
-    // if (key === 8 && this.multiPayload !== undefined) {
-    //   if (this.multiPayload.deletePressed()) {
-    //     this.multiPayload = undefined;
-    //   }
-    // }
+    if (key === 8 && this.keys.length > 0) {
+      MousePayload.clearData();
+      this.keys = [];
+    }
   }
 
   public setEndPoints() {
@@ -189,8 +182,7 @@ class DragSelector extends DomElement {
     this.outY = 0;
     this.setDims();
 
-    // if (this.multiPayload !== undefined)
-    //   MousePayload.setMultiPayload(this.multiPayload);
-    // this.multiPayload = undefined;
+    if (this.keys.length > 0)
+      MousePayload.addMulitplePayloads(this.keys);
   }
 }
