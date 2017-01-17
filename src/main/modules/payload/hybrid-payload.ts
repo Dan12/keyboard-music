@@ -24,7 +24,7 @@ abstract class HybridPayload<T> extends PayloadReceiver<T> implements Payload {
   }
 
   /** call the payload hook function to determine if this object can be a payload */
-  private canBePayload(): boolean {
+  public canBePayload(): boolean {
     return this.payloadHook !== undefined && this.payloadHook(PayloadHookRequest.IS_PAYLOAD, undefined, this.getObjectData());
   }
 }

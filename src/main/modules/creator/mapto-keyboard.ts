@@ -31,11 +31,7 @@ class MapToKeyboard {
         return payload instanceof Sound || payload instanceof KeyboardKey;
       } else if (type === PayloadHookRequest.IS_PAYLOAD) {
         // key can only be used as a payload if it has a sound applied to it
-        if (PayloadAlias.getInstance().getSongKey(objData) !== undefined) {
-          objData.highlight();
-          return true;
-        } else
-          return false;
+        return PayloadAlias.getInstance().getSongKey(objData) !== undefined;
       }
 
       return false;
@@ -72,21 +68,10 @@ class MapToKeyboard {
     if (sound) {
       PayloadAlias.getInstance().addSongKey(objData, sound);
     } else {
-      let container = PayloadAlias.getInstance().getSongKey(payload);
-      // remove the old location
-      // let areas = PayloadAlias.getInstance().removeSongContainer(payload);
-      PayloadAlias.getInstance().setSongContainer(objData, container.copy());
-      // let location = KeyboardUtils.getKeyLocation(objData);
-      // // add the areas back in
-      // if (areas !== undefined) {
-      //   for (let i = 0; i < areas.length; i++) {
-      //     SongManager.getCurrentPack().addToLinkedArea(areas[i], location);
-      //   }
-      // }
-      // payload.setDefaultColor();
+      PayloadAlias.getInstance().addToMoveMap(payload, objData);
+      payload.setDefaultColor();
     }
     this.showSoundActive(objData);
-    // payload.unHighlight();
     objData.asElement().click();
   }
 

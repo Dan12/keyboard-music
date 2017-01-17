@@ -10,6 +10,7 @@
 class MousePayload {
   public static CHECK_EVENT = 'mouse_payload_check';
   public static RECEIVE_EVENT = 'mouse_payload_receive';
+  public static FINISHED_POPPING_EVENT = 'mouse_payload_finished_popping';
 
   // the element to listen for mouse events on
   private static listen_element: JQW;
@@ -42,6 +43,7 @@ class MousePayload {
     MousePayload.payloadElements = [];
     MousePayload.mouseOffsets = [];
     MousePayload.receivers = [];
+    MousePayload.tempPayloads = [];
 
     MousePayload.listen_element.mousemove((e: JQueryMouseEventObject) => {
       MousePayload.assertChecks();
@@ -70,9 +72,9 @@ class MousePayload {
 
         // fire an event over the current object with the current payload
         DomEvents.fireEvent(
-          document.elementFromPoint(e.pageX + mouseOffset.x, e.pageY + mouseOffset.y),
           MousePayload.CHECK_EVENT,
-          {payload: MousePayload.payloads[i]}
+          {payload: MousePayload.payloads[i]},
+          document.elementFromPoint(e.pageX + mouseOffset.x, e.pageY + mouseOffset.y)
         );
       }
 
@@ -109,17 +111,23 @@ class MousePayload {
         element.remove();
 
       DomEvents.fireEvent(
-        document.elementFromPoint(mx + mouseOffset.x, my + mouseOffset.y),
         MousePayload.RECEIVE_EVENT,
-        {payload: payload}
+        {payload: payload},
+        document.elementFromPoint(mx + mouseOffset.x, my + mouseOffset.y)
       );
     }
 
     MousePayload.receivers = [];
+
+    DomEvents.fireEvent(MousePayload.FINISHED_POPPING_EVENT);
   }
 
   public static hasPayload(): boolean {
     return MousePayload.payloads.length > 0;
+  }
+
+  public static hasTempPayload(): boolean {
+    return MousePayload.tempPayloads.length > 0;
   }
 
   public static clearData() {
@@ -135,8 +143,17 @@ class MousePayload {
           MousePayload.payloadElements[i].remove();
       }
       MousePayload.payloads = [];
+
+      for (let i = 0; i < MousePayload.tempPayloads.length; i++) {
+        MousePayload.tempPayloads[i].removeHighlight();
+      }
       MousePayload.tempPayloads = [];
+
+      for (let i = 0; i < MousePayload.payloadElements.length; i++) {
+        MousePayload.payloadElements[i].remove();
+      }
       MousePayload.payloadElements = [];
+
       MousePayload.mouseOffsets = [];
     } else {
       MousePayload.setMutliples = false;
@@ -170,7 +187,12 @@ class MousePayload {
       MousePayload.mouseOffsets = [{x: 0, y: 0}];
       baseInd = 0;
     } else {
-      MousePayload.payloads = MousePayload.tempPayloads;
+      MousePayload.payloads = [];
+      for (let i = 0; i < MousePayload.tempPayloads.length; i++) {
+        if (MousePayload.tempPayloads[i].canBePayload()) {
+          MousePayload.payloads.push(MousePayload.tempPayloads[i]);
+        }
+      }
       MousePayload.tempPayloads = [];
       MousePayload.calculateMouseOffsets(baseInd);
     }

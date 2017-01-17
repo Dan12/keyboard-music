@@ -3,4 +3,5 @@ interface Payload {
   asElement: () => JQW;
   highlight: () => void;
   removeHighlight: () => void;
+  canBePayload: () => boolean;
 }

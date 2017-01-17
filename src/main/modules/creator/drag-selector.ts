@@ -120,10 +120,7 @@ class DragSelector extends DomElement {
       for (let r = rowStart; r <= rowEnd; r++) {
         for (let c = colStart; c <= colEnd; c++) {
           let key = keyboard.getKey(r, c);
-          if (
-            (square && PayloadAlias.getInstance().getSquareKey(key) !== undefined) ||
-            (!square && PayloadAlias.getInstance().getSongKey(key) !== undefined)
-          ) {
+          if (key.canBePayload()) {
             this.keys.push(key);
             key.highlight();
           }
@@ -169,8 +166,10 @@ class DragSelector extends DomElement {
   }
 
   public pressedKey(key: number) {
+    console.log('TODO: delete');
     if (key === 8 && this.keys.length > 0) {
       MousePayload.clearData();
+      // TODO remove keys
       this.keys = [];
     }
   }
@@ -182,7 +181,8 @@ class DragSelector extends DomElement {
     this.outY = 0;
     this.setDims();
 
-    if (this.keys.length > 0)
+    if (this.keys.length > 0) {
       MousePayload.addMulitplePayloads(this.keys);
+    }
   }
 }

@@ -141,7 +141,7 @@ class Creator extends DomElement {
   public keyDown(key: number) {
     this.mapTo.getKeyboard().keyDown(key);
 
-    if (MousePayload.hasPayload()) {
+    if (MousePayload.hasTempPayload()) {
       DragSelector.getInstance().pressedKey(key);
     } else
       Toolbar.getInstance().keyPress(key);

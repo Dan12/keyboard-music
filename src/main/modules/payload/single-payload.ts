@@ -10,6 +10,10 @@ abstract class SinglePayload extends DomElement implements Highlightable, Payloa
     });
   }
 
+  public canBePayload() {
+    return true;
+  }
+
   public setPayload(payload: Payload, mx: number, my: number) {
     MousePayload.setPayload(payload, mx, my);
   }
