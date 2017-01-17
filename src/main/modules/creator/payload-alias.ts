@@ -13,7 +13,7 @@ class PayloadAlias {
 
   private static instance: PayloadAlias;
 
-  // private tempSoundContainers: {[location: number]: {container: SoundContainer, areas: number[]}};
+  private tempSoundContainers: {[location: number]: {container: SoundContainer, areas: number[]}};
 
   public static getInstance(): PayloadAlias {
     if (PayloadAlias.instance === undefined) {
@@ -25,12 +25,10 @@ class PayloadAlias {
 
   private constructor() {
     this.keys = {};
-    // this.tempSoundContainers = {};
   }
 
   public clear() {
     this.keys = {};
-    // this.tempSoundContainers = {};
   }
 
   /**
@@ -85,6 +83,10 @@ class PayloadAlias {
     }
   }
 
+  public clearTemps() {
+    this.tempSoundContainers = {};
+  }
+
   /**
    * add a map from the key to the given container by adding the container to the song.
    * Will only work if the key is in the map to keyboard
@@ -100,17 +102,32 @@ class PayloadAlias {
     }
   }
 
-  // public getSongAreas(key: KeyboardKey): number[] {
-  //   if (key.getKeyboard().getID() === this.songId) {
-  //     let dataObj = this.tempSoundContainers[KeyboardUtils.getKeyLocation(key)];
-  //     if (dataObj)
-  //       return dataObj.areas;
-  //     else
-  //       return undefined;
-  //   } else {
-  //     return undefined;
-  //   }
-  // }
+  public freezeState() {
+    this.tempSoundContainers = {};
+  }
+
+  public unfreeze() {
+    this.tempSoundContainers = undefined;
+  }
+
+  public removeSongContainer(key: KeyboardKey): number[] {
+    if (key.getKeyboard().getID() === this.songId) {
+      let location = KeyboardUtils.getKeyLocation(key);
+      if (this.tempSoundContainers !== undefined) {
+        if (this.tempSoundContainers[location] === undefined) {
+          let container = SongManager.getCurrentPack().getContainer(location);
+          let areas = SongManager.getCurrentPack().removeContainer(location);
+          this.tempSoundContainers[location] = {container: container, areas: areas};
+          return areas;
+        } else {
+          return this.tempSoundContainers[location].areas;
+        }
+      } else
+        return SongManager.getCurrentPack().removeContainer(location);
+    } else {
+      return undefined;
+    }
+  }
 
   /**
    * get the container mapped to the given key if the key is on the map to keyboard.
@@ -119,40 +136,12 @@ class PayloadAlias {
   public getSongKey(key: KeyboardKey): SoundContainer {
     if (key.getKeyboard().getID() === this.songId) {
       let location = KeyboardUtils.getKeyLocation(key);
-      // if (this.tempSoundContainers[location] !== undefined) {
-      //   let ret = this.tempSoundContainers[location].container;
-      //
-      //   if (finalDestination)
-      //     delete this.tempSoundContainers[location];
-      //
-      //   return ret;
-      // } else
+      if (this.tempSoundContainers !== undefined)
+        return (this.tempSoundContainers[location] === undefined ? undefined : this.tempSoundContainers[location].container);
+      else
         return SongManager.getCurrentPack().getContainer(location);
     } else {
       return undefined;
     }
   }
-
-  /**
-   * called when the given key is about to become the mouse payload.
-   * Gives the appearance of moving the song key by removing it from its curent place in the song
-   * and storing it in a temporary object.
-   */
-  // public checkAndMoveSongKey(key: KeyboardKey): SoundContainer {
-  //   if (key.getKeyboard().getID() === this.songId) {
-  //     let location = KeyboardUtils.getKeyLocation(key);
-  //     let ret = SongManager.getCurrentPack().getContainer(location);
-  //
-  //     let areas = SongManager.getCurrentPack().removeContainer(location);
-  //
-  //     if (ret !== undefined) {
-  //       this.tempSoundContainers[location] = {container: ret, areas: areas};
-  //       key.setDefaultColor();
-  //     }
-  //
-  //     return ret;
-  //   } else {
-  //     return undefined;
-  //   }
-  // }
 }

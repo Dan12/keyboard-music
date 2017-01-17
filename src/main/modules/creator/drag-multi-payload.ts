@@ -109,6 +109,10 @@ class DragMultiPayload extends MultiPayload {
     return this.startedMotion;
   }
 
+  public isUnloading(): boolean {
+    return this.nextIndex >= 0;
+  }
+
   public clearPayload() {
     for (let i = 0; i < this.keys.length; i++) {
       this.keys[i].unHighlight();
@@ -142,26 +146,33 @@ class DragMultiPayload extends MultiPayload {
     }
   }
 
-  public peekPayload(): Payload {
+  public getAllKeys(): KeyboardKey[] {
+    let ret = <KeyboardKey[]>[];
+    if (this.firstKey)
+      ret.push(this.firstKey);
+    for (let i = 0; i < this.keys.length; i++) {
+      ret.push(this.keys[i]);
+    }
+    return ret;
+  }
+
+  public getFirstElement(): KeyboardKey {
     return this.firstKey;
   }
 
   public popNextPayload(): Payload {
     if (this.startedMotion) {
       if (this.nextIndex === -1) {
-        this.fireNextPopEvent();
-        return this.firstKey;
+        return this;
       } else {
-        let ind = this.nextIndex;
-        this.fireNextPopEvent();
-        return this.keys[ind];
+        return this.keys[this.nextIndex];
       }
     } else {
       return null;
     }
   }
 
-  private fireNextPopEvent() {
+  public fireNextPopEvent(): boolean {
     // go to the next valid index
     this.nextIndex++;
     // check if the next index has a sound assigned to it
@@ -174,9 +185,9 @@ class DragMultiPayload extends MultiPayload {
       event.pageX = this.lastX + this.mouseOffsets[this.nextIndex].x;
       event.pageY = this.lastY + this.mouseOffsets[this.nextIndex].y;
       $(document.elementFromPoint(event.pageX, event.pageY)).trigger(event);
+      return true;
     } else {
-      console.log(this);
-      console.log(SongManager.getCurrentPack());
+      return false;
     }
   }
 

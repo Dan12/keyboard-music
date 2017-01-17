@@ -53,14 +53,16 @@ class MousePayload {
 
     MousePayload.listen_element.mouseup((e: JQueryMouseEventObject) => {
       // if the multi payoad has not yet had it's first pop
-      if (!(MousePayload.multiPayload !== undefined && MousePayload.multiPayload.firstPop()))
+      if (!(MousePayload.multiPayload !== undefined && (MousePayload.multiPayload.firstPop() || MousePayload.multiPayload.isUnloading()))) {
         MousePayload.popPayload();
+        MousePayload.clearMultiPayload();
+      }
     });
   }
 
   /** set the potential multi payload */
-  public static setMultiPayload(mutli: MultiPayload) {
-    MousePayload.multiPayload = mutli;
+  public static setMultiPayload(multi: MultiPayload) {
+    MousePayload.multiPayload = multi;
   }
 
   public static clearMultiPayload() {
@@ -93,9 +95,8 @@ class MousePayload {
    * get the payload without popping it
    */
   public static peekPayload(): Payload {
-    // TODO, return multi payload and handle can receive in map to keyboard
-    if (MousePayload.multiPayload !== undefined)
-      return MousePayload.multiPayload.peekPayload();
+    if (MousePayload.multiPayload !== undefined && MousePayload.multiPayload.isPayload())
+      return MousePayload.multiPayload;
     else
       return MousePayload.payload;
   }
@@ -105,9 +106,7 @@ class MousePayload {
    */
   public static popPayload(): Payload {
     if (MousePayload.multiPayload !== undefined) {
-      let ret = MousePayload.multiPayload.popNextPayload();
-      MousePayload.clearMultiPayload();
-      return ret;
+      return MousePayload.multiPayload.popNextPayload();
     }
     else {
       let ret = MousePayload.payload;

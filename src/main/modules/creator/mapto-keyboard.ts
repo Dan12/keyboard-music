@@ -25,33 +25,32 @@ class MapToKeyboard {
 
           objData.asElement().click();
         } else if (payload instanceof KeyboardKey) {
-          let sound = PayloadAlias.getInstance().getSquareKey(payload);
-          if (sound) {
-            PayloadAlias.getInstance().addSongKey(objData, sound);
-          } else {
-            let container = PayloadAlias.getInstance().getSongKey(payload);
-            // remove the old location
-            let areas = SongManager.getCurrentPack().removeContainer(KeyboardUtils.getKeyLocation(payload));
-            // add back the linked areas
-            PayloadAlias.getInstance().setSongContainer(objData, container);
-            let location = KeyboardUtils.getKeyLocation(objData);
-            for (let i = 0; i < areas.length; i++) {
-              SongManager.getCurrentPack().addToLinkedArea(areas[i], location);
-            }
-            payload.setDefaultColor();
+          this.setObjectFromKey(objData, payload);
+        } else if (payload instanceof DragMultiPayload) {
+          PayloadAlias.getInstance().freezeState();
+          let keys = payload.getAllKeys();
+          for (let i = 0; i < keys.length; i++) {
+            PayloadAlias.getInstance().removeSongContainer(keys[i]);
           }
-          this.showSoundActive(objData);
-          payload.unHighlight();
+          this.setObjectFromKey(objData, payload.getFirstElement());
+          while (payload.fireNextPopEvent()) {
+            // fire event
+          }
+          PayloadAlias.getInstance().unfreeze();
+          Creator.getInstance().updateMapToGUI(false);
+          MousePayload.clearMultiPayload();
           objData.asElement().click();
-        }
-        else
+        } else
           collectErrorMessage('Payload type does not match soundfile or keyboard key in map to', payload);
       } else if (type === PayloadHookRequest.CAN_RECEIVE) {
-        return payload instanceof Sound || payload instanceof KeyboardKey;
+        return payload instanceof Sound || payload instanceof KeyboardKey || payload instanceof DragMultiPayload;
       } else if (type === PayloadHookRequest.IS_PAYLOAD) {
-        objData.highlight();
         // key can only be used as a payload if it has a sound applied to it
-        return PayloadAlias.getInstance().getSongKey(objData) !== undefined;
+        if (PayloadAlias.getInstance().getSongKey(objData) !== undefined) {
+          objData.highlight();
+          return true;
+        } else
+          return false;
       }
 
       return false;
@@ -81,6 +80,29 @@ class MapToKeyboard {
 
     this.element = new JQW('<div class="horizontal-column"></div>');
     this.element.append(this.mapTo.asElement());
+  }
+
+  private setObjectFromKey(objData: KeyboardKey, payload: KeyboardKey) {
+    let sound = PayloadAlias.getInstance().getSquareKey(payload);
+    if (sound) {
+      PayloadAlias.getInstance().addSongKey(objData, sound);
+    } else {
+      let container = PayloadAlias.getInstance().getSongKey(payload);
+      // remove the old location
+      let areas = PayloadAlias.getInstance().removeSongContainer(payload);
+      PayloadAlias.getInstance().setSongContainer(objData, container);
+      let location = KeyboardUtils.getKeyLocation(objData);
+      // add the areas back in
+      if (areas !== undefined) {
+        for (let i = 0; i < areas.length; i++) {
+          SongManager.getCurrentPack().addToLinkedArea(areas[i], location);
+        }
+      }
+      payload.setDefaultColor();
+    }
+    this.showSoundActive(objData);
+    payload.unHighlight();
+    objData.asElement().click();
   }
 
   /**

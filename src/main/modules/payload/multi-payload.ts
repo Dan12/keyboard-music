@@ -6,14 +6,18 @@ abstract class MultiPayload extends DomElement {
   /** pop off the next payload. The first one should be the one intended for the current mouse position */
   abstract popNextPayload(): Payload;
 
-  /** get the first payload just to determine payload type. Multi Payloads should not be a mixed set */
-  abstract peekPayload(): Payload;
-
   /** act on jquery mousemove event */
   abstract mouseMove(e: JQueryMouseEventObject): void;
 
   /** called when clearing this payload */
   abstract clearPayload(): void;
 
+  /** @return true if the multi has had a first mouseup */
   abstract firstPop(): boolean;
+
+  /** @return true if the multi is a payload */
+  abstract isPayload(): boolean;
+
+  /** @return true if this multi is unloading the payload */
+  abstract isUnloading(): boolean;
 }

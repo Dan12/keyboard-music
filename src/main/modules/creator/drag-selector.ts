@@ -189,6 +189,8 @@ class DragSelector extends DomElement {
     this.outY = 0;
     this.setDims();
 
-    MousePayload.setMultiPayload(this.multiPayload);
+    if (this.multiPayload !== undefined)
+      MousePayload.setMultiPayload(this.multiPayload);
+    this.multiPayload = undefined;
   }
 }
