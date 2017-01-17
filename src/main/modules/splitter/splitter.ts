@@ -3,7 +3,7 @@ class Splitter extends DomElement {
   private static instance: Splitter;
 
   public static getInstance(): Splitter {
-    if(Splitter.instance === undefined) {
+    if (Splitter.instance === undefined) {
       Splitter.instance = new Splitter();
     }
 

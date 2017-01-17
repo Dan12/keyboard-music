@@ -1,7 +1,7 @@
 /**
  * A directory class with files and recursive subdirectories
  */
-class Directory extends Payload {
+class Directory extends SinglePayload {
   private files: {[name: string]: Sound};
   private subdirectories: {[name: string]: Directory};
 

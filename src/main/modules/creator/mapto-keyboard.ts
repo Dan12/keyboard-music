@@ -22,28 +22,13 @@ class MapToKeyboard {
         if (payload instanceof Sound) {
           PayloadAlias.getInstance().addSongKey(objData, payload);
           this.showSoundActive(objData);
-
           objData.asElement().click();
         } else if (payload instanceof KeyboardKey) {
           this.setObjectFromKey(objData, payload);
-        } else if (payload instanceof DragMultiPayload) {
-          PayloadAlias.getInstance().freezeState();
-          let keys = payload.getAllKeys();
-          for (let i = 0; i < keys.length; i++) {
-            PayloadAlias.getInstance().removeSongContainer(keys[i]);
-          }
-          this.setObjectFromKey(objData, payload.getFirstElement());
-          while (payload.fireNextPopEvent()) {
-            // fire event
-          }
-          PayloadAlias.getInstance().unfreeze();
-          Creator.getInstance().updateMapToGUI(false);
-          MousePayload.clearMultiPayload();
-          objData.asElement().click();
         } else
           collectErrorMessage('Payload type does not match soundfile or keyboard key in map to', payload);
       } else if (type === PayloadHookRequest.CAN_RECEIVE) {
-        return payload instanceof Sound || payload instanceof KeyboardKey || payload instanceof DragMultiPayload;
+        return payload instanceof Sound || payload instanceof KeyboardKey;
       } else if (type === PayloadHookRequest.IS_PAYLOAD) {
         // key can only be used as a payload if it has a sound applied to it
         if (PayloadAlias.getInstance().getSongKey(objData) !== undefined) {
@@ -89,19 +74,19 @@ class MapToKeyboard {
     } else {
       let container = PayloadAlias.getInstance().getSongKey(payload);
       // remove the old location
-      let areas = PayloadAlias.getInstance().removeSongContainer(payload);
-      PayloadAlias.getInstance().setSongContainer(objData, container);
-      let location = KeyboardUtils.getKeyLocation(objData);
-      // add the areas back in
-      if (areas !== undefined) {
-        for (let i = 0; i < areas.length; i++) {
-          SongManager.getCurrentPack().addToLinkedArea(areas[i], location);
-        }
-      }
-      payload.setDefaultColor();
+      // let areas = PayloadAlias.getInstance().removeSongContainer(payload);
+      PayloadAlias.getInstance().setSongContainer(objData, container.copy());
+      // let location = KeyboardUtils.getKeyLocation(objData);
+      // // add the areas back in
+      // if (areas !== undefined) {
+      //   for (let i = 0; i < areas.length; i++) {
+      //     SongManager.getCurrentPack().addToLinkedArea(areas[i], location);
+      //   }
+      // }
+      // payload.setDefaultColor();
     }
     this.showSoundActive(objData);
-    payload.unHighlight();
+    // payload.unHighlight();
     objData.asElement().click();
   }
 

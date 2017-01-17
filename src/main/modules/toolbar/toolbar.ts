@@ -113,7 +113,7 @@ class Toolbar extends DomElement {
     if (this.prevHighlight.length > 0 && !keepOld) {
       for (let elem of this.prevHighlight) {
         if (elem instanceof KeyboardKey) {
-          elem.unHighlight();
+          elem.removeHighlight();
         } else {
           elem.asElement().removeClass('highlight');
         }

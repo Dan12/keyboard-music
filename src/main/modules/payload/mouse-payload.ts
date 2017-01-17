@@ -3,7 +3,6 @@
 /// <reference path="./payload-receiver.ts"/>
 /// <reference path="./hybrid-payload.ts"/>
 /// <reference path="./payload-utils.ts"/>
-/// <reference path="./multi-payload.ts"/>
 
 /**
  * Maintain the current payload of the mouse
@@ -37,6 +36,12 @@ class MousePayload {
   public static initialize(element: JQW) {
     MousePayload.listen_element = element;
 
+    MousePayload.setMutliples = false;
+    MousePayload.payloads = [];
+    MousePayload.payloadElements = [];
+    MousePayload.mouseOffsets = [];
+    MousePayload.receivers = [];
+
     MousePayload.listen_element.mousemove((e: JQueryMouseEventObject) => {
       // reset the receiver array
       for (let i = 0; i < MousePayload.receivers.length; i++) {
@@ -52,6 +57,7 @@ class MousePayload {
           MousePayload.payloadElements[i] = MousePayload.payloads[i].asElement().clone();
           MousePayload.listen_element.append(MousePayload.payloadElements[i]);
           MousePayload.payloadElements[i].css({'position': 'absolute', 'pointer-events': 'none', 'opacity': '0.5'});
+          MousePayload.payloads[i].highlight();
         }
 
         let mouseOffset = MousePayload.mouseOffsets[i];
@@ -80,31 +86,57 @@ class MousePayload {
   }
 
   private static popData(mx: number, my: number) {
-    for (let i = 0; i < MousePayload.payloads.length; i++) {
-      let mouseOffset = MousePayload.mouseOffsets[i];
-      DomEvents.fireEvent(
-        document.elementFromPoint(mx + mouseOffset.x, my + mouseOffset.y),
-        MousePayload.RECEIVE_EVENT,
-        {payload: MousePayload.payloads[i]}
-      );
+    for (let j = 0; j < MousePayload.receivers.length; j++) {
+      MousePayload.receivers[j].removeReceiveHighlight();
     }
+
+    let len = MousePayload.payloads.length;
+    for (let i = 0; i < len; i++) {
+      let mouseOffset = MousePayload.mouseOffsets.pop();
+      let payload = MousePayload.payloads.pop();
+      payload.removeHighlight();
+      let element = MousePayload.payloadElements.pop();
+      if (element)
+        element.remove();
+      for (let j = 0; j < MousePayload.receivers.length; j++) {
+        DomEvents.fireEvent(
+          MousePayload.receivers[i].asElement().getDomObj(),
+          MousePayload.RECEIVE_EVENT,
+          {payload: payload}
+        );
+      }
+    }
+
+    MousePayload.receivers = [];
   }
 
-  private static clearData() {
+  public static hasPayload(): boolean {
+    return MousePayload.payloads.length > 0;
+  }
+
+  public static clearData() {
     if (!MousePayload.setMutliples) {
       for (let i = 0; i < MousePayload.payloads.length; i++) {
         MousePayload.payloads[i].removeHighlight();
+        if (i < MousePayload.payloadElements.length)
+          MousePayload.payloadElements[i].remove();
       }
       MousePayload.payloads = [];
       MousePayload.payloadElements = [];
       MousePayload.mouseOffsets = [];
+      MousePayload.receivers = [];
     } else {
       MousePayload.setMutliples = false;
     }
   }
 
   private static calculateMouseOffsets(baseInd: number) {
-    // TODO
+    let baseDim = this.payloads[baseInd].asElement().getDomObj().getBoundingClientRect();
+
+    for (let i = 0; i < this.payloads.length; i++) {
+      let curDim = this.payloads[i].asElement().getDomObj().getBoundingClientRect();
+      this.mouseOffsets.push({x: (curDim.left - baseDim.left), y: (curDim.top - baseDim.top)});
+    }
   }
 
   /**
@@ -118,11 +150,12 @@ class MousePayload {
         break;
       }
     }
+
     if (baseInd === -1) {
-      MousePayload.setMutliples = false;
       MousePayload.clearData();
       MousePayload.payloads = [payload];
       MousePayload.mouseOffsets = [{x: 0, y: 0}];
+      baseInd = 0;
     } else {
       MousePayload.calculateMouseOffsets(baseInd);
     }

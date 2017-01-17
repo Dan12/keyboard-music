@@ -9,9 +9,9 @@ class DomEvents {
   public static fireEvent(elem: Element, name: string, args?: any) {
     let event: Event;
     if (args === undefined)
-      event = new Event(name);
+      event = new Event(name, {'bubbles': true});
     else
-      event = new CustomEvent(name, {'detail': args});
+      event = new CustomEvent(name, {'detail': args, 'bubbles': true});
     elem.dispatchEvent(event);
   }
 }

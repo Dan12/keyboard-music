@@ -7,7 +7,6 @@ abstract class SinglePayload extends DomElement implements Highlightable, Payloa
 
     this.asElement().mousedown((e: JQueryMouseEventObject) => {
       this.setPayload(this, e.pageX, e.pageY);
-      this.highlight();
     });
   }
 

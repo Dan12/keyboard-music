@@ -159,10 +159,10 @@ class Keyboard extends DomElement {
   }
 
   /** unhighlight all keys */
-  public unhighlight() {
+  public removeHighlight() {
     for (let r = 0; r < this.numRows; r++) {
       for (let c = 0; c < this.numCols; c++) {
-        this.rows[r][c].unHighlight();
+        this.rows[r][c].removeHighlight();
       }
     }
   }

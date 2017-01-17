@@ -10,6 +10,7 @@ class ModeHandler {
   static init() {
     Creator.getInstance().asElement().hide();
     KeyboardLayout.getInstance().asElement().hide();
+    Splitter.getInstance().asElement().hide();
   }
 
  /**
@@ -44,6 +45,9 @@ class ModeHandler {
           KeyboardLayout.getInstance().asElement().show();
           break;
         case Mode.CREATOR:
+          Creator.getInstance().asElement().show();
+          break;
+        case Mode.SPLITTER:
           Creator.getInstance().asElement().show();
           break;
       }

@@ -14,15 +14,14 @@ abstract class PayloadReceiver<T> extends DomElement {
 
     DomEvents.addListener(this.asElement().getDomObj(), MousePayload.CHECK_EVENT, (event: CustomEvent) => {
       if (this.canReceive(event.detail.payload)) {
-        MousePayload.addReceiver(this);
         this.receiveHighlight();
+        MousePayload.addReceiver(this);
       }
     });
 
     DomEvents.addListener(this.asElement().getDomObj(), MousePayload.RECEIVE_EVENT, (event: CustomEvent) => {
       if (this.canReceive(event.detail.payload)) {
         this.receivePayload(event.detail.payload);
-        this.removeReceiveHighlight();
       }
     });
   }

@@ -31,7 +31,7 @@ function ModuleLoader(main_element: JQW) {
 
   // initialize the mode handler
   ModeHandler.init();
-  ModeHandler.setMode(Mode.SPLITTER);
+  ModeHandler.setMode(Mode.CREATOR);
 
   // initialize the mouse payload listener on the main element
   MousePayload.initialize(main_element);
