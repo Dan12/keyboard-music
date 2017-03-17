@@ -15,6 +15,7 @@
 /// <reference path="./modules/events/dom-events.ts"/>
 /// <reference path="./modules/payload/highlightable.ts"/>
 /// <reference path="./modules/audio/audio-tools.ts"/>
+/// <reference path="./modules/song/sound-utils.ts"/>
 
 /**
  * Loads certain modules onto the main element

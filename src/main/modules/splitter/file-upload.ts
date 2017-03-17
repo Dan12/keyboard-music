@@ -4,7 +4,7 @@ class FileUpload extends DomElement {
     super(new JQW('<div id="file_upload"></div>'));
 
     let upload = new JQW('<input type="file" />');
-    let submit = new JQW('<input type="submit"/>');
+    let submit = new JQW('<input type="submit" value="Submit Sound"/>');
     submit.click(() => {
       for (let i = 0; i < upload.getDomObj().files.length; i++) {
         callback(upload.getDomObj().files[i]);
@@ -17,7 +17,7 @@ class FileUpload extends DomElement {
     this.asElement().append(dropZone);
 
     // ========== setup file drag and drop events ===============
-    DomEvents.addListener('dragover', () => {
+    DomEvents.addListener('dragover', (event: Event) => {
       dropZone.css({'background-color': 'rgba(100,255,255, 0.5)'});
       event.preventDefault();
     }, dropZone.getDomObj());

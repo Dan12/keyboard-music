@@ -2,6 +2,10 @@ class DrawSound extends DomElement {
   private canvas: HTMLElement;
   private ctx: CanvasRenderingContext2D;
 
+  // the button elements to set the input and output of the sound
+  private setIn: JQW;
+  private setOut: JQW;
+
   private inTime = 0;
   private outTime = 0;
   // pixels per sample
@@ -13,10 +17,20 @@ class DrawSound extends DomElement {
 
   private cursorAt = 0;
 
+  // the sound buffers
   private ch1: Float32Array;
   private ch2: Float32Array;
 
+  // the next start position of the sound
+  private nextPos = 0;
+
   private mousedown = false;
+
+  // the numnerb mapping to the refresh interval
+  private refreshInterval: number;
+
+  // the sound being drawn
+  private currentSound: Sound;
 
   constructor() {
     super(new JQW('<div class="waveform"></div>'));
@@ -28,17 +42,203 @@ class DrawSound extends DomElement {
     this.asElement().append(canvasElement);
     this.canvas = canvasElement.getDomObj();
 
-    this.asElement().css({
-      'overflow-x': 'hidden',
-      'overflow-y': 'hidden'
+    // TODO investigate
+    // this.asElement().css({
+    //   'overflow-x': 'hidden',
+    //   'overflow-y': 'hidden'
+    // });
+
+    // create the set points buttons and listeners
+    let setPoints = new JQW('<div style="display: inline-block;"></div>');
+    this.asElement().append(setPoints);
+
+    // set up the setIn and setOut buttons
+    this.setIn = new JQW('<button disabled="disabled">Set in point</button>');
+    this.setOut = new JQW('<button disabled="disabled">Set out point</button>');
+    setPoints.append(this.setIn);
+    setPoints.append(this.setOut);
+    this.setIn.click(() => {
+      if (this.currentSound && this.cursorAt < this.outTime) {
+        this.inTime = this.cursorAt;
+        this.setSprite();
+      }
     });
+    this.setOut.click(() => {
+      if (this.currentSound && this.cursorAt > this.inTime) {
+        this.outTime = this.cursorAt;
+        this.setSprite();
+      }
+    });
+
+    // set scrubbing listeners
+    this.asElement().mousedown((e: JQueryMouseEventObject) => {
+      this.setNextPos(e.pageX);
+      this.mousedown = true;
+    });
+    this.asElement().mousemove((e: JQueryMouseEventObject) => {
+      if (this.mousedown)
+       this.setNextPos(e.pageX);
+    });
+    this.asElement().mouseup((e: JQueryMouseEventObject) => {
+      this.mousedown = false;
+    });
+    this.asElement().mouseleave((e: JQueryMouseEventObject) => {
+      this.mousedown = false;
+    });
+
+    // set scale and scroll listeners
+    this.canvas.addEventListener('wheel', (e: WheelEvent) => {
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        this.offset -= e.deltaX;
+      } else {
+        this.scale -= e.deltaY / (500 / this.scale);
+      }
+
+      // clamp scale and offset, offset depends on scale
+      this.scale = Math.min(Math.max(this.scale, (this.canvas.width - this.padding * 2) / this.ch1.length), 0.33);
+      this.offset = Math.min(Math.max(this.offset, - this.ch1.length * this.scale + this.canvas.width - this.padding), this.padding);
+
+      e.preventDefault();
+      return false;
+    });
+
+    this.offset = this.padding;
   }
 
-  public initSound(ch1: Float32Array, ch2: Float32Array) {
+  public setSound(sound: Sound, buffer?: AudioBuffer) {
+    // initialize the canvas and context
     if (this.ctx === undefined) {
       this.canvas.width = Math.floor(this.asElement().width());
       this.canvas.height = this.asElement().height();
       this.ctx = this.canvas.getContext('2d');
     }
+
+    this.currentSound = sound;
+
+    if (buffer !== undefined) {
+      this.setBufferedSoundElements(buffer);
+    } else {
+      let raw = this.currentSound.getSrc();
+      raw = raw.substring(SoundUtils.mp3Meta64.length, raw.length);
+
+      // convert the base64 data to a byte array
+      let data = SoundUtils.base64ToArrayBuffer(raw);
+      // decode the byte array and draw the stero waveform onto the canvas
+      AudioTools.audioContext.decodeAudioData(data, (buffer: AudioBuffer) => {
+        this.setBufferedSoundElements(buffer);
+      });
+    }
+  }
+
+  private setBufferedSoundElements(buffer: AudioBuffer) {
+    // setup the channels
+    this.ch1 = buffer.getChannelData(0);
+    this.ch2 = buffer.getChannelData(1);
+    this.sampleRate = buffer.sampleRate;
+    this.nextPos = 0;
+
+    // try to get the endpoints from the sound array
+    let arr = this.currentSound.toArr();
+    if (arr.length > 1) {
+      this.inTime = <number> arr[1] / 1000;
+      this.outTime = <number> arr[2] / 1000;
+    } else {
+      this.inTime = 0;
+      this.outTime = buffer.duration;
+    }
+
+    // initialize the scale
+    this.scale = (this.canvas.width - this.padding * 2) / this.ch1.length;
+
+    this.refreshInterval = setInterval(() => {
+      this.refreshCanvas();
+    }, 25);
+  }
+
+  /**
+   * set the sample sprite for the sound to the current in and out points
+   */
+  private setSprite() {
+    this.currentSound.editSprite(this.inTime * 1000, this.outTime * 1000);
+    this.nextPos = 0;
+  }
+
+  /**
+   * set the next playback position based on the mouse position
+   */
+  private setNextPos(mouseX: number) {
+    if (this.currentSound)
+      this.currentSound.pause();
+    this.nextPos = (mouseX - this.offset - this.asElement().offset().left) / this.scale / this.sampleRate;
+
+    if (this.nextPos < 0)
+      this.nextPos = 0;
+    if (this.nextPos > this.currentSound.duration())
+      this.nextPos = this.currentSound.duration();
+
+    this.nextPos -= this.inTime;
+  }
+
+  /**
+   * refresh the canvas with the two channels
+   */
+  private refreshCanvas() {
+    this.ctx.fillStyle = 'black';
+
+    // compute the scales
+    let yScale = this.canvas.height / 4;
+
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    let start = Math.floor(-this.offset / (this.scale));
+    let end = Math.ceil((this.canvas.width - this.offset) / this.scale);
+
+    let constance = 5;
+
+    let interval = Math.ceil((end - start) / (1000 * constance)) * constance;
+    start = Math.floor(start / interval) * interval;
+
+    if (this.ch1) {
+      // draw first channel
+      this.ctx.beginPath();
+      this.ctx.moveTo(0, yScale);
+      if (this.offset > 0)
+        this.ctx.lineTo(this.offset, yScale);
+      for (let i = start; i < end; i += interval) {
+        this.ctx.lineTo(this.offset + i * this.scale, (this.ch1[i] + 1) * yScale);
+      }
+      if (this.offset + this.ch1.length * this.scale - this.canvas.width < 0)
+        this.ctx.lineTo(this.offset + this.ch1.length * this.scale, yScale);
+      this.ctx.lineTo(this.canvas.width, yScale);
+      this.ctx.stroke();
+
+      // draw second channel
+      this.ctx.beginPath();
+      this.ctx.moveTo(0, yScale * 3);
+      if (this.offset > 0)
+        this.ctx.lineTo(this.offset, yScale * 3);
+      for (let i = start; i < end; i += interval) {
+        this.ctx.lineTo(this.offset + i * this.scale, (this.ch2[i] + 3) * yScale);
+      }
+      if (this.offset + this.ch1.length * this.scale - this.canvas.width < 0)
+        this.ctx.lineTo(this.offset + this.ch1.length * this.scale, yScale * 3);
+      this.ctx.lineTo(this.canvas.width, yScale * 3);
+      this.ctx.stroke();
+
+      // seconds * samples per second * pixels per sample
+      this.cursorAt = (this.currentSound.playing() ? this.currentSound.seek() : this.nextPos + this.inTime);
+
+      this.drawCursorAtTime(this.cursorAt, 0);
+      this.ctx.fillStyle =  'blue';
+      this.drawCursorAtTime(this.inTime, 6);
+      this.drawCursorAtTime(this.outTime, 6);
+    }
+  }
+
+  /**
+   * draw a cursor at the given time. Will scale x to pixels
+   */
+  private drawCursorAtTime(x: number, padding: number) {
+    this.ctx.fillRect((x * this.sampleRate * this.scale) + this.offset - 1, padding, 2, this.canvas.height - padding * 2);
   }
 }
