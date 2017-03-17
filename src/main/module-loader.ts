@@ -12,6 +12,9 @@
 /// <reference path="./modules/error-collector.ts"/>
 /// <reference path="./modules/jquery_wrapper/jquery-wrapper.ts"/>
 /// <reference path="./modules/splitter/splitter.ts"/>
+/// <reference path="./modules/events/dom-events.ts"/>
+/// <reference path="./modules/payload/highlightable.ts"/>
+/// <reference path="./modules/audio/audio-tools.ts"/>
 
 /**
  * Loads certain modules onto the main element

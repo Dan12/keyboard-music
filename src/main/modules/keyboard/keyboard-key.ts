@@ -65,8 +65,12 @@ class KeyboardKey extends HybridPayload<KeyboardKey> {
   /**
    * unhighlight this key
    */
-  public unHighlight() {
+  public removeHighlight() {
     this.isHighlighted = false;
+    this.resetColor();
+  }
+
+  public removeReceiveHighlight() {
     this.resetColor();
   }
 

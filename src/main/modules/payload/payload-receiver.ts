@@ -12,52 +12,26 @@ abstract class PayloadReceiver<T> extends DomElement {
 
     this.payloadHook = hook;
 
-    this.previousColor = '';
+    DomEvents.addListener(MousePayload.CHECK_EVENT, (event: CustomEvent) => {
+      if (this.canReceive(event.detail.payload)) {
+        this.receiveHighlight();
+        MousePayload.addReceiver(this);
+      }
+    }, this.asElement().getDomObj());
 
-    this.asElement().mouseup(() => {
-      this.receivePayloadFromMouse(MousePayload.peekPayload());
-    });
-
-    // highlight on mouseover
-    this.asElement().mouseenter(() => {
-      this.checkPayloadFromMouse(MousePayload.peekPayload());
-    });
-
-    this.asElement().mouseleave(() => {
-      this.restorePreviousColor();
-    });
+    DomEvents.addListener(MousePayload.RECEIVE_EVENT, (event: CustomEvent) => {
+      if (this.canReceive(event.detail.payload)) {
+        this.receivePayload(event.detail.payload);
+      }
+    }, this.asElement().getDomObj());
   }
 
-  /** called when this element should check a possible mouse payload */
-  public checkPayloadFromMouse(payload: Payload) {
-    if (payload !== undefined && this.canReceive(payload)) {
-      this.setPreviousColor();
-      this.asElement().css('background-color', 'rgb(150,230,230)');
-    }
+  public receiveHighlight() {
+    this.asElement().css({'background-color': 'rgb(150,230,230)'});
   }
 
-  /** called when this element receives a payload from the mouse */
-  public receivePayloadFromMouse(payload: Payload) {
-    // only consume the payload if you can recieve it
-    if (payload !== undefined && this.canReceive(payload)) {
-      this.restorePreviousColor();
-      this.receivePayload(MousePayload.popPayload());
-    }
-  }
-
-  /**
-   * set the previous color to this element's current color
-   */
-  public setPreviousColor() {
-    this.previousColor = this.asElement().css('background-color');
-  }
-
-  /** restore the previous background color of the receiving element */
-  private restorePreviousColor() {
-    if (this.previousColor !== '') {
-      this.asElement().css('background-color', this.previousColor);
-      this.previousColor = '';
-    }
+  public removeReceiveHighlight() {
+    this.asElement().css({'background-color': ''});
   }
 
   /**

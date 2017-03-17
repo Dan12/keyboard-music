@@ -1,8 +1,6 @@
+/// <reference path="./draw-sound.ts"/>
+
 class SoundTools extends DomElement {
-
-  // the audio context for the file inspector
-  private audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
   private nameElement: JQW;
   private waveformContainer: JQW;
   private setIn: JQW;
@@ -199,7 +197,7 @@ class SoundTools extends DomElement {
     let data = this.base64ToArrayBuffer(raw);
 
     // decode the byte array and draw the stero waveform onto the canvas
-    this.audioCtx.decodeAudioData(data, (buffer: AudioBuffer) => {
+    AudioTools.audioContext.decodeAudioData(data, (buffer: AudioBuffer) => {
       this.ch1 = buffer.getChannelData(0);
       this.ch2 = buffer.getChannelData(1);
       this.sampleRate = buffer.sampleRate;

@@ -17,7 +17,6 @@
         "no-eval": true,
         "no-internal-module": true,
         "no-trailing-whitespace": true,
-        "no-unreachable": true,
         "no-unused-expression": true,
         "no-var-keyword": true,
         "max-line-length": [true, 140],

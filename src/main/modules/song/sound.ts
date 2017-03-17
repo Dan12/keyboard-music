@@ -1,7 +1,7 @@
 /**
  * A class to abstract a howl object
  */
-class Sound extends Payload {
+class Sound extends SinglePayload {
 
   private static nextID = 1;
   private id: number;

@@ -13,7 +13,7 @@ class PayloadAlias {
 
   private static instance: PayloadAlias;
 
-  private tempSoundContainers: {[location: number]: {container: SoundContainer, areas: number[]}};
+  private moveMap: {to: KeyboardKey, from: KeyboardKey}[];
 
   public static getInstance(): PayloadAlias {
     if (PayloadAlias.instance === undefined) {
@@ -25,10 +25,16 @@ class PayloadAlias {
 
   private constructor() {
     this.keys = {};
+    this.moveMap = [];
+
+    DomEvents.addListener(MousePayload.FINISHED_POPPING_EVENT, () => {
+      this.flushMap();
+    });
   }
 
   public clear() {
     this.keys = {};
+    this.moveMap = [];
   }
 
   /**
@@ -76,15 +82,10 @@ class PayloadAlias {
    */
   public addSongKey(key: KeyboardKey, sound: Sound) {
     if (key.getKeyboard().getID() === this.songId) {
-      let location = KeyboardUtils.getKeyLocation(key);
-      SongManager.getSong().addSound(SongManager.getInstance().getCurrentSoundPack(), location, sound);
+      SongManager.getSong().addSound(SongManager.getInstance().getCurrentSoundPack(), KeyboardUtils.getKeyLocation(key), sound);
     } else {
       collectErrorMessage('Error: key is not in map to keyboard');
     }
-  }
-
-  public clearTemps() {
-    this.tempSoundContainers = {};
   }
 
   /**
@@ -102,31 +103,33 @@ class PayloadAlias {
     }
   }
 
-  public freezeState() {
-    this.tempSoundContainers = {};
+  public addToMoveMap(from: KeyboardKey, to: KeyboardKey) {
+    if (from.getKeyboard().getID() === this.songId && to.getKeyboard().getID() === this.songId)
+      this.moveMap.push({to: to, from: from});
+    else
+      collectErrorMessage('Error: map from and to are not both from the map to keyboard');
   }
 
-  public unfreeze() {
-    this.tempSoundContainers = undefined;
-  }
-
-  public removeSongContainer(key: KeyboardKey): number[] {
-    if (key.getKeyboard().getID() === this.songId) {
-      let location = KeyboardUtils.getKeyLocation(key);
-      if (this.tempSoundContainers !== undefined) {
-        if (this.tempSoundContainers[location] === undefined) {
-          let container = SongManager.getCurrentPack().getContainer(location);
-          let areas = SongManager.getCurrentPack().removeContainer(location);
-          this.tempSoundContainers[location] = {container: container, areas: areas};
-          return areas;
-        } else {
-          return this.tempSoundContainers[location].areas;
-        }
-      } else
-        return SongManager.getCurrentPack().removeContainer(location);
-    } else {
-      return undefined;
+  public flushMap() {
+    let tempMap: {to: KeyboardKey, container: SoundContainer, areas: number[]}[];
+    tempMap = [];
+    for (let i = 0; i < this.moveMap.length; i++) {
+      let location = KeyboardUtils.getKeyLocation(this.moveMap[i].from);
+      let container = SongManager.getCurrentPack().getContainer(location);
+      let areas = SongManager.getCurrentPack().removeContainer(location);
+      tempMap.push({to: this.moveMap[i].to, container: container, areas: areas});
     }
+
+    for (let i = 0; i < tempMap.length; i++) {
+      let loc = KeyboardUtils.getKeyLocation(tempMap[i].to);
+      SongManager.getCurrentPack().setContainer(tempMap[i].container, loc);
+      for (let j = 0; j < tempMap[i].areas.length; j++) {
+        SongManager.getCurrentPack().addToLinkedArea(tempMap[i].areas[j], loc);
+      }
+      tempMap[i].to.setDefaultColor(100, 255, 100);
+      tempMap[i].to.asElement().click();
+    }
+    this.moveMap = [];
   }
 
   /**
@@ -135,11 +138,7 @@ class PayloadAlias {
    */
   public getSongKey(key: KeyboardKey): SoundContainer {
     if (key.getKeyboard().getID() === this.songId) {
-      let location = KeyboardUtils.getKeyLocation(key);
-      if (this.tempSoundContainers !== undefined)
-        return (this.tempSoundContainers[location] === undefined ? undefined : this.tempSoundContainers[location].container);
-      else
-        return SongManager.getCurrentPack().getContainer(location);
+      return SongManager.getCurrentPack().getContainer(KeyboardUtils.getKeyLocation(key));
     } else {
       return undefined;
     }
