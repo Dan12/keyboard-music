@@ -127,6 +127,7 @@ class PayloadAlias {
         SongManager.getCurrentPack().addToLinkedArea(tempMap[i].areas[j], loc);
       }
       tempMap[i].to.setDefaultColor(100, 255, 100);
+      tempMap[i].to.asElement().click();
     }
     this.moveMap = [];
   }

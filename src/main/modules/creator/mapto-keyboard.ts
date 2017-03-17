@@ -67,12 +67,12 @@ class MapToKeyboard {
     let sound = PayloadAlias.getInstance().getSquareKey(payload);
     if (sound) {
       PayloadAlias.getInstance().addSongKey(objData, sound);
+      this.showSoundActive(objData);
+      objData.asElement().click();
     } else {
       PayloadAlias.getInstance().addToMoveMap(payload, objData);
       payload.setDefaultColor();
     }
-    this.showSoundActive(objData);
-    objData.asElement().click();
   }
 
   /**

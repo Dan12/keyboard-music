@@ -14,6 +14,7 @@
 /// <reference path="./modules/splitter/splitter.ts"/>
 /// <reference path="./modules/events/dom-events.ts"/>
 /// <reference path="./modules/payload/highlightable.ts"/>
+/// <reference path="./modules/audio/audio-tools.ts"/>
 
 /**
  * Loads certain modules onto the main element
@@ -31,7 +32,7 @@ function ModuleLoader(main_element: JQW) {
 
   // initialize the mode handler
   ModeHandler.init();
-  ModeHandler.setMode(Mode.CREATOR);
+  ModeHandler.setMode(Mode.SPLITTER);
 
   // initialize the mouse payload listener on the main element
   MousePayload.initialize(main_element);

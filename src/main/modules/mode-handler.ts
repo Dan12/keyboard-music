@@ -35,7 +35,7 @@ class ModeHandler {
             Creator.getInstance().asElement().hide();
             break;
           case Mode.SPLITTER:
-            Creator.getInstance().asElement().hide();
+            Splitter.getInstance().asElement().hide();
             break;
         }
       }
@@ -48,7 +48,7 @@ class ModeHandler {
           Creator.getInstance().asElement().show();
           break;
         case Mode.SPLITTER:
-          Creator.getInstance().asElement().show();
+          Splitter.getInstance().asElement().show();
           break;
       }
 
