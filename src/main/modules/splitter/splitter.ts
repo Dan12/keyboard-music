@@ -52,7 +52,7 @@ class Splitter extends DomElement {
             // source.start(0);
             // console.log('started');
             this.waveform.asElement().show();
-            this.waveform.setSound(sound, buffer);
+            this.waveform.setSound(sound, false, buffer);
 
             AudioAnalyzer.analyze(buffer);
           }, () => {

@@ -119,7 +119,16 @@ class DrawSound extends DomElement {
     this.offset = this.padding;
   }
 
-  public setSound(sound: Sound, buffer?: AudioBuffer) {
+  public setSound(sound: Sound, enableInOut?: boolean, buffer?: AudioBuffer) {
+    if (enableInOut) {
+      this.setIn.getJQ().prop('disabled', false);
+      this.setOut.getJQ().prop('disabled', false);
+    }
+    else {
+      this.setIn.getJQ().prop('disabled', true);
+      this.setOut.getJQ().prop('disabled', true);
+    }
+
     // initialize the canvas and context
     if (this.ctx === undefined) {
       this.canvas.width = Math.floor(this.asElement().width());
@@ -142,6 +151,24 @@ class DrawSound extends DomElement {
         this.setBufferedSoundElements(buffer);
       });
     }
+  }
+
+  /**
+   * clear the data in this object and hide this element
+   */
+  public clearData() {
+    if (this.refreshInterval)
+      clearInterval(this.refreshInterval);
+
+    if (this.canvas !== undefined)
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.ch1 = undefined;
+    this.ch2 = undefined;
+
+    if (this.currentSound !== undefined)
+      this.currentSound.stop();
+    this.currentSound = undefined;
   }
 
   private setBufferedSoundElements(buffer: AudioBuffer) {
