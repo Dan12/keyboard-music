@@ -55,6 +55,9 @@ class InputEventPropegator {
           case Mode.SPLITTER:
             Splitter.getInstance().keyDown(event.keyCode);
             return false;
+          case Mode.EDITOR:
+            Editor.getInstance().keyDown(event.keyCode);
+            return false;
         }
       } else if (InputEventPropegator.pulledFocus) {
         Toolbar.getInstance().focusedKeyPress(event.keyCode);
@@ -69,6 +72,9 @@ class InputEventPropegator {
             return false;
           case Mode.CREATOR:
             Creator.getInstance().keyUp(event.keyCode);
+            return false;
+          case Mode.EDITOR:
+            Editor.getInstance().keyUp(event.keyCode);
             return false;
         }
       }

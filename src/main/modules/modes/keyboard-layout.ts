@@ -1,4 +1,4 @@
-/// <reference path="keyboard.ts"/>
+/// <reference path="../keyboard/keyboard.ts"/>
 
 /**
  * the layout class for the keyboard mode
@@ -27,6 +27,12 @@ class KeyboardLayout extends DomElement {
     this.keyboard.centerVertical();
 
     this.asElement().append(this.keyboard.asElement());
+  }
+
+  public init() {
+    SongManager.getInstance().loadSong('songs/eq.min.json', () => {
+      this.keyboard.setSoundPackSwitcher(SoundPackSwitcherType.ARROWS);
+    });
   }
 
   public getKeyboard(): Keyboard {

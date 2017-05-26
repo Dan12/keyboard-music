@@ -1,9 +1,9 @@
 class AudioAnalyzer {
 
-  public static emptyTol = 0.031; // under this is considered silence
-  public static emptyLen = 20;    // have to have tolerated silence for 20 bytes to be considered in the silent section
-  public static moveBufferHead = -1000;   // move buffer head back to compensate for immediate start to sound and possible cutoffs
-  public static moveBufferTail = -6000;   // move buffer length back due to the amount of empty space afterwards
+  public static emptyTol = 0.0021; // under this is considered silence
+  public static emptyLen = 100;    // have to have tolerated silence for 20 bytes to be considered in the silent section
+  public static moveBufferHead = -600;   // move buffer head back to compensate for immediate start to sound and possible cutoffs
+  public static moveBufferTail = -1000;   // move buffer length back due to the amount of empty space afterwards
   public static roundBuffer = 128;    // round output buffer to have nice chunks and get ride of static overlay
 
   /** @return a 2D array of start and end points for each sound */
@@ -19,7 +19,7 @@ class AudioAnalyzer {
         if (Math.abs(ch1[i]) > AudioAnalyzer.emptyTol && Math.abs(ch2[i]) > AudioAnalyzer.emptyTol) {
             let startPos = i;
 
-            // make sure that audio is not silent for at least emptyTol number of bytes
+            // make sure that audio is not silent for at least emptyLen number of bytes
             let isValid = true;
             for (; i < startPos + AudioAnalyzer.emptyLen; i++) {
                 if (Math.abs(ch1[i]) <= AudioAnalyzer.emptyTol && Math.abs(ch2[i]) <= AudioAnalyzer.emptyTol) {

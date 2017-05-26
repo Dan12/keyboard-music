@@ -11,6 +11,7 @@ class ModeHandler {
     Creator.getInstance().asElement().hide();
     KeyboardLayout.getInstance().asElement().hide();
     Splitter.getInstance().asElement().hide();
+    Editor.getInstance().asElement().hide();
   }
 
  /**
@@ -37,6 +38,9 @@ class ModeHandler {
           case Mode.SPLITTER:
             Splitter.getInstance().asElement().hide();
             break;
+          case Mode.EDITOR:
+            Editor.getInstance().asElement().hide();
+            break;
         }
       }
 
@@ -50,6 +54,9 @@ class ModeHandler {
         case Mode.SPLITTER:
           Splitter.getInstance().asElement().show();
           break;
+        case Mode.EDITOR:
+            Editor.getInstance().asElement().show();
+            break;
       }
 
       ModeHandler.mode = mode;

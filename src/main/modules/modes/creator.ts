@@ -1,8 +1,8 @@
-/// <reference path="./payload-keyboard.ts"/>
-/// <reference path="./square-keyboard.ts"/>
-/// <reference path="./mapto-keyboard.ts"/>
-/// <reference path="./payload-alias.ts"/>
-/// <reference path="./drag-selector.ts"/>
+/// <reference path="../creator/payload-keyboard.ts"/>
+/// <reference path="../creator/square-keyboard.ts"/>
+/// <reference path="../creator/mapto-keyboard.ts"/>
+/// <reference path="../creator/payload-alias.ts"/>
+/// <reference path="../creator/drag-selector.ts"/>
 
 /**
  * the class to parent the creator gui for creating songs

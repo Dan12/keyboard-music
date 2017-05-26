@@ -19,6 +19,7 @@ class DrawSound extends DomElement {
   // samples per second
   private sampleRate: number;
 
+  // the position of the cursor in seconds
   private cursorAt = 0;
 
   // the sound buffers
@@ -36,6 +37,7 @@ class DrawSound extends DomElement {
   // the sound being drawn
   private currentSound: Sound;
 
+  // create a new waveform container with in and out buttons
   constructor() {
     super(new JQW('<div class="waveform"></div>'));
 
@@ -105,7 +107,10 @@ class DrawSound extends DomElement {
       if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
         this.offset -= e.deltaX;
       } else {
+        let prevScale = this.scale;
         this.scale -= e.deltaY / (500 / this.scale);
+
+        this.offset = e.offsetX - ((this.scale / prevScale) * (e.offsetX - this.offset));
       }
 
       // clamp scale and offset, offset depends on scale
@@ -119,6 +124,12 @@ class DrawSound extends DomElement {
     this.offset = this.padding;
   }
 
+  /**
+   * set the sound to be inspected.
+   * @param sound the sound to inspect
+   * @param enableInOut optinally enable/disable the in out controls
+   * @param buffer optionally provide the audio buffer to remove duplication of work
+   */
   public setSound(sound: Sound, enableInOut?: boolean, buffer?: AudioBuffer) {
     if (enableInOut) {
       this.setIn.getJQ().prop('disabled', false);
@@ -128,6 +139,9 @@ class DrawSound extends DomElement {
       this.setIn.getJQ().prop('disabled', true);
       this.setOut.getJQ().prop('disabled', true);
     }
+
+    if (this.currentSound !== undefined)
+      this.currentSound.stop();
 
     // initialize the canvas and context
     if (this.ctx === undefined) {
@@ -160,7 +174,7 @@ class DrawSound extends DomElement {
     if (this.refreshInterval)
       clearInterval(this.refreshInterval);
 
-    if (this.canvas !== undefined)
+    if (this.ctx !== undefined)
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.ch1 = undefined;
@@ -171,6 +185,28 @@ class DrawSound extends DomElement {
     this.currentSound = undefined;
   }
 
+  /**
+   * set the in time of the sound to the given time
+   * @param time the time in seconds to set in time to
+   */
+  public setInTime(time: number) {
+    this.inTime = time;
+    this.setSprite();
+  }
+
+  /**
+   * set the out time of the sound to the given time
+   * @param time the time in seconds to set out time to
+   */
+  public setOutTime(time: number) {
+    this.outTime = time;
+    this.setSprite();
+  }
+
+  /**
+   * initialize variables from the current buffer
+   * @param buffer the current buffer being inspected
+   */
   private setBufferedSoundElements(buffer: AudioBuffer) {
     // setup the channels
     this.ch1 = buffer.getChannelData(0);
@@ -288,7 +324,6 @@ class DrawSound extends DomElement {
       this.ctx.lineTo(this.canvas.width, yScale * 3);
       this.ctx.stroke();
 
-      // seconds * samples per second * pixels per sample
       this.cursorAt = (this.currentSound.playing() ? this.currentSound.seek() : this.nextPos + this.inTime);
 
       this.drawCursorAtTime(this.cursorAt, 0);
@@ -302,6 +337,7 @@ class DrawSound extends DomElement {
    * draw a cursor at the given time. Will scale x to pixels
    */
   private drawCursorAtTime(x: number, padding: number) {
+    // seconds * samples per second * pixels per sample
     this.ctx.fillRect((x * this.sampleRate * this.scale) + this.offset - 1, padding, 2, this.canvas.height - padding * 2);
   }
 }
