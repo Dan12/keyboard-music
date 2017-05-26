@@ -1,3 +1,7 @@
+/**
+ * a class to draw a sound's waveform and provide 
+ * a simple editor to adjust the sounds in and out points
+ */
 class DrawSound extends DomElement {
   private canvas: HTMLElement;
   private ctx: CanvasRenderingContext2D;
@@ -35,7 +39,7 @@ class DrawSound extends DomElement {
   constructor() {
     super(new JQW('<div class="waveform"></div>'));
 
-    let canvasElement = new JQW(`<canvas id="waveform-canvas" width="10" height="10">
+    let canvasElement = new JQW(`<canvas class="waveform-canvas" width="10" height="10">
                                    Your Browser Does Not Support The Canvas Element
                                  </canvas>`);
 
@@ -53,10 +57,20 @@ class DrawSound extends DomElement {
     this.asElement().append(setPoints);
 
     // set up the setIn and setOut buttons
-    this.setIn = new JQW('<button disabled="disabled">Set in point</button>');
-    this.setOut = new JQW('<button disabled="disabled">Set out point</button>');
+    this.setIn = new JQW('<button>Set in point</button>');
+    this.setOut = new JQW('<button>Set out point</button>');
     setPoints.append(this.setIn);
     setPoints.append(this.setOut);
+
+    // stop mouse down event propegating to parent element
+    this.setIn.mousedown(() => {
+      return false;
+    });
+    // stop mouse down event propegating to parent element
+    this.setOut.mousedown(() => {
+      return false;
+    });
+
     this.setIn.click(() => {
       if (this.currentSound && this.cursorAt < this.outTime) {
         this.inTime = this.cursorAt;
@@ -156,6 +170,27 @@ class DrawSound extends DomElement {
   }
 
   /**
+   * called when the space bar is pressed
+   * and the inspector is in the current mode
+   */
+  public pressSpace() {
+    // make sure that there is a sound
+    if (this.currentSound) {
+      // if the sound is playing
+      if (this.currentSound.playing()) {
+        this.currentSound.pause();
+        this.nextPos = this.currentSound.seek() - this.inTime;
+      } else {
+        this.currentSound.play();
+
+        this.currentSound.seek(this.nextPos + this.inTime);
+
+        this.nextPos = 0;
+      }
+    }
+  }
+
+  /**
    * set the sample sprite for the sound to the current in and out points
    */
   private setSprite() {
@@ -167,16 +202,17 @@ class DrawSound extends DomElement {
    * set the next playback position based on the mouse position
    */
   private setNextPos(mouseX: number) {
-    if (this.currentSound)
+    if (this.currentSound) {
       this.currentSound.pause();
-    this.nextPos = (mouseX - this.offset - this.asElement().offset().left) / this.scale / this.sampleRate;
+      this.nextPos = (mouseX - this.offset - this.asElement().offset().left) / this.scale / this.sampleRate;
 
-    if (this.nextPos < 0)
-      this.nextPos = 0;
-    if (this.nextPos > this.currentSound.duration())
-      this.nextPos = this.currentSound.duration();
+      if (this.nextPos < 0)
+        this.nextPos = 0;
+      if (this.nextPos > this.currentSound.duration())
+        this.nextPos = this.currentSound.duration();
 
-    this.nextPos -= this.inTime;
+      this.nextPos -= this.inTime;
+    }
   }
 
   /**

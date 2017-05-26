@@ -37,9 +37,9 @@ class SoundTools extends DomElement {
     this.asElement().append(this.nameElement);
 
     // create the name and waveform elements
-    this.waveformContainer = new JQW('<div id="waveform"></div>');
+    this.waveformContainer = new JQW('<div class="waveform"></div>');
     this.asElement().append(this.waveformContainer);
-    this.waveformContainer.append(`<canvas id="waveform-canvas" width="10" height="10">
+    this.waveformContainer.append(`<canvas class="waveform-canvas" width="10" height="10">
                                     Your Browser Does Not Support The Canvas Element
                                    </canvas>`
                                  );
@@ -140,7 +140,7 @@ class SoundTools extends DomElement {
     }
 
     if (this.canvas === undefined) {
-      this.canvas = document.getElementById('waveform-canvas');
+      this.canvas = <HTMLElement> document.getElementsByClassName('waveform-canvas')[0];
       this.canvas.width = Math.floor(this.waveformContainer.width());
       this.canvas.height = this.waveformContainer.height();
       this.ctx = this.canvas.getContext('2d');

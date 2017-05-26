@@ -31,6 +31,7 @@ class Splitter extends DomElement {
     let waveformContainer = new JQW('<div id="waveformContainer"></div>');
     this.asElement().append(waveformContainer);
     waveformContainer.append(this.waveform.asElement());
+    this.waveform.asElement().hide();
   }
 
   private decodeAudioFile(file: File) {
@@ -50,6 +51,7 @@ class Splitter extends DomElement {
             // source.connect(AudioTools.audioContext.destination);
             // source.start(0);
             // console.log('started');
+            this.waveform.asElement().show();
             this.waveform.setSound(sound, buffer);
 
             AudioAnalyzer.analyze(buffer);
@@ -66,5 +68,15 @@ class Splitter extends DomElement {
       console.log('not valid audio file');
       console.log(file);
     }
+  }
+
+  public keyDown(key: number) {
+    if (key === 32) {
+      this.waveform.pressSpace();
+    }
+  }
+
+  public keyUp(key: number) {
+    // do nothing
   }
 }
