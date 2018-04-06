@@ -75,9 +75,9 @@ Backend.getJSON("resources/eq/song.json").then((song) => {
     [song.soundpacks.length, song.soundpacks[0].length, song.soundpacks[0][0].length],
     undefined);
 
-  let groups: {[id: number]: Sound[]} = {};
-
   for (let p = 0; p < song.soundpacks.length; p++) {
+    // groups by pack
+    let groups: {[id: number]: Sound[]} = {};
     for (let r = 0; r < song.soundpacks[p].length; r++) {
       for (let c = 0; c < song.soundpacks[p][r].length; c++) {
         numWaitingFor++;

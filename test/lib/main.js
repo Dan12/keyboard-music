@@ -410,8 +410,9 @@ Backend.getJSON("resources/eq/song.json").then((song) => {
     Globals.BPM = song.bpm;
     let sounds = Globals.defaultArr([song.soundpacks.length, song.soundpacks[0].length, song.soundpacks[0][0].length], undefined);
     let playConfig = Globals.defaultArr([song.soundpacks.length, song.soundpacks[0].length, song.soundpacks[0][0].length], undefined);
-    let groups = {};
     for (let p = 0; p < song.soundpacks.length; p++) {
+        // groups by pack
+        let groups = {};
         for (let r = 0; r < song.soundpacks[p].length; r++) {
             for (let c = 0; c < song.soundpacks[p][r].length; c++) {
                 numWaitingFor++;
