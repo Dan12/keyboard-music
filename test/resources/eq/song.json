@@ -1,0 +1,1614 @@
+{
+  "name": "Skrillex - Equinox",
+  "bpm": 148,
+  "soundpacks": [
+    [
+      [
+        {
+          "pitches": [
+            "chain1/c1.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            0
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/a0.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/a1.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/a2.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/a3.mp3"
+          ],
+          "hold_to_play": true,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/b0.mp3"
+          ],
+          "hold_to_play": true,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/b1.mp3"
+          ],
+          "hold_to_play": true,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/b2.mp3"
+          ],
+          "hold_to_play": true,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/b3.mp3"
+          ],
+          "hold_to_play": true,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/b3.mp3"
+          ],
+          "hold_to_play": true,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/d8.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/d12.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        }
+      ],
+      [
+        {
+          "pitches": [
+            "chain1/c3.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            0
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/c5.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            0
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/a5.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/a6.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/a7.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/b4.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/b5.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/b6.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/b7.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/d5.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/d6.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/d4.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        }
+      ],
+      [
+        {
+          "pitches": [
+            "chain1/c2.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            0
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/c7.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            0
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/a9.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/a10.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/a11.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/b8.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/b9.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/b10.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/b11.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/d1.mp3"
+          ],
+          "hold_to_play": true,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/d0.mp3"
+          ],
+          "hold_to_play": true,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/e0.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        }
+      ],
+      [
+        {
+          "pitches": [
+            "chain1/c6.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            0
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/a12.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/a13.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/a14.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/a15.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/b12.mp3"
+          ],
+          "hold_to_play": true,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/b13.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/b14.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/b15.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/d3.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/d2.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain1/d1.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "pitches": [
+            "chain2/a13.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            1
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/a14.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            1
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/a15.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            1
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/c2.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            1
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/c3.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            1
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/b0.mp3"
+          ],
+          "hold_to_play": true,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/b1.mp3"
+          ],
+          "hold_to_play": true,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/b2.mp3"
+          ],
+          "hold_to_play": true,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/b3.mp3"
+          ],
+          "hold_to_play": true,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/b3.mp3"
+          ],
+          "hold_to_play": true,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/d8.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/d12.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        }
+      ],
+      [
+        {
+          "pitches": [
+            "chain2/c1.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            1
+          ],
+          "quantization": 0
+        },
+        {},
+        {},
+        {
+          "pitches": [
+            "chain2/c6.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            1
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/c7.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            1
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/b4.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/b5.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/b6.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/b7.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/d5.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/d6.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/d4.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        }
+      ],
+      [
+        {
+          "pitches": [
+            "chain2/c5.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            1
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/c8.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/c9.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            1
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/c10.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            1
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/c11.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            1
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/b8.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/b9.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/b10.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/b11.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/d1.mp3"
+          ],
+          "hold_to_play": true,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/d0.mp3"
+          ],
+          "hold_to_play": true,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/d15.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        }
+      ],
+      [
+        {
+          "pitches": [
+            "chain2/e0.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/c12.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            1
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/c13.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            1
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/c14.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            1
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/c15.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            1
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/b12.mp3"
+          ],
+          "hold_to_play": true,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/b13.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/b14.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/b15.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/d3.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/d2.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain2/d1.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "pitches": [
+            "chain3/a0.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/e2.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/a1.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/a3.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/d0.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            2
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/d1.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            2
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/d2.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            2
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/d3.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            2
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/b0.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/b1.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/b2.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/b3.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        }
+      ],
+      [
+        {
+          "pitches": [
+            "chain3/c3.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/e1.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/e3.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/c11.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/d4.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            2
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/d5.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            2
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/d6.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            2
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/d7.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            2
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/b4.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/b5.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/b6.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/b7.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        }
+      ],
+      [
+        {
+          "pitches": [
+            "chain3/c4.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/e0.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/e4.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/c2.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/d8.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            2
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/d9.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            2
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/d10.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            2
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/d11.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            2
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/b8.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/b9.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/b11.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {}
+      ],
+      [
+        {
+          "pitches": [
+            "chain3/a12.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/c15.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/e5.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/c1.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/d12.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            2
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/c0.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/d14.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            2
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/d15.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            2
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/b12.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/b13.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain3/b14.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {}
+      ]
+    ],
+    [
+      [
+        {
+          "pitches": [
+            "chain4/c0.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain4/c3.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain4/a15.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {},
+        {},
+        {},
+        {},
+        {
+          "pitches": [
+            "chain4/b15.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            3
+          ],
+          "quantization": 0
+        },
+        {},
+        {},
+        {},
+        {}
+      ],
+      [
+        {
+          "pitches": [
+            "chain4/c4.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain4/c7.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {},
+        {},
+        {},
+        {},
+        {
+          "pitches": [
+            "chain4/d6.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            3
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain4/d3.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            3
+          ],
+          "quantization": 0
+        },
+        {},
+        {},
+        {},
+        {}
+      ],
+      [
+        {
+          "pitches": [
+            "chain4/c8.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain4/c11.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {},
+        {},
+        {
+          "pitches": [
+            "chain4/d12.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            3
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain4/d13.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            3
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain4/d14.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            3
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain4/d7.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            3
+          ],
+          "quantization": 0
+        },
+        {},
+        {},
+        {},
+        {}
+      ],
+      [
+        {
+          "pitches": [
+            "chain4/c12.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain4/c15.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [],
+          "quantization": 0
+        },
+        {},
+        {},
+        {
+          "pitches": [
+            "chain4/d8.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            3
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain4/d9.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            3
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain4/d10.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            3
+          ],
+          "quantization": 0
+        },
+        {
+          "pitches": [
+            "chain4/d11.mp3"
+          ],
+          "hold_to_play": false,
+          "loop": false,
+          "groups": [
+            3
+          ],
+          "quantization": 0
+        },
+        {},
+        {},
+        {},
+        {}
+      ]
+    ]
+  ]
+}

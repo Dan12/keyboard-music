@@ -1,0 +1,254 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial;
+  background-color: #f4f4f4;
+  text-align: center;
+  overflow: hidden; }
+
+.vertical-align {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%); }
+
+.horizontal-column {
+  display: inline-block;
+  vertical-align: top;
+  height: 100%; }
+
+#keyboard {
+  width: 100vw;
+  height: 100vh; }
+
+.keyboard {
+  display: inline-block;
+  text-align: center;
+  padding: 0; }
+  .keyboard .row {
+    padding: 0;
+    margin: 0; }
+  .keyboard .bolder {
+    font-weight: bold; }
+  .keyboard .transition {
+    transition: background-color 75ms ease-out; }
+  .keyboard .sound_pack_button {
+    display: inline-block;
+    margin: 2px;
+    border: 1px solid black;
+    background-color: white; }
+    .keyboard .sound_pack_button.sound_pack_block {
+      display: block;
+      margin: 2px auto; }
+    .keyboard .sound_pack_button.highlight_sound_pack {
+      background-color: #ffa000; }
+
+.keyboard_key {
+  display: inline-block;
+  margin: 4px;
+  text-align: center;
+  border: solid 1px black;
+  cursor: default; }
+
+#file-manager {
+  display: inline-block;
+  border: 1px solid black;
+  position: absolute;
+  text-align: left;
+  overflow: scroll;
+  cursor: pointer;
+  background-color: #c8c8fa;
+  padding-left: 4px; }
+  #file-manager .subdirectory-name {
+    padding: 4px 0;
+    color: #646464; }
+    #file-manager .subdirectory-name:hover {
+      color: black; }
+  #file-manager .subdirectory {
+    padding-left: 8px;
+    display: none; }
+  #file-manager .file {
+    padding: 4px;
+    background-color: #9696c8; }
+    #file-manager .file:hover {
+      background-color: white; }
+    #file-manager .file.highlight {
+      background-color: white; }
+
+#creator {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%; }
+  #creator #drag_selector {
+    position: absolute;
+    display: inline-block;
+    background-color: #3296ff;
+    opacity: 0.5; }
+
+#toolbar {
+  position: absolute;
+  display: inline-block;
+  border: 1px solid black;
+  border-left: none;
+  background-color: gainsboro;
+  text-align: left; }
+  #toolbar #sound-tools, #toolbar #container-tools {
+    border-left: 1px solid black; }
+  #toolbar #song-tools {
+    width: 20%; }
+    #toolbar #song-tools button {
+      margin: 4px; }
+    #toolbar #song-tools div {
+      margin: 4px; }
+    #toolbar #song-tools label {
+      margin-right: 4px; }
+  #toolbar #container-tools {
+    width: 40%; }
+    #toolbar #container-tools #controls {
+      margin-left: 6px;
+      margin-top: 6px;
+      width: 55%; }
+    #toolbar #container-tools .container-button {
+      border: 1px solid black;
+      cursor: pointer;
+      color: #646464;
+      margin-bottom: 6px;
+      padding: 2px 4px;
+      display: inline-block;
+      margin-left: 4px; }
+      #toolbar #container-tools .container-button.true {
+        color: black;
+        background-color: #00c864; }
+    #toolbar #container-tools #areas_container {
+      margin-top: 4px;
+      overflow: scroll; }
+      #toolbar #container-tools #areas_container #linked_areas {
+        border: 1px solid black;
+        margin: 0 6px;
+        display: inline-block; }
+        #toolbar #container-tools #areas_container #linked_areas span {
+          padding: 0 4px 1px;
+          cursor: pointer;
+          color: #646464; }
+          #toolbar #container-tools #areas_container #linked_areas span.in_area {
+            color: black;
+            background-color: #00c864; }
+          #toolbar #container-tools #areas_container #linked_areas span:hover {
+            color: black; }
+    #toolbar #container-tools #pitches {
+      width: 40%;
+      border-right: 1px solid black; }
+      #toolbar #container-tools #pitches h3 {
+        margin: 0;
+        font-size: 20px;
+        text-align: center;
+        padding: 3px;
+        border-bottom: 1px solid black; }
+      #toolbar #container-tools #pitches #pitch-container {
+        overflow-x: hidden;
+        overflow-y: scroll; }
+        #toolbar #container-tools #pitches #pitch-container .pitch {
+          cursor: pointer;
+          padding: 3px; }
+          #toolbar #container-tools #pitches #pitch-container .pitch:hover {
+            background-color: white; }
+          #toolbar #container-tools #pitches #pitch-container .pitch.highlight {
+            background-color: white; }
+  #toolbar #sound-tools {
+    width: 38%; }
+    #toolbar #sound-tools #file_name {
+      padding: 2px; }
+    #toolbar #sound-tools button {
+      margin: 0 4px; }
+    #toolbar #sound-tools .waveform {
+      border-left: none; }
+
+#splitter {
+  width: 100vw;
+  height: 100vh; }
+  #splitter #file_upload #drop_zone {
+    border: 1px solid black;
+    margin: 20px auto;
+    padding: 50px 0;
+    width: 50%; }
+  #splitter #waveformContainer {
+    width: 50%;
+    height: 200px;
+    margin: 20px auto; }
+
+.waveform {
+  display: inline-block;
+  border: 1px solid black;
+  width: 100%;
+  height: 55%; }
+
+#editor {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw; }
+  #editor .note-editor {
+    background-color: #2a3433;
+    width: 80%;
+    height: 60%;
+    border: 1px solid black;
+    margin: 40px auto;
+    position: relative;
+    overflow: hidden; }
+    #editor .note-editor .control-panel {
+      background-color: #f0f0f0;
+      width: 100%;
+      height: 60px; }
+    #editor .note-editor .scroll-area {
+      overflow: scroll;
+      width: 100%;
+      position: relative;
+      padding-top: 30px; }
+      #editor .note-editor .scroll-area .side-panel {
+        position: absolute;
+        top: 30px;
+        width: 20px;
+        background-color: #f0f0f0; }
+        #editor .note-editor .scroll-area .side-panel .key-cell {
+          border-bottom: 1px solid black;
+          height: 20px; }
+      #editor .note-editor .scroll-area .scrub-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 30px;
+        background-color: #c8c8c8; }
+      #editor .note-editor .scroll-area .note-row {
+        width: 200%;
+        height: 20px;
+        border-bottom: 1px solid #c86464; }
+
+.ink {
+  display: block;
+  position: absolute;
+  background: #ffa000;
+  border-radius: 0;
+  transform: scale(1);
+  opacity: 0;
+  z-index: 200; }
+
+.animate {
+  animation: ripple 0.3s linear; }
+
+@keyframes ripple {
+  0% {
+    opacity: 1; }
+  /*scale the element to 250% to safely cover the entire link and fade it out */
+  100% {
+    opacity: 0;
+    transform: scale(2);
+    border-radius: 25%; } }
+.keyboard_key {
+  position: relative; }
+
+/*# sourceMappingURL=stylesheet.css.map */

@@ -1,0 +1,4 @@
+enum KeyDirection {
+  UP,
+  DOWN
+}

@@ -1,0 +1,1 @@
+tsc -w & sass --watch src/styles/stylesheet.sass:lib/stylesheet.css & python -m SimpleHTTPServer 8080
