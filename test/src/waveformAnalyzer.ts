@@ -5,8 +5,8 @@ class WaveformAnalyzer extends DomElt {
   private ctx: CanvasRenderingContext2D;
 
   // the button elements to set the input and output of the sound
-  // private setIn: JQW;
-  // private setOut: JQW;
+  private setIn: HTMLElement;
+  private setOut: HTMLElement;
 
   private inTime = 0;
   private outTime = 0;
@@ -44,12 +44,45 @@ class WaveformAnalyzer extends DomElt {
 
     this.elt.appendChild(this.canvas);
 
+    // create the set points buttons and listeners
+    let setPoints = DomUtils.makeElt("div", {"style" : "display: inline-block;"}, "");
+    this.elt.appendChild(setPoints);
+
+    // set up the setIn and setOut buttons
+    this.setIn = DomUtils.makeElt("button", {}, "Set in point");
+    this.setOut = DomUtils.makeElt("button", {}, "Set out point");
+    setPoints.appendChild(this.setIn);
+    setPoints.appendChild(this.setOut);
+
+    // stop mouse down event propegating to parent element
+    this.setIn.onmousedown = (e: MouseEvent) => {
+      e.stopPropagation();
+    };
+    // stop mouse down event propegating to parent element
+    this.setOut.onmousedown = (e: MouseEvent) => {
+      e.stopPropagation();
+    };
+
+    this.setIn.onclick = () => {
+      if (this.currentSound && this.cursorAt < this.outTime) {
+        this.inTime = this.cursorAt;
+        if (this.currentSound) this.currentSound.startTime = this.inTime;
+        this.nextPos = 0;
+      }
+    };
+    this.setOut.onclick = () => {
+      if (this.currentSound && this.cursorAt > this.inTime) {
+        this.outTime = this.cursorAt;
+        if (this.currentSound) this.currentSound.endTime = this.outTime;
+      }
+    };
+
     // set scrubbing listeners
     this.elt.onmousedown = (e: MouseEvent) => {
       this.setNextPos(e.pageX);
       this.mousedown = true;
     };
-    this.elt.onmousedown = (e: MouseEvent) => {
+    this.elt.onmousemove = (e: MouseEvent) => {
       if (this.mousedown)
        this.setNextPos(e.pageX);
     };
@@ -72,8 +105,8 @@ class WaveformAnalyzer extends DomElt {
       }
 
       // clamp scale and offset, offset depends on scale
-      this.scale = Math.min(Math.max(this.scale, (this.canvas.width - this.padding * 2) / this.ch1.length), 0.33);
-      this.offset = Math.min(Math.max(this.offset, - this.ch1.length * this.scale + this.canvas.width - this.padding), this.padding);
+      this.scale = Math.min(Math.max(this.scale, (this.canvas.offsetWidth - this.padding * 2) / this.ch1.length), 0.33);
+      this.offset = Math.min(Math.max(this.offset, - this.ch1.length * this.scale + this.canvas.offsetWidth - this.padding), this.padding);
 
       e.preventDefault();
       return false;
@@ -90,7 +123,7 @@ class WaveformAnalyzer extends DomElt {
       clearInterval(this.refreshInterval);
 
     if (this.ctx !== undefined)
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight);
 
     this.ch1 = undefined;
     this.ch2 = undefined;
@@ -121,9 +154,9 @@ class WaveformAnalyzer extends DomElt {
   public setBuffer(buffer: AudioBuffer) {
     // initialize the canvas and context
     if (this.ctx === undefined) {
-      this.canvas.width = Math.floor(this.elt.width);
-      this.canvas.height = this.elt.height;
-      this.ctx = this.canvas.getContext("2d");
+      this.canvas.setAttribute("width", Math.floor(this.elt.offsetWidth) + "px");
+      this.canvas.setAttribute("height", this.elt.offsetHeight + "px");
+      this.ctx = (this.canvas as HTMLCanvasElement).getContext("2d");
     }
 
     this.currentSound = new Sample(buffer, false);
@@ -134,8 +167,11 @@ class WaveformAnalyzer extends DomElt {
     this.sampleRate = buffer.sampleRate;
     this.nextPos = 0;
 
+    this.inTime = 0;
+    this.outTime = buffer.duration;
+
     // initialize the scale
-    this.scale = (this.canvas.width - this.padding * 2) / this.ch1.length;
+    this.scale = (this.canvas.offsetWidth - this.padding * 2) / this.ch1.length;
 
     this.refreshInterval = setInterval(() => {
       this.refreshCanvas();
@@ -190,12 +226,12 @@ class WaveformAnalyzer extends DomElt {
     this.ctx.fillStyle = "black";
 
     // compute the scales
-    let yScale = this.canvas.height / 4;
+    let yScale = this.canvas.offsetHeight / 4;
 
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight);
 
     let start = Math.floor(-this.offset / (this.scale));
-    let end = Math.ceil((this.canvas.width - this.offset) / this.scale);
+    let end = Math.ceil((this.canvas.offsetWidth - this.offset) / this.scale);
 
     let constance = 5;
 
@@ -211,9 +247,9 @@ class WaveformAnalyzer extends DomElt {
       for (let i = start; i < end; i += interval) {
         this.ctx.lineTo(this.offset + i * this.scale, (this.ch1[i] + 1) * yScale);
       }
-      if (this.offset + this.ch1.length * this.scale - this.canvas.width < 0)
+      if (this.offset + this.ch1.length * this.scale - this.canvas.offsetWidth < 0)
         this.ctx.lineTo(this.offset + this.ch1.length * this.scale, yScale);
-      this.ctx.lineTo(this.canvas.width, yScale);
+      this.ctx.lineTo(this.canvas.offsetWidth, yScale);
       this.ctx.stroke();
 
       // draw second channel
@@ -224,17 +260,17 @@ class WaveformAnalyzer extends DomElt {
       for (let i = start; i < end; i += interval) {
         this.ctx.lineTo(this.offset + i * this.scale, (this.ch2[i] + 3) * yScale);
       }
-      if (this.offset + this.ch1.length * this.scale - this.canvas.width < 0)
+      if (this.offset + this.ch1.length * this.scale - this.canvas.offsetWidth < 0)
         this.ctx.lineTo(this.offset + this.ch1.length * this.scale, yScale * 3);
-      this.ctx.lineTo(this.canvas.width, yScale * 3);
+      this.ctx.lineTo(this.canvas.offsetWidth, yScale * 3);
       this.ctx.stroke();
 
-      this.cursorAt = (this.currentSound.isPlaying() ? this.currentSound.getPos() : this.nextPos + this.inTime);
+      this.cursorAt = (this.currentSound.isPlaying() ? this.currentSound.getPos() : (this.nextPos + this.inTime));
 
       this.drawCursorAtTime(this.cursorAt, 0);
       this.ctx.fillStyle =  "blue";
-      // this.drawCursorAtTime(this.inTime, 6);
-      // this.drawCursorAtTime(this.outTime, 6);
+      this.drawCursorAtTime(this.inTime, 6);
+      this.drawCursorAtTime(this.outTime, 6);
     }
   }
 
@@ -243,6 +279,6 @@ class WaveformAnalyzer extends DomElt {
    */
   private drawCursorAtTime(x: number, padding: number) {
     // seconds * samples per second * pixels per sample
-    this.ctx.fillRect((x * this.sampleRate * this.scale) + this.offset - 1, padding, 2, this.canvas.height - padding * 2);
+    this.ctx.fillRect((x * this.sampleRate * this.scale) + this.offset - 1, padding, 2, this.canvas.offsetHeight - padding * 2);
   }
 }

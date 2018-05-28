@@ -25,7 +25,7 @@ class Sample {
 
   public getPos(): number {
     if (this.isPlaying) {
-      return Globals.audioCtx.currentTime - this.prevStartedTime;
+      return Globals.audioCtx.currentTime - this.prevStartedTime + this.startTime;
     } else {
       return 0;
     }

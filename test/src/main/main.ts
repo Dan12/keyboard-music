@@ -8,8 +8,6 @@
 /// <reference path="../zip.ts"/>
 /// <reference path="../soundLib.ts"/>
 
-
-/// <reference path="../libraries/misc.d.ts"/>
 /// <reference path="../domUtils.ts"/>
 /// <reference path="../waveformAnalyzer.ts"/>
 
@@ -112,6 +110,15 @@ Backend.getAsAudioBuffer("resources/eq/sounds/chain1/a0.mp3").then((data: ArrayB
     analyze.setBuffer(audioBuf);
   });
 });
+
+class AnalyzeIO extends AbstractIO<KeyboardMessage, void> {
+  public receiveMessage(msg: KeyboardMessage) {
+    if (msg.keyCode === 32 && msg.direction === KeyDirection.DOWN) {
+      analyze.pressSpace();
+    }
+  }
+}
+KeyboardIO.instance.attachListener(new AnalyzeIO);
 
 // TEST
 // let myArrayBuffer = ctx.createBuffer(2, ctx.sampleRate * 3, ctx.sampleRate);
