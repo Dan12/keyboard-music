@@ -36,6 +36,24 @@ class Backend {
         req.send();
     });
   }
+
+  public static getFileBlob(filename: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let req = new XMLHttpRequest();
+        req.open("GET", filename, true);
+        req.responseType = "blob";
+
+        req.onload = (event) => {
+          resolve(req.response);
+        };
+
+        req.onerror = (event) => {
+          reject(event);
+        };
+
+        req.send();
+    });
+  }
 }
 
 interface SoundJSON {

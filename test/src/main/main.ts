@@ -5,6 +5,8 @@
 /// <reference path="../IO/keyboardIO.ts"/>
 /// <reference path="../IO/defaultPadIO.ts"/>
 /// <reference path="../IO/midiIO.ts"/>
+/// <reference path="../zip.ts"/>
+/// <reference path="../soundLib.ts"/>
 
 console.log("hello world");
 
@@ -30,35 +32,33 @@ function loadSound(
   p: number, r: number, c: number, sound: SoundJSON, sounds: Sound[][][],
   playConfig: PadConfiguration[][][], groups: {[id: number]: Sound[]}) {
   if (sound.pitches !== undefined && sound.pitches.length > 0) {
-    Backend.getAsAudioBuffer("resources/eq/sounds/" + sound.pitches[0]).then((buf) => {
-      Globals.fromArray(buf).then((audioBuf) => {
-        let samp = new Sample(audioBuf, sound.loop);
-        let s = new Sound(samp);
-        let sGroups: Sound[] = [];
-        // for (let group of sound.groups) {
-        //   if (!(group in groups)) {
-        //     groups[group] = [];
-        //   }
-        //   groups[group].push(s);
-        //   sGroups.push(groups[group]);
-        // }
-        if (sound.groups.length > 0) {
-          if (sound.groups.length > 1) {
-            console.log("Warning: more than 1 group");
-          }
-          let group = sound.groups[0];
-          if (!(group in groups)) {
-            groups[group] = [];
-          }
-          groups[group].push(s);
-          sGroups = groups[group];
+    SoundLibrary.getFromLib("eq/sounds/" + sound.pitches[0]).then((audioBuf) => {
+      let samp = new Sample(audioBuf, sound.loop);
+      let s = new Sound(samp);
+      let sGroups: Sound[] = [];
+      // for (let group of sound.groups) {
+      //   if (!(group in groups)) {
+      //     groups[group] = [];
+      //   }
+      //   groups[group].push(s);
+      //   sGroups.push(groups[group]);
+      // }
+      if (sound.groups.length > 0) {
+        if (sound.groups.length > 1) {
+          console.log("Warning: more than 1 group");
         }
-        let padConf = new PadConfiguration(sound.hold_to_play, sound.loop, sound.quantization, sGroups);
+        let group = sound.groups[0];
+        if (!(group in groups)) {
+          groups[group] = [];
+        }
+        groups[group].push(s);
+        sGroups = groups[group];
+      }
+      let padConf = new PadConfiguration(sound.hold_to_play, sound.loop, sound.quantization, sGroups);
 
-        sounds[p][r][c] = s;
-        playConfig[p][r][c] = padConf;
-        loaded();
-      });
+      sounds[p][r][c] = s;
+      playConfig[p][r][c] = padConf;
+      loaded();
     });
   } else {
     loaded();
@@ -88,6 +88,14 @@ Backend.getJSON("resources/eq/song.json").then((song) => {
 
   Globals.midiConfig = new MidiConfiguration(sounds);
   Globals.playerConfig = new PlayConfiguration(playConfig);
+});
+
+Backend.getFileBlob("resources/eq/sounds.zip").then((data) => {
+  ZipHandler.loadFile(data, (name: string, data: ArrayBuffer) => {
+    Globals.fromArray(data).then((audioBuf) => {
+        SoundLibrary.addToLib("eq/" + name, audioBuf);
+    });
+  });
 });
 
 // TEST
