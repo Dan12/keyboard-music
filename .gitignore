@@ -5,4 +5,4 @@
 /.sass-cache
 /documentation/*
 
-test/lib
+test/lib/main*
