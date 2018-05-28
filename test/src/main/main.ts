@@ -8,6 +8,11 @@
 /// <reference path="../zip.ts"/>
 /// <reference path="../soundLib.ts"/>
 
+
+/// <reference path="../libraries/misc.d.ts"/>
+/// <reference path="../domUtils.ts"/>
+/// <reference path="../waveformAnalyzer.ts"/>
+
 console.log("hello world");
 
 // Initialization
@@ -90,11 +95,21 @@ Backend.getJSON("resources/eq/song.json").then((song) => {
   Globals.playerConfig = new PlayConfiguration(playConfig);
 });
 
-Backend.getFileBlob("resources/eq/sounds.zip").then((data) => {
-  ZipHandler.loadFile(data, (name: string, data: ArrayBuffer) => {
-    Globals.fromArray(data).then((audioBuf) => {
-        SoundLibrary.addToLib("eq/" + name, audioBuf);
-    });
+// Backend.getFileBlob("resources/eq/sounds.zip").then((data) => {
+//   ZipHandler.loadFile(data, (name: string, data: ArrayBuffer) => {
+//     Globals.fromArray(data).then((audioBuf) => {
+//         SoundLibrary.addToLib("eq/" + name, audioBuf);
+//     });
+//   });
+// });
+
+let body = document.getElementsByTagName("body")[0];
+let analyze = new WaveformAnalyzer();
+body.appendChild(analyze.getElt());
+Backend.getAsAudioBuffer("resources/eq/sounds/chain1/a0.mp3").then((data: ArrayBuffer) => {
+  Globals.fromArray(data).then((audioBuf) => {
+    console.log("setting");
+    analyze.setBuffer(audioBuf);
   });
 });
 

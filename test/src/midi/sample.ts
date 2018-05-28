@@ -1,13 +1,15 @@
 class Sample {
 
   public readonly buffer: AudioBuffer;
-  public readonly startTime: number;
-  public readonly endTime: number;
+  public startTime: number;
+  public endTime: number;
   public readonly loop: boolean;
 
   private node: AudioBufferSourceNode;
 
   private playing: boolean;
+
+  private prevStartedTime: number;
 
   constructor(buffer: AudioBuffer, loop: boolean) {
     this.buffer = buffer;
@@ -15,6 +17,18 @@ class Sample {
 
     this.startTime = 0;
     this.endTime = this.buffer.duration;
+  }
+
+  public duration(): number {
+    return this.buffer.duration;
+  }
+
+  public getPos(): number {
+    if (this.isPlaying) {
+      return Globals.audioCtx.currentTime - this.prevStartedTime;
+    } else {
+      return 0;
+    }
   }
 
   /**
@@ -39,6 +53,13 @@ class Sample {
       this.node.start(when, this.startTime);
     } else {
       this.node.start(when, this.startTime, this.endTime - this.startTime);
+    }
+
+    // set the start time so we can seek later
+    if (when < Globals.audioCtx.currentTime) {
+      this.prevStartedTime = Globals.audioCtx.currentTime;
+    } else {
+      this.prevStartedTime = when;
     }
 
     this.playing = true;

@@ -6,3 +6,5 @@
 /documentation/*
 
 test/lib/main*
+test/lib/stylesheet*
+test/.sass-cache

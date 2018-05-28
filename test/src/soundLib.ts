@@ -3,8 +3,8 @@ class SoundLibrary {
 
   /**
    * Adds the data to the sound library at the given path.
-   * If there is a promise for it, then resolve with the promise
-   * first, and then set.
+   * If there is a promise for it resolve with the promise
+   * first and then set.
    * @param path the path of the data
    * @param data the data
    */
