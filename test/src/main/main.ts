@@ -10,6 +10,9 @@
 
 /// <reference path="../domUtils.ts"/>
 /// <reference path="../waveformAnalyzer.ts"/>
+/// <reference path="../audioAnalyzer.ts"/>
+/// <reference path="../analyzeIO.ts"/>
+/// <reference path="../splitter.ts"/>
 
 console.log("hello world");
 
@@ -102,23 +105,31 @@ Backend.getJSON("resources/eq/song.json").then((song) => {
 // });
 
 let body = document.getElementsByTagName("body")[0];
-let analyze = new WaveformAnalyzer();
+let analyze = new AudioAnalyzer();
 body.appendChild(analyze.getElt());
-Backend.getAsAudioBuffer("resources/eq/sounds/chain1/a0.mp3").then((data: ArrayBuffer) => {
-  Globals.fromArray(data).then((audioBuf) => {
-    console.log("setting");
-    analyze.setBuffer(audioBuf);
-  });
-});
 
-class AnalyzeIO extends AbstractIO<KeyboardMessage, void> {
-  public receiveMessage(msg: KeyboardMessage) {
-    if (msg.keyCode === 32 && msg.direction === KeyDirection.DOWN) {
-      analyze.pressSpace();
-    }
-  }
-}
-KeyboardIO.instance.attachListener(new AnalyzeIO);
+// WAVEFORM ANAZYLER TEST
+// let analyze = new WaveformAnalyzer();
+// body.appendChild(analyze.getElt());
+// Backend.getAsAudioBuffer("resources/eq/sounds/chain1/a0.mp3").then((data: ArrayBuffer) => {
+//   Globals.fromArray(data).then((audioBuf) => {
+//     console.log("setting");
+//     analyze.setBuffer(audioBuf);
+//   });
+// });
+
+// class AnalyzeIO extends AbstractIO<KeyboardMessage, void> {
+//   public receiveMessage(msg: KeyboardMessage) {
+//     if (msg.keyCode === 32) {
+//       if (msg.direction === KeyDirection.DOWN) {
+//         analyze.pressSpace();
+//       }
+//       // space presses recently selected button on chrome
+//       msg.event.preventDefault();
+//     }
+//   }
+// }
+// KeyboardIO.instance.attachListener(new AnalyzeIO);
 
 // TEST
 // let myArrayBuffer = ctx.createBuffer(2, ctx.sampleRate * 3, ctx.sampleRate);

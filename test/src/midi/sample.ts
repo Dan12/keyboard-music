@@ -11,22 +11,32 @@ class Sample {
 
   private prevStartedTime: number;
 
-  constructor(buffer: AudioBuffer, loop: boolean) {
+  constructor(buffer: AudioBuffer, loop: boolean, startTime?: number, endTime?: number) {
     this.buffer = buffer;
     this.loop = loop;
 
-    this.startTime = 0;
-    this.endTime = this.buffer.duration;
+    this.startTime = startTime || 0;
+    this.endTime = endTime || this.buffer.duration;
   }
 
-  public duration(): number {
+  public bufferDuration(): number {
     return this.buffer.duration;
   }
 
+  public duration(): number {
+    return this.endTime - this.startTime;
+  }
+
+  public getBufferPos(): number {
+    return this.getPos() + this.startTime;
+  }
+
+  // if you want absolute buffer pos, add this.startTime
   public getPos(): number {
     if (this.isPlaying) {
-      return Globals.audioCtx.currentTime - this.prevStartedTime + this.startTime;
+      return Globals.audioCtx.currentTime - this.prevStartedTime;
     } else {
+      // TODO maybe add an most recently ended timestamp to compute paused position
       return 0;
     }
   }

@@ -7,11 +7,11 @@ class KeyboardIO extends AbstractIO<void, KeyboardMessage> {
   private constructor() {
     super();
     document.onkeydown = (event) => {
-      this.sendMessage(new KeyboardMessage(event.keyCode, KeyDirection.DOWN));
+      this.sendMessage(new KeyboardMessage(event.keyCode, KeyDirection.DOWN, event));
     };
 
     document.onkeyup = (event) => {
-      this.sendMessage(new KeyboardMessage(event.keyCode, KeyDirection.UP));
+      this.sendMessage(new KeyboardMessage(event.keyCode, KeyDirection.UP, event));
     };
   }
 

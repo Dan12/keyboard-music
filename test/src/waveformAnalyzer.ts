@@ -151,6 +151,14 @@ class WaveformAnalyzer extends DomElt {
     this.currentSound.endTime = time;
   }
 
+  public getInTime() {
+    return this.inTime;
+  }
+
+  public getOutTime() {
+    return this.outTime;
+  }
+
   public setBuffer(buffer: AudioBuffer) {
     // initialize the canvas and context
     if (this.ctx === undefined) {
@@ -188,9 +196,13 @@ class WaveformAnalyzer extends DomElt {
       // if the sound is playing
       if (this.currentSound.isPlaying()) {
         this.currentSound.stop();
-        this.nextPos = this.currentSound.getPos() - this.inTime;
+        this.nextPos = this.currentSound.getBufferPos() - this.inTime;
       } else {
-        this.currentSound.startTime = this.nextPos + this.inTime;
+        if (this.nextPos + this.inTime < this.currentSound.endTime) {
+          this.currentSound.startTime = this.nextPos + this.inTime;
+        } else {
+          this.currentSound.startTime = this.inTime;
+        }
         this.currentSound.start(0);
 
         this.nextPos = 0;
@@ -212,8 +224,8 @@ class WaveformAnalyzer extends DomElt {
 
       if (this.nextPos < 0)
         this.nextPos = 0;
-      if (this.nextPos > this.currentSound.duration())
-        this.nextPos = this.currentSound.duration();
+      if (this.nextPos > this.currentSound.bufferDuration())
+        this.nextPos = this.currentSound.bufferDuration();
 
       this.nextPos -= this.inTime;
     }
@@ -265,7 +277,7 @@ class WaveformAnalyzer extends DomElt {
       this.ctx.lineTo(this.canvas.offsetWidth, yScale * 3);
       this.ctx.stroke();
 
-      this.cursorAt = (this.currentSound.isPlaying() ? this.currentSound.getPos() : (this.nextPos + this.inTime));
+      this.cursorAt = (this.currentSound.isPlaying() ? this.currentSound.getBufferPos() : (this.nextPos + this.inTime));
 
       this.drawCursorAtTime(this.cursorAt, 0);
       this.ctx.fillStyle =  "blue";
