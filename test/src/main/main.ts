@@ -10,9 +10,9 @@
 
 /// <reference path="../utils/domUtils.ts"/>
 /// <reference path="../waveform/waveformDisplay.ts"/>
-/// <reference path="../waveform/audioAnalyzer.ts"/>
+/// <reference path="../waveform/audioSplitter.ts"/>
 /// <reference path="../waveform/analyzeIO.ts"/>
-/// <reference path="../waveform/splitter.ts"/>
+/// <reference path="../waveform/audioAnalyzer.ts"/>
 
 console.log("hello world");
 
@@ -105,8 +105,10 @@ Backend.getJSON("resources/eq/song.json").then((song) => {
 // });
 
 let body = document.getElementsByTagName("body")[0];
-let analyze = new AudioAnalyzer();
-body.appendChild(analyze.getElt());
+
+// AUDIO ANALYZER TEST
+// let analyze = new AudioAnalyzer();
+// body.appendChild(analyze.getElt());
 
 // WAVEFORM ANAZYLER TEST
 // let analyze = new WaveformAnalyzer();

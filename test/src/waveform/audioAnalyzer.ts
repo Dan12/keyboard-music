@@ -1,112 +1,64 @@
-// Audio analyzer - upload audio file and split it into samples
+class AudioAnalyzer {
+  public static emptyTol = 0.0017; // under this is considered silence
+  public static emptyLen = 200;    // have to have tolerated silence for 20 bytes to be considered in the silent section
+  public static moveBufferHead = -600;   // move buffer head back to compensate for immediate start to sound and possible cutoffs
+  public static moveBufferTail = -1000;   // move buffer length back due to the amount of empty space afterwards
+  public static roundBuffer = 128;    // round output buffer to have nice chunks and get ride of static overlay
 
-class AudioAnalyzer extends DomElt {
-  private idx = 0;
-  private samples: Sample[] = [];
+  /** @return a 2D array of start and end points for each sound */
+  public static analyze(buffer: AudioBuffer): number[][] {
+    let ch1 = buffer.getChannelData(0);
+    let ch2 = buffer.getChannelData(1);
 
-  private waveform: WaveformDisplay;
-  private analyzeSections: number[][];
-  private buffer: AudioBuffer;
+    let ret = <number[][]>[];
 
-  private nextButton: HTMLElement;
-  private prevButton: HTMLElement;
-  private makeSample: HTMLElement;
+    // scan for silence and find audio start and end points and use those points to split audio
+    for (let i = 0; i < ch1.length; i++) {
+      // scan until no silence for one byte in both channels
+      if (Math.abs(ch1[i]) > AudioAnalyzer.emptyTol && Math.abs(ch2[i]) > AudioAnalyzer.emptyTol) {
+        let startPos = i;
 
-  constructor() {
-    super("div", {"class": "analyzer"}, "");
+        // make sure that audio is not silent for at least emptyLen number of bytes
+        let isValid = true;
+        for (; i < startPos + AudioAnalyzer.emptyLen; i++) {
+          if (Math.abs(ch1[i]) <= AudioAnalyzer.emptyTol && Math.abs(ch2[i]) <= AudioAnalyzer.emptyTol) {
+            isValid = false;
+            break;
+          }
+        }
 
-    this.waveform = new WaveformDisplay();
-    this.waveform.getElt().classList.add("hidden");
+        // valid audio sample determined
+        if (isValid) {
+          while (i < ch1.length) {
+            i++;
+            // scan until one byte of silence detected
+            if (Math.abs(ch1[i]) <= AudioAnalyzer.emptyTol && Math.abs(ch2[i]) <= AudioAnalyzer.emptyTol) {
+              let endPos = i;
 
-    this.nextButton = DomUtils.makeElt("button", {}, "next");
-    this.prevButton = DomUtils.makeElt("button", {}, "prev");
-    this.makeSample = DomUtils.makeElt("button", {}, "make sample");
+              // make sure that audio is silent for at least emptyTol number of bytes
+              let isOver = true;
+              for (; i < endPos + AudioAnalyzer.emptyLen; i++) {
+                if (Math.abs(ch1[i]) > AudioAnalyzer.emptyTol && Math.abs(ch2[i]) > AudioAnalyzer.emptyTol) {
+                  isOver = false;
+                  break;
+                }
+              }
 
-    this.nextButton.addEventListener("click", () => {
-      if (this.idx < this.analyzeSections.length - 1) {
-        this.idx++;
-        this.setTime(this.idx);
+              // if audio section boundary found, make a new file with the data within the boundaries
+              if (isOver) {
+                startPos += AudioAnalyzer.moveBufferHead;
+                startPos = Math.floor((startPos) / AudioAnalyzer.roundBuffer) * AudioAnalyzer.roundBuffer;
+                endPos += AudioAnalyzer.moveBufferTail;
+                endPos = Math.floor((endPos) / AudioAnalyzer.roundBuffer) * AudioAnalyzer.roundBuffer;
+                ret.push([startPos, endPos]);
+                break;
+              }
+            }
+          }
+        }
       }
-    });
-    this.prevButton.addEventListener("click", () => {
-      if (this.idx > 0) {
-        this.idx--;
-        this.setTime(this.idx);
-      }
-    });
-    this.makeSample.addEventListener("click", () => {
-      const sample = new Sample(this.buffer, false, this.waveform.getInTime(), this.waveform.getOutTime());
-      this.samples.push(sample);
-      const player = DomUtils.makeElt("button", {}, "Play");
-      player.addEventListener("click", () => {
-        sample.start();
-      });
-      this.elt.appendChild(player);
-    });
+    }
 
-    this.nextButton.classList.add("hidden");
-    this.prevButton.classList.add("hidden");
-    this.makeSample.classList.add("hidden");
-
-    this.elt.appendChild(DomUtils.makeElt("label", {}, "Anaylze File: "));
-    const audioUploader = (<HTMLInputElement> DomUtils.makeElt("input", {"type": "file"}, ""));
-    audioUploader.addEventListener("change", () => {
-      if (audioUploader.files.length > 0) {
-        this.handleFile(audioUploader.files[0]);
-      }
-    });
-    this.elt.appendChild(audioUploader);
-
-    // const dropZone = DomUtils.makeElt("div", {"id": "drop_zone"}, "Or drop file here");
-    // this.elt.appendChild(dropZone);
-
-    const waveformContainer = DomUtils.makeElt("div", {"id": "waveform_container"}, "");
-    this.elt.appendChild(waveformContainer);
-    waveformContainer.appendChild(this.waveform.getElt());
-
-    this.elt.appendChild(this.nextButton);
-    this.elt.appendChild(this.prevButton);
-    this.elt.appendChild(this.makeSample);
-
-    const spaceIO = new AnalyzeIO(this.waveform);
-    KeyboardIO.instance.attachListener(spaceIO);
-  }
-
-  private handleFile(file: File) {
-    AudioAnalyzer.fileToArrayBuffer(file).then((buf) => {
-      return Globals.fromArray(buf);
-    }).then((buf) => {
-      this.buffer = buf;
-
-      this.waveform.getElt().classList.remove("hidden");
-      this.waveform.clearData();
-      this.waveform.setBuffer(this.buffer);
-      this.analyzeSections = Splitter.analyze(this.buffer);
-
-      if (this.analyzeSections.length > 0) {
-        this.idx = 0;
-        this.setTime(this.idx);
-
-        this.nextButton.classList.remove("hidden");
-        this.prevButton.classList.remove("hidden");
-        this.makeSample.classList.remove("hidden");
-      }
-    });
-  }
-
-  private setTime(i: number) {
-    const inTime = this.analyzeSections[i][0] / this.buffer.sampleRate;
-    const outTime = this.analyzeSections[i][1] / this.buffer.sampleRate;
-
-    this.waveform.setInTime(inTime);
-    this.waveform.setOutTime(outTime);
-  }
-
-  private static fileToArrayBuffer(file: File) {
-    return new Promise<ArrayBuffer>((resolve, _) => {
-      const fileReader = new FileReader();
-      fileReader.onload = (event: FileReaderProgressEvent) => {resolve(event.target.result); };
-      fileReader.readAsArrayBuffer(file);
-    });
+    return ret;
   }
 }
