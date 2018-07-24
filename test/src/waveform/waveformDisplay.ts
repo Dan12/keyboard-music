@@ -1,6 +1,6 @@
 // canvas element (drag, play pause, set in out)
 
-class WaveformAnalyzer extends DomElt {
+class WaveformDisplay extends DomElt {
   private canvas: HTMLElement;
   private ctx: CanvasRenderingContext2D;
 

@@ -137,7 +137,7 @@ interface JSZipObject {
      * @deprecated since version 3.0
      */
     asUint8Array(): void;
-    //asNodeBuffer(): void;
+    // asNodeBuffer(): void;
 }
 
 interface JSZipFileOptions {
@@ -215,7 +215,7 @@ declare var JSZip: {
 
     prototype: JSZip;
     support: JSZipSupport;
-}
+};
 
 declare module "jszip" {
     export = JSZip;

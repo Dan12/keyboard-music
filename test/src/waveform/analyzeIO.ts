@@ -1,7 +1,7 @@
 class AnalyzeIO extends AbstractIO<KeyboardMessage, void> {
-  private analyze: WaveformAnalyzer;
+  private analyze: WaveformDisplay;
 
-  constructor(analyze: WaveformAnalyzer) {
+  constructor(analyze: WaveformDisplay) {
     super();
     this.analyze = analyze;
   }

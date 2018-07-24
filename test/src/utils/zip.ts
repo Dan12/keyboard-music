@@ -1,4 +1,4 @@
-/// <reference path="libraries/jszip.d.ts"/>
+/// <reference path="../libraries/jszip.d.ts"/>
 
 class ZipHandler {
 

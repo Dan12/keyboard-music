@@ -4,7 +4,7 @@ class AudioAnalyzer extends DomElt {
   private idx = 0;
   private samples: Sample[] = [];
 
-  private waveform: WaveformAnalyzer;
+  private waveform: WaveformDisplay;
   private analyzeSections: number[][];
   private buffer: AudioBuffer;
 
@@ -15,7 +15,7 @@ class AudioAnalyzer extends DomElt {
   constructor() {
     super("div", {"class": "analyzer"}, "");
 
-    this.waveform = new WaveformAnalyzer();
+    this.waveform = new WaveformDisplay();
     this.waveform.getElt().classList.add("hidden");
 
     this.nextButton = DomUtils.makeElt("button", {}, "next");
@@ -105,7 +105,7 @@ class AudioAnalyzer extends DomElt {
   private static fileToArrayBuffer(file: File) {
     return new Promise<ArrayBuffer>((resolve, _) => {
       const fileReader = new FileReader();
-      fileReader.onload = (event) => {resolve(event.target.result); };
+      fileReader.onload = (event: FileReaderProgressEvent) => {resolve(event.target.result); };
       fileReader.readAsArrayBuffer(file);
     });
   }

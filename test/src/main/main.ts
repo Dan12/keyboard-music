@@ -5,14 +5,14 @@
 /// <reference path="../IO/keyboardIO.ts"/>
 /// <reference path="../IO/defaultPadIO.ts"/>
 /// <reference path="../IO/midiIO.ts"/>
-/// <reference path="../zip.ts"/>
-/// <reference path="../soundLib.ts"/>
+/// <reference path="../utils/zip.ts"/>
+/// <reference path="../utils/soundLib.ts"/>
 
-/// <reference path="../domUtils.ts"/>
-/// <reference path="../waveformAnalyzer.ts"/>
-/// <reference path="../audioAnalyzer.ts"/>
-/// <reference path="../analyzeIO.ts"/>
-/// <reference path="../splitter.ts"/>
+/// <reference path="../utils/domUtils.ts"/>
+/// <reference path="../waveform/waveformDisplay.ts"/>
+/// <reference path="../waveform/audioAnalyzer.ts"/>
+/// <reference path="../waveform/analyzeIO.ts"/>
+/// <reference path="../waveform/splitter.ts"/>
 
 console.log("hello world");
 
