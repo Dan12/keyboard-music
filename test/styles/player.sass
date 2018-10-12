@@ -1,0 +1,75 @@
+#player
+  background-color: black
+  width: 100%
+  height: 100%
+  display: flex
+  flex-direction: column
+
+  #buttonContainer
+    color: white
+    border-bottom: 1px solid gray
+    
+    div
+      display: inline-block
+      padding: 10px 20px
+      cursor: pointer
+
+  #bottomContainer
+    overflow: hidden
+    display: flex
+    flex-direction: column
+    color: white
+    position: relative
+
+    #timeline
+      position: absolute
+      text-align: left
+      width: max-content
+      height: 100%
+
+    .beatLine
+      display: inline-block
+      width: 59px
+      border-right: 1px solid gray
+      text-align: right
+      height: 100%
+
+    #bottomSubContainer
+      overflow: hidden
+      display: flex
+      flex-direction: row
+      color: white
+      position: relative
+      border-top: 1px solid blue
+      top: 18px
+
+      #keyContainer
+        align-self: flex-start
+        position: relative
+        border-right: 1px solid red
+        z-index: 10
+        background-color: black
+
+        div
+          border-bottom: 1px solid gray
+
+      #barContainer
+        align-self: flex-start
+        flex: 1
+        position: relative
+
+        .bar
+          height: 18px
+          border-bottom: 1px solid gray
+
+      #noteContainer
+        align-self: flex-start
+        flex: 1
+        position: absolute
+
+        .note
+          position: relative
+          height: 18px
+          width: 60px
+          background: lightblue
+          border-radius: 4px

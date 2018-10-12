@@ -14,6 +14,8 @@
 /// <reference path="../waveform/analyzeIO.ts"/>
 /// <reference path="../waveform/audioAnalyzer.ts"/>
 
+/// <reference path="../player/player.ts"/>
+
 console.log("hello world");
 
 // Initialization
@@ -105,6 +107,8 @@ Backend.getJSON("resources/eq/song.json").then((song) => {
 // });
 
 let body = document.getElementsByTagName("body")[0];
+let player = new Player();
+body.appendChild(player.getElt());
 
 // AUDIO ANALYZER TEST
 // let analyze = new AudioAnalyzer();
