@@ -59,4 +59,8 @@ class NoteManager {
     }
     return null;
   }
+
+  public getNotes() {
+    return this.notes;
+  }
 }

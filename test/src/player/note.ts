@@ -25,8 +25,12 @@ class Note implements Selectable {
     this.noteElem.classList.add("selected");
   }
 
+  public selected() {
+    return this.noteElem.classList.contains("selected");
+  }
+
   public toggleSelect() {
-    if (this.noteElem.classList.contains("selected")) {
+    if (this.selected()) {
       this.noteElem.classList.remove("selected");
     } else {
       this.noteElem.classList.add("selected");

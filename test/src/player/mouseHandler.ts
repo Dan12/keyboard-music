@@ -9,10 +9,13 @@ class MouseHandler {
     let NM = NoteManager.NoteManager();
     let sel = new Selector<Note>();
 
+    player.noteContainer.appendChild(sel.mutliElt);
+
     let moved = false;
     let prevX = 0;
     let prevY = 0;
     let down = false;
+    let deselect = false;
 
     let selectOffsetX = 0;
     let selectOffsetY = 0;
@@ -26,17 +29,25 @@ class MouseHandler {
 
       // set state props
       moved = false;
-      down = true;
       prevX = xPos;
       prevY = yPos;
+      down = true;
 
       // do note manipulation
       let note = NM.getNoteByPos(xPos, yPos);
       if (note) {
-        sel.singleSelect(note);
+        if (sel.getSelected().indexOf(note) === -1) {
+          sel.singleSelect(note);
+        }
         let nxy = note.getNotePos();
         selectOffsetX = xPos - nxy.x;
         selectOffsetY = yPos - nxy.y;
+      } else {
+        deselect = sel.getSelected().length > 0;
+        // console.log(deselect);
+        // console.log(sel.getSelected());
+        sel.deselectAll();
+        sel.startMulti(xPos, yPos);
       }
 
       e.preventDefault();
@@ -57,10 +68,23 @@ class MouseHandler {
         let deltaY = yPos - prevY;
         prevX = xPos;
         prevY = yPos;
-  
-        for (let n of sel.getSelected()) {
-          n.moveNotePos(deltaX, deltaY);
-          n.updateRealNotePos();
+
+        // update multi
+        if (sel.startedMulti()) {
+          sel.updateMultiEnd(xPos, yPos);
+          for (let n of NM.getNotes()) {
+            if (sel.isContained(n.left, n.top, n.length, 16)) {
+              sel.select(n);
+            } else {
+              sel.deselect(n);
+            }
+          }
+        } else {
+          // update positions
+          for (let n of sel.getSelected()) {
+            n.moveNotePos(deltaX, deltaY);
+            n.updateRealNotePos();
+          }
         }
       }
 
@@ -93,22 +117,29 @@ class MouseHandler {
       // set state props
       down = false;
 
-      if (!moved) {
+      if (!moved && !deselect) {
         // do note manipulation
         let note = NM.getNoteByPos(xPos, yPos);
         if (note === null) {
           let newNote = Note.positionToNote(xPos, yPos);
           player.noteContainer.appendChild(newNote.noteElem);
           NM.addNote(newNote);
-          sel.deselect();
+          sel.deselectAll();
         }
       } else {
         for (let n of sel.getSelected()) {
+          // snap to mouse position
           n.moveNotePos(selectOffsetX, selectOffsetY);
+          // update note props
           n.setNoteProps();
+          // set position
           n.updateRealNotePos();
         }
       }
+
+      deselect = false;
+
+      sel.endMulti();
 
       e.preventDefault();
     });
