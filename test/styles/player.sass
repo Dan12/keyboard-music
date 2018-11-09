@@ -31,8 +31,11 @@
       display: inline-block
       width: 59px
       border-right: 1px solid gray
-      text-align: right
+      text-align: left
       height: 100%
+
+      &:first-child
+        margin-left: 23px
 
     #bottomSubContainer
       overflow: hidden
@@ -57,6 +60,7 @@
         align-self: flex-start
         flex: 1
         position: relative
+        z-index: 10
 
         .bar
           height: 18px
@@ -66,10 +70,16 @@
         align-self: flex-start
         flex: 1
         position: absolute
+        left: 22px
 
         .note
-          position: relative
-          height: 18px
-          width: 60px
-          background: lightblue
+          position: absolute
+          height: 16px
+          width: 59px
+          background: rgb(168,214,238)
           border-radius: 4px
+          border: 1px solid rgb(190,235,255)
+          cursor: pointer
+
+          &.selected
+            background: rgb(100,140,200)

@@ -1,8 +1,8 @@
+/// <reference path="noteUtils.ts"/>
+/// <reference path="noteManager.ts"/>
 /// <reference path="note.ts"/>
 
 class Player extends DomElt {
-  private notes: Notes;
-
   private Keys =
     ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=",
      "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]",
@@ -10,6 +10,11 @@ class Player extends DomElt {
      "Z", "X", "C", "V", "B", "N", "M", ", ", ".", "/", "\\s", "NA"];
 
   private numBeats = 40;
+
+  public readonly barContainer: HTMLElement;
+  public readonly noteContainer: HTMLElement;
+  public scrollX = 0;
+  public scrollY = 0;
 
   constructor() {
     super("div", {id: "player"}, "");
@@ -35,50 +40,44 @@ class Player extends DomElt {
     }
     bottomSubContainer.appendChild(keyContainer);
 
-    const barContainer = DomUtils.makeElt("div", {id: "barContainer"}, "");
+    this.barContainer = DomUtils.makeElt("div", {id: "barContainer"}, "");
     for (let i = 0; i < this.Keys.length; i++) {
       const bar = DomUtils.makeElt("div", {class: "bar"}, "");
-      barContainer.appendChild(bar);
+      this.barContainer.appendChild(bar);
     }
 
-    const noteContainer = DomUtils.makeElt("div", {id: "noteContainer"}, "");
-    const note = DomUtils.makeElt("div", {class: "note"}, "");
-    note.style.left = "40px";
-    // note.style.top = "40px";
-    noteContainer.appendChild(note);
+    this.noteContainer = DomUtils.makeElt("div", {id: "noteContainer"}, "");
 
     for (let i = 0; i < this.numBeats; i++) {
       const beatLine = DomUtils.makeElt("div", {class: "beatLine"}, `${i}`);
       timeline.appendChild(beatLine);
     }
 
-    bottomSubContainer.appendChild(barContainer);
-    bottomSubContainer.appendChild(noteContainer);
+    bottomSubContainer.appendChild(this.barContainer);
+    bottomSubContainer.appendChild(this.noteContainer);
 
-    let scrollX = 0;
-    let scrollY = 0;
-    bottomContaier.addEventListener("mousewheel", e => {
-      scrollX -= e.deltaX;
-      scrollY -= e.deltaY;
-      if (scrollX > 0) {
-        scrollX = 0;
+    bottomContaier.addEventListener("mousewheel", (e: WheelEvent) => {
+      this.scrollX -= e.deltaX;
+      this.scrollY -= e.deltaY;
+      if (this.scrollX > 0) {
+        this.scrollX = 0;
       }
       const maxX = timeline.offsetWidth - bottomContaier.offsetWidth;
-      if (scrollX < -maxX) {
-        scrollX = -maxX;
+      if (this.scrollX < -maxX) {
+        this.scrollX = -maxX;
       }
-      if (scrollY > 0) {
-        scrollY = 0;
+      if (this.scrollY > 0) {
+        this.scrollY = 0;
       }
       // 19 = bottom.top+1
-      const maxY = barContainer.offsetHeight + 19 - bottomContaier.offsetHeight;
-      if (scrollY < -maxY) {
-        scrollY = -maxY;
+      const maxY = this.barContainer.offsetHeight + 19 - bottomContaier.offsetHeight;
+      if (this.scrollY < -maxY) {
+        this.scrollY = -maxY;
       }
-      keyContainer.setAttribute("style", "top: " + scrollY + "px");
-      timeline.setAttribute("style", "left: " + scrollX + "px");
-      barContainer.setAttribute("style", "top: " + scrollY + "px");
-      noteContainer.setAttribute("style", "left: " + scrollX + "px; top: " + scrollY + "px");
+      keyContainer.setAttribute("style", "top: " + this.scrollY + "px");
+      timeline.setAttribute("style", "left: " + this.scrollX + "px");
+      this.barContainer.setAttribute("style", "top: " + this.scrollY + "px");
+      this.noteContainer.setAttribute("style", "left: " + (this.scrollX + 22) + "px; top: " + this.scrollY + "px");
       e.preventDefault();
     });
   }
