@@ -17,6 +17,9 @@
 /// <reference path="../player/player.ts"/>
 /// <reference path="../player/playerEventHandler.ts"/>
 
+/// <reference path="../keyboard/keyboard.ts"/>
+/// <reference path="../keyboard/keyboardMidiIO.ts"/>
+
 console.log("hello world");
 
 // Initialization
@@ -82,7 +85,7 @@ Backend.getJSON("resources/eq/song.json").then((song) => {
     undefined);
   let playConfig: PadConfiguration[][][] = Globals.defaultArr(
     [song.soundpacks.length, song.soundpacks[0].length, song.soundpacks[0][0].length],
-    undefined);
+    PadConfiguration.NoConfig);
 
   for (let p = 0; p < song.soundpacks.length; p++) {
     // groups by pack
@@ -99,15 +102,22 @@ Backend.getJSON("resources/eq/song.json").then((song) => {
   Globals.playerConfig = new PlayConfiguration(playConfig);
 });
 
-// Backend.getFileBlob("resources/eq/sounds.zip").then((data) => {
-//   ZipHandler.loadFile(data, (name: string, data: ArrayBuffer) => {
-//     Globals.fromArray(data).then((audioBuf) => {
-//         SoundLibrary.addToLib("eq/" + name, audioBuf);
-//     });
-//   });
-// });
+Backend.getFileBlob("resources/eq/sounds.zip").then((data) => {
+  ZipHandler.loadFile(data, (name: string, data: ArrayBuffer) => {
+    Globals.fromArray(data).then((audioBuf) => {
+        SoundLibrary.addToLib("eq/" + name, audioBuf);
+    });
+  });
+});
 
 let body = document.getElementsByTagName("body")[0];
+
+let keyboard = new Keyboard();
+body.appendChild(keyboard.getElt());
+let keyboardIO = new KeyboardMidiIO(keyboard);
+padIO.attachListener(keyboardIO);
+
+// PLAYER TEST
 // let player = new Player();
 // body.appendChild(player.getElt());
 // let pEventHandler = new PlayerEventHandler(player);

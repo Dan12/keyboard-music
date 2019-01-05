@@ -721,7 +721,7 @@ class KeyboardUtils {
                 return { rows: 8, cols: 8 };
             case KeyBoardType.DOUBLE:
                 return { rows: 8, cols: 11 };
-            default:
+            default: // standard
                 return { rows: 4, cols: 12 };
         }
     }
@@ -850,38 +850,38 @@ class SoundPackSwitcher extends DomElement {
         this.unhighlightCurrent();
         if (this.type === SoundPackSwitcherType.ARROWS) {
             switch (keyCode) {
-                case 39:
+                case 39: // right
                     SongManager.getInstance().setSoundPack(3);
                     break;
-                case 37:
+                case 37: // left
                     SongManager.getInstance().setSoundPack(0);
                     break;
-                case 38:
+                case 38: // up
                     SongManager.getInstance().setSoundPack(1);
                     break;
-                case 40:
+                case 40: // down
                     SongManager.getInstance().setSoundPack(2);
                     break;
             }
         }
         else {
             switch (keyCode) {
-                case 39:
+                case 39: // right
                     if (SongManager.getInstance().getCurrentSoundPack() < SongManager.getSong().getNumPacks() - 1)
                         SongManager.getInstance().setSoundPack(SongManager.getInstance().getCurrentSoundPack() + 1);
                     else
                         SongManager.getInstance().setSoundPack(0);
                     break;
-                case 37:
+                case 37: // left
                     if (SongManager.getInstance().getCurrentSoundPack() > 0)
                         SongManager.getInstance().setSoundPack(SongManager.getInstance().getCurrentSoundPack() - 1);
                     else
                         SongManager.getInstance().setSoundPack(SongManager.getSong().getNumPacks() - 1);
                     break;
-                case 38:
+                case 38: // up
                     SongManager.getInstance().setSoundPack(SongManager.getSong().getNumPacks() - 1);
                     break;
-                case 40:
+                case 40: // down
                     SongManager.getInstance().setSoundPack(0);
                     break;
             }
@@ -1064,6 +1064,7 @@ class Keyboard extends DomElement {
                 // if user has to hold, modifier is down
                 if (this.modifierHold)
                     this.modifierActive = true;
+                // if user can press and release, modifier is toggled on key down
                 else
                     this.modifierActive = !this.modifierActive;
                 this.changeModiferKeys();
@@ -3821,7 +3822,7 @@ function ModuleLoader(main_element) {
     main_element.append(Editor.getInstance().asElement());
     // initialize the mode handler
     ModeHandler.init();
-    ModeHandler.setMode(3 /* SPLITTER */);
+    ModeHandler.setMode(0 /* KEYBOARD */);
     // initialize the mouse payload listener on the main element
     MousePayload.initialize(main_element);
     // initilize the event propegator

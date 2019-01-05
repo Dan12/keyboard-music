@@ -52,6 +52,9 @@ class DefaultPadIO extends AbstractIO<KeyboardMessage, PadMessage> {
       }
     } else {
       this.curPad = soundpackKey;
+      if (msg.direction === KeyDirection.DOWN) {
+        this.sendMessage(new PadMessage(msg.direction, this.curPad, -1, -1));
+      }
     }
   }
 }

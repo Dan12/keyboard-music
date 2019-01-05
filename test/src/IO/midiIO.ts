@@ -6,6 +6,7 @@ class MidiIO extends AbstractIO<PadMessage, void> {
   private soundpack = 0;
 
   public receiveMessage(msg: PadMessage) {
+    Globals.audioCtx.resume();
     let c = Globals.playerConfig.getPadConfig(msg.pack, msg.row, msg.col);
     if (c !== PadConfiguration.NoConfig) {
 

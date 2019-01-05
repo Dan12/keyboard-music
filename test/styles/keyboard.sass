@@ -1,0 +1,44 @@
+#keyboard-container
+  width: 100vw
+  height: 100vh
+
+  #keyboard
+    display: inline-block
+    text-align: center
+    padding: 0
+
+    .row
+      padding: 0
+      margin: 0
+
+      .keyboard-key
+        display: inline-block
+        margin: 4px
+        text-align: center
+        border: solid 1px black
+        cursor: default
+        font-size: 35px
+        padding: 9px 2px
+        width: 54px
+        height: 40px
+        border-radius: 6px
+
+    #soundpack-info
+      font-size: 20px
+
+    .soundpack-button
+      display: inline-block
+      margin: 2px
+      border: 1px solid black
+      background-color: white
+      font-size: 20px
+      width: 24px
+      height: 24px
+      border-radius: 2px
+
+      &.soundpack-block
+        display: block
+        margin: 2px auto
+
+      &.highlight-soundpack
+        background-color: rgb(255, 160, 0)

@@ -2,12 +2,6 @@
 /// <reference path="note.ts"/>
 
 class Player extends DomElt {
-  private Keys =
-    ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=",
-     "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]",
-     "A", "S", "D", "F", "G", "H", "J", "K", "L", ";", "'", "\\n",
-     "Z", "X", "C", "V", "B", "N", "M", ", ", ".", "/", "\\s", "NA"];
-
   private numBeats = 40;
 
   public readonly barContainer: HTMLElement;
@@ -34,13 +28,13 @@ class Player extends DomElt {
     bottomContaier.appendChild(bottomSubContainer);
 
     const keyContainer = DomUtils.makeElt("div", {id: "keyContainer"}, "");
-    for (let i = 0; i < this.Keys.length; i++) {
-      keyContainer.appendChild(DomUtils.makeElt("div", {}, this.Keys[i]));
+    for (let i = 0; i < Globals.DefaultKeyStrings.length; i++) {
+      keyContainer.appendChild(DomUtils.makeElt("div", {}, Globals.DefaultKeyStrings[i]));
     }
     bottomSubContainer.appendChild(keyContainer);
 
     this.barContainer = DomUtils.makeElt("div", {id: "barContainer"}, "");
-    for (let i = 0; i < this.Keys.length; i++) {
+    for (let i = 0; i < Globals.DefaultKeyStrings.length; i++) {
       const bar = DomUtils.makeElt("div", {class: "bar"}, "");
       this.barContainer.appendChild(bar);
     }

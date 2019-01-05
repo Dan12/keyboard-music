@@ -6,6 +6,12 @@ class Globals {
 
   public static BPM: number;
 
+  public static DefaultKeyStrings =
+    ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=",
+     "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]",
+     "A", "S", "D", "F", "G", "H", "J", "K", "L", ";", "'", "\\n",
+     "Z", "X", "C", "V", "B", "N", "M", ", ", ".", "/", "\\s", "NA"];
+
   public static fromArray(arr: ArrayBuffer): Promise<AudioBuffer> {
     // decodeAudio returns promiseLike or something like that
     return Globals.audioCtx.decodeAudioData(arr) as Promise<AudioBuffer>;
