@@ -15,7 +15,7 @@
 /// <reference path="../waveform/audioAnalyzer.ts"/>
 
 /// <reference path="../player/player.ts"/>
-/// <reference path="../player/mouseHandler.ts"/>
+/// <reference path="../player/playerEventHandler.ts"/>
 
 console.log("hello world");
 
@@ -108,9 +108,10 @@ Backend.getJSON("resources/eq/song.json").then((song) => {
 // });
 
 let body = document.getElementsByTagName("body")[0];
-let player = new Player();
-body.appendChild(player.getElt());
-let mouseHandler = new MouseHandler(player);
+// let player = new Player();
+// body.appendChild(player.getElt());
+// let pEventHandler = new PlayerEventHandler(player);
+// KeyboardIO.instance.attachListener(pEventHandler);
 
 // AUDIO ANALYZER TEST
 // let analyze = new AudioAnalyzer();

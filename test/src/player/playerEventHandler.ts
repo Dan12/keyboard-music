@@ -3,8 +3,9 @@
 /// <reference path="selector.ts"/>
 /// <reference path="note.ts"/>
 
-class MouseHandler {
+class PlayerEventHandler extends AbstractIO<KeyboardMessage, void> {
   public constructor(player: Player) {
+    super();
     let rect = player.barContainer.getBoundingClientRect();
     let NM = NoteManager.NoteManager();
     let sel = new Selector<Note>();
@@ -44,8 +45,6 @@ class MouseHandler {
         selectOffsetY = yPos - nxy.y;
       } else {
         deselect = sel.getSelected().length > 0;
-        // console.log(deselect);
-        // console.log(sel.getSelected());
         sel.deselectAll();
         sel.startMulti(xPos, yPos);
       }
@@ -98,10 +97,15 @@ class MouseHandler {
       xPos -= player.scrollX;
       yPos -= player.scrollY;
 
+      // update state
+      deselect = false;
+
       // do note manipulation
       let note = NM.getNoteByPos(xPos, yPos);
       if (note) {
         note.noteElem.remove();
+        NM.removeNote(note);
+        sel.deselectAll();
       }
 
       e.preventDefault();
@@ -143,5 +147,13 @@ class MouseHandler {
 
       e.preventDefault();
     });
+  }
+
+  public receiveMessage(msg: KeyboardMessage) {
+    if (msg.direction === KeyDirection.DOWN) {
+      // if (msg.keyCode === )
+    } else {
+      // pass
+    }
   }
 }

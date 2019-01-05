@@ -1,4 +1,3 @@
-/// <reference path="noteUtils.ts"/>
 /// <reference path="noteManager.ts"/>
 /// <reference path="note.ts"/>
 
