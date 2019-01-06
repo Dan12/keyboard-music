@@ -18,7 +18,8 @@ class SoundpackSwitcher extends DomElt {
 
     this.soundpackElements[0].classList.add("soundpack-block");
 
-    this.soundpackInfo = DomUtils.makeElt("div", {id: "soundpack-info"}, "Sound Pack: 1");
+    this.soundpackInfo = DomUtils.makeElt("div", {id: "soundpack-info"}, "Sound Pack 1");
+    this.elt.appendChild(this.soundpackInfo);
 
     let tmp = this.soundpackElements[0];
     this.soundpackElements[0] = this.soundpackElements[1];
@@ -34,7 +35,7 @@ class SoundpackSwitcher extends DomElt {
 
     this.soundpackElements[pack].classList.add("highlight-soundpack");
 
-    this.soundpackInfo.innerHTML = `Sound Pack ${pack}`;
+    this.soundpackInfo.innerHTML = `Sound Pack ${pack + 1}`;
   }
 
 }
