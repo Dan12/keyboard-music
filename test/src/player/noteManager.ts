@@ -15,6 +15,11 @@ class NoteManager {
     return this.instance;
   }
 
+  public clear() {
+    this.notes = [];
+    this.playbackIDX = 0;
+  }
+
   public getNoteByPos(x: number, y: number): Note {
     let nb = Note.positionToNotePos(x, y);
     for (let n of this.notes) {
@@ -44,18 +49,18 @@ class NoteManager {
     }
   }
 
-  public startPlayBack(time: number) {
+  public startPlayBack(beat: number) {
     for (let i = 0; i < this.notes.length; i++) {
-      if (this.notes[i].startBeat >= time) {
+      if (this.notes[i].startBeat >= beat) {
         this.playbackIDX = i;
         break;
       }
     }
   }
 
-  public getNextNote(curTime: number) {
-    if (this.notes[this.playbackIDX].startBeat < curTime) {
-      return this.notes[this.playbackIDX];
+  public getNextNote(curBeat: number) {
+    if (this.notes[this.playbackIDX].startBeat < curBeat) {
+      return this.notes[this.playbackIDX++];
     }
     return null;
   }

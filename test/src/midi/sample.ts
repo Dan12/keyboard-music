@@ -77,7 +77,7 @@ class Sample {
       this.playing = false;
     };
 
-    return this.promiseThis(when * 1000);
+    return this.promiseThis((when - Globals.audioCtx.currentTime) * 1000);
   }
 
   /**
@@ -88,7 +88,7 @@ class Sample {
     if (this.node !== undefined) {
       this.node.stop(when);
 
-      return this.promiseThis(when * 1000);
+      return this.promiseThis((when - Globals.audioCtx.currentTime) * 1000);
     } else {
       return this.promiseThis(0);
     }
@@ -100,10 +100,10 @@ class Sample {
 
   /**
    * promise this in timeout ms
-   * @param timout the timeout in ms
+   * @param timeout the timeout in ms
    */
-  private promiseThis(timout: number): Promise<Sample> {
-    if (timout === 0) {
+  private promiseThis(timeout: number): Promise<Sample> {
+    if (timeout <= 0) {
       return new Promise((resolve, reject) => {
         resolve(this);
       });
@@ -111,7 +111,7 @@ class Sample {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve(this);
-      }, timout);
+      }, timeout);
     });
   }
 }

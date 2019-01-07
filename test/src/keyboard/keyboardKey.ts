@@ -32,6 +32,6 @@ class KeyboardKey extends DomElt {
     this.ink.style.left = "0px";
     setTimeout(() => {
       this.ink.classList.add("animate");
-    }, 1);
+    }, 0);
   }
 }

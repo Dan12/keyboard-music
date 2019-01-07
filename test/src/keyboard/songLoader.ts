@@ -1,16 +1,16 @@
 class SongLoader extends DomElt {
   private numLoaded = 0;
   private numWaitingFor = 0;
-  private name: string;
+  private fileName: string;
   private songName: string;
 
   constructor(name: string) {
 
     super("div", {class: "song-loader"}, "");
 
-    this.name = name;
+    this.fileName = name;
 
-    Backend.getJSON(`resources/${this.name}/song.json`).then((song) => {
+    Backend.getJSON<SongJSON>(`resources/${this.fileName}/song.json`).then((song) => {
       Globals.BPM = song.bpm;
       this.songName = song.name;
 
@@ -36,10 +36,10 @@ class SongLoader extends DomElt {
       Globals.playerConfig = new PlayConfiguration(playConfig);
     });
 
-    Backend.getFileBlob(`resources/${this.name}/sounds.zip`).then((data) => {
+    Backend.getFileBlob(`resources/${this.fileName}/sounds.zip`).then((data) => {
       ZipHandler.loadFile(data, (name: string, data: ArrayBuffer) => {
         Globals.fromArray(data).then((audioBuf) => {
-            SoundLibrary.addToLib(`${this.name}/${name}`, audioBuf);
+            SoundLibrary.addToLib(`${this.fileName}/${name}`, audioBuf);
         });
       });
     });
@@ -67,7 +67,7 @@ class SongLoader extends DomElt {
     playConfig: PadConfiguration[][][], groups: {[id: number]: Sound[]}) {
     if (sound.pitches !== undefined && sound.pitches.length > 0) {
       // TODO handle more than 1 pitch
-      SoundLibrary.getFromLib(`${this.name}/sounds/${sound.pitches[0]}`).then((audioBuf) => {
+      SoundLibrary.getFromLib(`${this.fileName}/sounds/${sound.pitches[0]}`).then((audioBuf) => {
         let samp = new Sample(audioBuf, sound.loop);
         let s = new Sound(samp);
         let sGroups: Sound[] = [];

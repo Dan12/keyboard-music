@@ -22,7 +22,7 @@
           "hold_to_play": false,
           "loop": false,
           "groups": [],
-          "quantization": 0
+          "quantization": 1
         },
         {
           "pitches": [

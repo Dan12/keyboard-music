@@ -19,7 +19,7 @@ class MidiIO extends AbstractIO<PadMessage, void> {
         // beats per second
         let bps = Globals.BPM / 60;
         let quantTime = c.quantization / bps;
-        let currTime = Globals.audioCtx.currentTime;
+        let currTime = MidiPlayer.MidiPlayer().getCurrentTime();
         let alreadyElapsed = (currTime * scalar) % (quantTime * scalar);
         timeOffset = currTime + quantTime - (alreadyElapsed / scalar);
       }

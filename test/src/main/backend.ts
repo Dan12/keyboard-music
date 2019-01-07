@@ -19,7 +19,7 @@ class Backend {
     });
   }
 
-  public static getJSON(filename: string): Promise<SongJSON> {
+  public static getJSON<T>(filename: string): Promise<T> {
     return new Promise((resolve, reject) => {
       let req = new XMLHttpRequest();
         req.open("GET", filename, true);
@@ -68,4 +68,15 @@ interface SongJSON {
   bpm: number;
   name: string;
   soundpacks: SoundJSON[][][];
+}
+
+interface MidiNote {
+  note: number;
+  beat: number;
+  length: number;
+}
+
+interface MidiJSON {
+  name: string;
+  song_data: MidiNote[];
 }

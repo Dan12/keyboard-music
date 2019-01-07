@@ -21,7 +21,9 @@
 /// <reference path="../keyboard/keyboardMidiIO.ts"/>
 /// <reference path="../keyboard/songLoader.ts"/>
 
-console.log("hello world");
+/// <reference path="../player/midiLoader.ts"/>
+/// <reference path="../player/miniPlayer.ts"/>
+/// <reference path="../player/midiPlayer.ts"/>
 
 // Initialization
 let padIO = new DefaultPadIO();
@@ -34,13 +36,25 @@ Globals.BPM = 120;
 
 let body = document.getElementsByTagName("body")[0];
 
-let eqLoader = new SongLoader("eq");
-
+// MAIN SCREEN TEST
 let keyboard = new Keyboard();
 body.appendChild(keyboard.getElt());
-keyboard.keyboard.prepend(eqLoader.getElt());
 let keyboardIO = new KeyboardMidiIO(keyboard);
 padIO.attachListener(keyboardIO);
+
+let loadButton = DomUtils.makeElt("div", {class: "load-button"}, "Load Equinox");
+loadButton.addEventListener("click", () => {
+  let eqLoader = new SongLoader("eq");
+  keyboard.keyboard.prepend(eqLoader.getElt());
+  body.removeChild(loadButton);
+});
+body.prepend(loadButton);
+
+let ml = new MidiLoader("eq/eq_0_midi");
+
+let miniPlayer = new MiniPlayer();
+body.appendChild(miniPlayer.getElt());
+MidiPlayer.MidiPlayer().attachListener(padIO);
 
 // PLAYER TEST
 // let player = new Player();

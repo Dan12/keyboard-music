@@ -21,6 +21,7 @@ class PlayerEventHandler extends AbstractIO<KeyboardMessage, void> {
     let selectOffsetX = 0;
     let selectOffsetY = 0;
 
+    // TODO cleanup
     player.barContainer.addEventListener("mousedown", e => {
       let xPos = e.pageX - rect.left;
       let yPos = e.pageY - rect.top;

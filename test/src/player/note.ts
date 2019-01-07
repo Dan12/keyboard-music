@@ -59,7 +59,7 @@ class Note implements Selectable {
   public setNotePosition() {
     this.left = this.startBeat * 60;
     this.top = this.noteID * 19;
-    this.length = this.length * 59;
+    this.width = this.length * 59;
   }
 
   /**
@@ -68,7 +68,7 @@ class Note implements Selectable {
   public updateRealNotePos() {
     this.noteElem.style.top = this.top + "px";
     this.noteElem.style.left = this.left + "px";
-    this.noteElem.style.width = this.length + "px";
+    this.noteElem.style.width = this.width + "px";
   }
 
   /**
@@ -102,5 +102,9 @@ class Note implements Selectable {
     this.noteID = Math.floor(this.top / 19);
     this.left = this.startBeat * 60;
     this.top = this.noteID * 19;
+  }
+
+  public isDone(beat: number) {
+    return beat >= this.startBeat + this.length;
   }
 }
