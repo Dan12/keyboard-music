@@ -17,6 +17,7 @@ $secondary-color: rgb(255, 160, 0)
 @import player
 @import keyboard
 @import ripple
+@import miniPlayer
 
 .hidden
   display: none
@@ -26,22 +27,3 @@ $secondary-color: rgb(255, 160, 0)
   padding: 2px 6px
   cursor: pointer
   display: inline-block
-
-#mini-player
-
-  #play-pause
-    display: inline-block
-    border: 1px solid black
-
-  #timeline-bar
-    width: 200px
-    height: 30px
-    border: 1px solid black
-    display: inline-block
-    position: relative
-
-    #timeline-progress-bar
-      position: absolute
-      height: 100%
-      width: 30%
-      background-color: red

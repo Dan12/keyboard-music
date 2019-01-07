@@ -6,9 +6,10 @@ class NoteManager {
 
   private static instance: NoteManager = new NoteManager();
 
+  private maxLength: number;
+
   private constructor() {
-    this.notes = [];
-    this.playbackIDX = 0;
+    this.clear();
   }
 
   public static NoteManager() {
@@ -18,6 +19,11 @@ class NoteManager {
   public clear() {
     this.notes = [];
     this.playbackIDX = 0;
+    this.maxLength = 0;
+  }
+
+  public getMaxNoteBeat() {
+    return this.maxLength;
   }
 
   public getNoteByPos(x: number, y: number): Note {
@@ -38,6 +44,10 @@ class NoteManager {
       }
     }
     this.notes.push(n);
+
+    if (n.startBeat + n.length > this.maxLength) {
+      this.maxLength = n.startBeat + n.length;
+    }
   }
 
   public removeNote(n: Note) {

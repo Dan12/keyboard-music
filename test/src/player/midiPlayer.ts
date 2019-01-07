@@ -1,3 +1,7 @@
+interface Tickable {
+  (beat: number): void;
+}
+
 class MidiPlayer extends AbstractIO<void, KeyboardMessage> {
   private static instance: MidiPlayer = new MidiPlayer();
 
@@ -7,6 +11,8 @@ class MidiPlayer extends AbstractIO<void, KeyboardMessage> {
   private apparentStartTime = 0;
 
   private playingNotes: Note[];
+
+  private tickListeners: Tickable[];
 
   private keycodes = [
     49, 50, 51, 52, 53, 54, 55, 56,  57,  48,  189, 187,
@@ -23,12 +29,16 @@ class MidiPlayer extends AbstractIO<void, KeyboardMessage> {
   private constructor() {
     super();
 
+    this.tickListeners = [];
     this.playingNotes = [];
   }
 
   public stop() {
+    clearInterval(this.intervalID);
     this.curBeat = 0;
-    // TODO do something with playing notes
+    this.clearPlayingNotes();
+    this.makeTicks();
+    this.playing = false;
   }
 
   public curBeatToSeconds() {
@@ -56,6 +66,32 @@ class MidiPlayer extends AbstractIO<void, KeyboardMessage> {
     return Globals.audioCtx.currentTime - this.apparentStartTime;
   }
 
+  public addTickListener(tick: Tickable) {
+    this.tickListeners.push(tick);
+  }
+
+  public setCurrentBeat(beat: number) {
+    this.curBeat = beat;
+    this.apparentStartTime = Globals.audioCtx.currentTime - this.curBeatToSeconds();
+    NoteManager.NoteManager().startPlayBack(beat);
+    this.makeTicks();
+    this.clearPlayingNotes();
+  }
+
+  private makeTicks() {
+    this.tickListeners.forEach(tick => {
+      tick(this.curBeat);
+    });
+  }
+
+  private clearPlayingNotes() {
+    this.playingNotes.forEach(note => {
+      let noteKeycode = this.keycodes[note.noteID];
+      this.sendMessage(new KeyboardMessage(noteKeycode, KeyDirection.UP, new KeyboardEvent("MIDI")));
+    });
+    this.playingNotes = [];
+  }
+
   private tick() {
     let curTime = this.getCurrentTime();
     this.curBeat = (curTime / 60) * Globals.BPM;
@@ -76,5 +112,13 @@ class MidiPlayer extends AbstractIO<void, KeyboardMessage> {
     });
 
     this.playingNotes = this.playingNotes.filter((note) => {return !note.isDone(this.curBeat); });
+
+    this.tickListeners.forEach(tick => {
+      tick(this.curBeat);
+    });
+
+    if (this.curBeat >= NoteManager.NoteManager().getMaxNoteBeat()) {
+      this.stop();
+    }
   }
 }
